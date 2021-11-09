@@ -2,7 +2,7 @@
 
 class Page {
     private $htmlString = "";
-    private $title = "";
+    private $title = "Gradlapp";
 
     /**
      * @param string $title
@@ -13,25 +13,16 @@ class Page {
 
 
     public function printPage() {
-        try {
-            if ($this->title != "") {
-
-                echo("<!DOCTYPE html>
+        echo("<!DOCTYPE html>
 <html>
     <head>
+        <meta lang='de'>
+        
         <title>");
-                echo($this->title);
-                echo("</title>
+        echo($this->title);
+        echo("</title>
     </head>
     <body></body>
 </html>");
-            } else {
-                throw new Exception();
-            }
-        } catch (Exception $e) {
-            var_dump($e);
-        }
-
-
     }
 }
