@@ -3,26 +3,25 @@
 class Page {
     private $htmlString = "";
     private $title = "Gradlapp";
+    private $css = [];
+    private $db;
+    public function __construct() {
+        $this->db = new DBService();
 
-    /**
-     * @param string $title
-     */
+    }
+
     public function setTitle($title) {
         $this->title = $title;
     }
 
-
     public function printPage() {
-        echo("<!DOCTYPE html>
-<html>
-    <head>
+        $this->db->getUserSession();
+        echo("<!DOCTYPE html><html>");
+        echo(" <head>
         <meta lang='de'>
-        
-        <title>");
-        echo($this->title);
-        echo("</title>
-    </head>
-    <body></body>
-</html>");
+        <title>".$this->title."</title>");
+        echo("</head>");
+        echo("<body></body>");
+        echo("</html>");
     }
 }

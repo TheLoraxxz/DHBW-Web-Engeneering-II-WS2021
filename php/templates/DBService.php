@@ -4,7 +4,8 @@ class DBService {
     private $host = "127.0.0.1";
     private $username = "root";
     private $password = "";
-    private $conn = null;
+    private $conn ;
+    private $key = "e&sTC/k+i}^ha;b9%[E'TXm;%a32}dvk}=kH.niwE(R\"q+3T<#";
     function __construct() {
         $this->conn = new mysqli($this->host,$this->username,$this->password);
         $res = $this->conn->multi_query("USE db_pain;");
@@ -50,7 +51,7 @@ class DBService {
                 create table user
                 (
                     user_id int,
-                    password varchar(5000) not null,
+                    password varchar(60) not null,
                     email varchar(500) null,
                     name varchar(500) null,
                     surename varchar(500) null,
@@ -133,7 +134,19 @@ class DBService {
                 alter table project_class modify id int auto_increment;
             ");
         }
+    }
 
+    public function getUserSession() {
+        $result =$this->conn->query("
+            SELECT user_id as user_id,password as passowrd
+            FROM user");
+        $users = mysqli_fetch_all($result);
+        $session = [];
+        foreach ($users as $user) {
+            array_push($session,openssl_encrypt($user[0].$user[1],"aes-128-cbc",$this->key,0,$users[0]));
+        }
+
+        var_dump($session);
     }
 
 }
