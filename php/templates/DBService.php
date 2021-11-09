@@ -143,7 +143,7 @@ class DBService {
         $users = mysqli_fetch_all($result);
         $session = [];
         foreach ($users as $user) {
-            array_push($session,openssl_encrypt($user[0].$user[1],"aes-128-cbc",$this->key,0,$users[0]));
+            array_push($session,openssl_encrypt($user[0].$user[1],"aes-128-cbc",$this->key));
         }
 
         var_dump($session);
