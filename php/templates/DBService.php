@@ -143,10 +143,10 @@ class DBService {
         $users = mysqli_fetch_all($result);
         $session = [];
         foreach ($users as $user) {
-            array_push($session,openssl_encrypt($user[0].$user[1],"aes-128-cbc",$this->key));
+            array_push($session,$user[0].$user[1]);
         }
 
-        var_dump($session);
+        return $session;
     }
 
 }
