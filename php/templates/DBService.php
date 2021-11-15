@@ -36,17 +36,18 @@ class DBService {
                         primary key (course_id);
                 alter table course modify course_id int auto_increment;
                 
-                create table role_admin
+                create table role
                 (
                     role_id int,
-                    read_simple_enable boolean default false not null
+                    read_simple_enavble boolean default false null,
+                    name varchar(400) not null
                 );
-                create unique index role_admin_role_id_uindex
-                    on role_admin (role_id);
-                alter table role_admin
-                    add constraint role_admin_pk
+                create unique index role_role_id_index
+                    on role(role_id);
+                alter table role
+                    add constraint role_pk
                         primary key (role_id);
-                alter table role_admin modify role_id int auto_increment;
+                alter table role modify role_id int auto_increment;
                 
                 create table user
                 (
@@ -132,6 +133,27 @@ class DBService {
                     add constraint project_class_pk
                         primary key (id);
                 alter table project_class modify id int auto_increment;
+                
+                create table user_role
+                (
+                    user_role_id int,
+                    role_id int null,
+                    user_id int null,
+                    constraint role_role_id___fk
+                        foreign key (role_id) references role (role_id),
+                    constraint user_user_id___fk
+                        foreign key (user_id) references user (user_id)
+                );
+                create unique index user_role_user_role_id_uindex
+                    on user_role (user_role_id);              
+                alter table user_role
+                    add constraint user_role_pk
+                        primary key (user_role_id);  
+                alter table user_role modify user_role_id int auto_increment;
+
+                INSERT INTO role_admin (read_simple_enable, name) VALUES (1,'admin');
+                INSERT INTO user (password, email, name, surename, course_id) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', 'admin','',null);
+                
             ");
         }
     }

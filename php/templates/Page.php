@@ -15,8 +15,8 @@ class Page {
     }
 
     public function printPage() {
-        $sessions = $this->db->getUserSession();
-        var_dump($sessions);
+        //$sessions = $this->db->getUserSession();
+
         echo("<!DOCTYPE html><html>");
         echo(" <head>
         <meta lang='de'>
