@@ -1,12 +1,16 @@
 <?php
-
 class Page {
     private $htmlString = "";
     private $title = "Gradlappain";
     private $css = [];
+    private $js = [];
     private $db;
+
+    private $ROOTLIB;
     public function __construct() {
         $this->db = new DBService();
+        $rootlib = dirname(__FILE__);
+        $this->ROOTLIB = substr($rootlib,strpos($rootlib,"htdocs")+6)."../../../";
 
     }
 
@@ -14,17 +18,68 @@ class Page {
         $this->title = $title;
     }
 
-    public function printPage() {
-        //$sessions = $this->db->getUserSession();
+    public function addJs($hrefToScript) {
+        $hrefToScript = $this->ROOTLIB.$hrefToScript;
+        $isJs = substr($hrefToScript,-2);
+        if($isJs=="js"&&file_exists($hrefToScript)) {
+            array_push($this->js,$hrefToScript);
+        } else {
+            throw new Exception("KEIN VALIDES JS FILe");
+        }
+    }
 
+    public function addCs($hrefToScript) {
+        $hrefToScript = $this->ROOTLIB.$hrefToScript;
+        $isCss = substr($hrefToScript,-3);
+        if($isCss=="css"&&file_exists($hrefToScript)) {
+            array_push($this->css,$hrefToScript);
+        } else {
+            throw new Exception("Kein Valides CSS File");
+        }
+    }
+
+    public function printPage() {
+        $sessions = $this->db->getUserSession();
+        $session_set = false;
         echo("<!DOCTYPE html><html>");
-        echo(" <head>
-        <meta lang='de'>
-        <link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\" integrity=\"sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu\" crossorigin=\"anonymous\">
-        <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js\" integrity=\"sha384-aJ21OjlMXNL5UyIl/XNwTMqvzeRMZH2w8c5cRVpzpU8Y5bApTppSuUkhZXN0VxHd\" crossorigin=\"anonymous\"></script>
-        <title>".$this->title."</title>");
+        echo(' <head>
+        <meta lang="de">
+        <link rel="stylesheet" href="'.$this->ROOTLIB  .'css/bootstrap/bootstrap.css">
+        <title>'.$this->title.'</title>');
+        foreach ($this->js as $js) {
+            echo('<script src="'.$js.'"></script>');
+        }
+        foreach ($this->css as $css) {
+            echo ('<link rel="stylesheet" href="'.$css.'">');
+        }
         echo("</head>");
-        echo("<body></body>");
+        echo("<body>");
+        if ($session_set) {
+
+        } else {
+            echo($this->printLogin());
+        }
+        echo("</body>");
         echo("</html>");
+    }
+
+    private function printLogin() {
+        $html = '
+            <div class="mb-3">
+                <form>
+                    <h1>Bitte einloggen</h1>
+                    <div>
+                        <label for="name" class="form-label" >Name oder ID</label>
+                        <input id="name" placeholder="Max Mustermann" type="text" maxlength="100" class="form-control">
+                    </div>
+                    <div>
+                        <span>Passwort</span>
+                        <input type="password">
+                    </div>
+                    <button>Login</button>
+                </form>
+            </div>
+        ';
+        return $html;
     }
 }
