@@ -5,6 +5,7 @@ class Page {
     private $css = [];
     private $js = [];
     private $db;
+    private $isSession= null;
 
     private $ROOTLIB;
     public function __construct() {
@@ -16,6 +17,26 @@ class Page {
 
     public function setTitle($title) {
         $this->title = $title;
+    }
+
+    public function addHtml($string) {
+        $this->htmlString=$this->htmlString.$string;
+    }
+
+    public function getLoginstatus($session_current) {
+        $sessions = $this->db->getUserSession();
+        //TODO: Wird Cookie deaktivert wenn ich das auslese?
+        //TODO: Login automatisch auslesen
+        if ($session_current==null) {
+            return false;
+        }
+        foreach ($sessions as $session) {
+            if (password_verify($session_current,$session)) {
+                $this->isSession = $session;
+                return true;
+            }
+        }
+        return false;
     }
 
     public function addJs($hrefToScript) {
@@ -39,8 +60,6 @@ class Page {
     }
 
     public function printPage() {
-        $sessions = $this->db->getUserSession();
-        $session_set = false;
         echo('<!DOCTYPE html>
               <html>');
         echo(' 
@@ -58,32 +77,13 @@ class Page {
         }
         echo("</head>");
         echo("<body>");
-        if ($session_set) {
-
+        if($this->isSession==null) {
+            include_once('./noHJeader.html');
         } else {
-            echo($this->printLogin());
+
         }
+        echo($this->htmlString);
         echo("</body>");
         echo("</html>");
-    }
-
-    private function printLogin() {
-        $html = '
-            <div class="container" >
-                <form action="./login.php" method="post">
-                    <h1>Bitte einloggen</h1>
-                    <div>
-                        <label for="name" class="form-label" >Name oder ID</label>
-                        <input id="name" placeholder="Max Mustermann" type="text" maxlength="100" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="password" class="form-label">Passwort</label>
-                        <input id="password" type="password" class="form-control">
-                    </div>
-                    <button class="btn btn-primary">Login</button>
-                </form>
-            </div>
-        ';
-        return $html;
     }
 }
