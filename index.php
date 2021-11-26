@@ -33,7 +33,6 @@ if(isset($_COOKIE['GradlappainCook'])&&$page->getLoginstatus($_COOKIE['Gradlappa
             <div class="login_button">
                 <button class="btn btn-primary">Login</button>
             </div>
-         
         </form>
     </div>
     ';

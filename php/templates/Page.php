@@ -87,9 +87,9 @@ class Page {
         echo("</head>");
         echo("<body>");
         if($this->isSession==null) {
-
+            echo('');
         } else {
-
+            echo('');
         }
         echo($this->htmlString);
         echo("</body>");
