@@ -12,6 +12,7 @@ class Page {
         $this->db = new DBService();
         $rootlib = dirname(__FILE__); //gets the directory this one is in --> used for adding scripts
         $this->ROOTLIB = substr($rootlib,strpos($rootlib,"htdocs")+6)."/../../";
+        $this->addCs("forAll.css");
 
     }
 
@@ -86,9 +87,7 @@ class Page {
         }
         echo("</head>");
         echo("<body>");
-        if($this->isSession==null) {
-            echo('');
-        } else {
+        if(!$this->isSession==null) {
             echo('');
         }
         echo($this->htmlString);

@@ -19,21 +19,25 @@ if(isset($_COOKIE['GradlappainCook'])&&$page->getLoginstatus($_COOKIE['Gradlappa
 } else {
     $page->addCs('login_and_home/login.css');
     $string = '
-    <div>
-        <form method="post" action="index.php" class="container">
-            <h1>Login</h1>
-            <div>
-                <label class="form-label">Login</label>
-                <input placeholder="Max Mustermann" class="form-control" id="login" name="login">
-            </div>
-            <div>
-                <label class="form-label" for="password">Passwort</label>
-                <input class="form-control" type="password" name="password" id="password">
-            </div>
-            <div class="login_button">
-                <button class="btn btn-primary">Login</button>
-            </div>
-        </form>
+    <div  class="container">
+        <div class="row">
+            <div class="col-sm"></div>   
+            <form method="post" action="index.php" class="col-sm login_window">
+                <h1>Gradlappain</h1>
+                <div>
+                    <label class="form-label">Login</label>
+                    <input placeholder="Max Mustermann" class="form-control" id="login" name="login">
+                </div>
+                <div>
+                    <label class="form-label" for="password">Passwort</label>
+                    <input class="form-control" type="password" name="password" id="password">
+                </div>
+                <div class="login_button">
+                    <button class="btn btn-primary">Login</button>
+                </div>
+            </form>
+            <div class="col-sm"></div>
+        </div>
     </div>
     ';
     $page->addHtml($string);
