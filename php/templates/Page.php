@@ -6,6 +6,7 @@ class Page {
     private $js = [];
     private $db;
     private $isSession= null;
+    private $messages = [];
 
     private $ROOTLIB;
     public function __construct() {
@@ -69,6 +70,16 @@ class Page {
         }
     }
 
+
+    public function showError($message) {
+        $message =strip_tags($message);
+
+        if(strlen($message)<30) {
+            $error = ["type"=>"error","message"=>$message];
+            array_push($this->messages,$error);
+        }
+    }
+
     public function printPage() {
         echo('<!DOCTYPE html>
               <html>');
@@ -90,8 +101,17 @@ class Page {
         if(!$this->isSession==null) {
             echo('');
         }
+        if (count($this->messages)>0) {
+            foreach ($this->messages as $message) {
+                if ($message["type"]=="error") {
+                    echo('<div class="alert-danger">'.$message["message"].'</div>');
+                }
+            }
+        }
         echo($this->htmlString);
         echo("</body>");
         echo("</html>");
     }
+
+
 }
