@@ -5,12 +5,22 @@ include_once ("./php/templates/Page.php");
 
 $service = new DBService();
 $page = new Page();
-if($page->getLoginstatus($_COOKIE['GradlappainCook'])) {
-
+if (isset($_POST["login"]) and isset($_POST["password"]) and $service->verifyLogin($_POST["login"],$_POST["password"])) {
+    $string = '<script>
+        window.location = "./php/home.php";
+        
+    </script>';
+    $page->addHtml($string);
+    $page->printPage();
+}
+if(isset($_COOKIE['GradlappainCook'])&&$page->getLoginstatus($_COOKIE['GradlappainCook'])) {
+        header("Location: ./php/home.php");
+        die();
 } else {
+    $page->addCs('login_and_home/login.css');
     $string = '
     <div>
-        <form method="post" class="container">
+        <form method="post" action="index.php" class="container">
             <h1>Login</h1>
             <div>
                 <label class="form-label">Login</label>
@@ -20,7 +30,7 @@ if($page->getLoginstatus($_COOKIE['GradlappainCook'])) {
                 <label class="form-label" for="password">Passwort</label>
                 <input class="form-control" type="password" name="password" id="password">
             </div>
-            <div>
+            <div class="login_button">
                 <button class="btn btn-primary">Login</button>
             </div>
          
