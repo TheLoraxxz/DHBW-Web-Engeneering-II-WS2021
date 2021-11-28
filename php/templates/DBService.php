@@ -39,7 +39,7 @@ class DBService {
                 create table role
                 (
                     role_id int,
-                    read_simple_enavble boolean default false null,
+                    read_simple_enable boolean default false null,
                     name varchar(400) not null
                 );
                 create unique index role_role_id_index
@@ -151,8 +151,9 @@ class DBService {
                         primary key (user_role_id);  
                 alter table user_role modify user_role_id int auto_increment;
 
-                INSERT INTO role_admin (read_simple_enable, name) VALUES (1,'admin');
+                INSERT INTO role (read_simple_enable, name) VALUES (1,'admin');
                 INSERT INTO user (password, email, name, surename, course_id) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', 'admin','',null);
+                INSERT INTO user_role (role_id, user_id) VALUES (1, 1);
                 
             ");
         }
@@ -160,7 +161,7 @@ class DBService {
 
     public function getUserSession() {
         $result =$this->conn->query("
-            SELECT user_id as user_id,password as passowrd
+            SELECT user_id,password
             FROM user");
         $users = mysqli_fetch_all($result);
         $session = [];
@@ -169,6 +170,24 @@ class DBService {
         }
 
         return $session;
+    }
+
+    public function verifyLogin($login,$password) {
+        $login = str_replace([";"," "],"",$login);
+        $query = $this->conn->query("
+            SELECT password,user_id FROM user
+            WHERE user_id='".$login."' OR email='".$login."' OR name ='".$login."'
+        ");
+        $result = mysqli_fetch_all($query);
+        if (count($result)!=1) {
+            return false;
+        }
+
+        if (password_verify($password,$result[0][0])) {
+            setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            return true;
+        }
+        return false;
     }
 
 }

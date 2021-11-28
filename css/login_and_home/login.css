@@ -1,0 +1,26 @@
+.login_button {
+    margin-top: 20px;
+}
+.login_window img {
+    width: 400px;
+    position: relative;
+    opacity: 60%;
+    left: 20px;
+    top: 20px;
+    z-index: -1;
+
+}
+.login_window {
+    margin-top: 10em;
+    box-shadow: #b4b4b0 4px 4px 4px 4px;
+    border-radius: 10px;
+    padding: 10px;
+
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+h1 {
+    text-align: center;
+    position: relative;
+    top: -100px;
+}
