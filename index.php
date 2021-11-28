@@ -31,6 +31,7 @@ $string = '
     <div class="row">
         <div class="col-sm"></div>   
         <form method="post" action="index.php" class="col-sm login_window">
+            <img src="./assets/img/Logo_Background.svg">
             <h1>Gradlappain</h1>
             <div>
                 <label class="form-label">Login</label>
