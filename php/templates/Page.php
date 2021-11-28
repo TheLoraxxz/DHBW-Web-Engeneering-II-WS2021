@@ -104,7 +104,10 @@ class Page {
         if (count($this->messages)>0) {
             foreach ($this->messages as $message) {
                 if ($message["type"]=="error") {
-                    echo('<div class="alert-danger">'.$message["message"].'</div>');
+                    echo('
+                    <div class="container error">
+                        <div class="alert alert-danger">'.$message["message"].'</div>
+                    </div>');
                 }
             }
         }
