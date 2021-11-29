@@ -3,8 +3,9 @@ include_once("./php/templates/DBService.php");
 include_once ("./php/templates/Page.php");
 
 
-$service = new DBService();
+
 $page = new Page();
+$service = $page->getDBService();
 if ((isset($_POST["login"]) and isset($_POST["password"])) or (isset($_COOKIE['GradlappainCook']))) {
     if($service->verifyLogin($_POST["login"],$_POST["password"])) {
         $string = '<script>
@@ -16,14 +17,7 @@ if ((isset($_POST["login"]) and isset($_POST["password"])) or (isset($_COOKIE['G
     } else {
         $page->showError("Logindaten sind falsch");
     }
-    if(isset($_COOKIE['GradlappainCook']) and $page->getLoginstatus($_COOKIE['GradlappainCook'])) {
-        $string = '<script>
-        window.location = "./php/home.php";
-        
-        </script>';
-        $page->addHtml($string);
-        $page->printPage();
-    }
+   $page->getLoginstatus($_COOKIE['GradlappainCook']);
 }
 $page->addCs('login_and_home/login.css');
 $string = '

@@ -20,6 +20,9 @@ class Page {
     public function setTitle($title) {
         $this->title = $title;
     }
+    public function getDBService() {
+        return $this->db;
+    }
 
     public function addHtml($string) {
         $this->htmlString=$this->htmlString.$string;
@@ -27,15 +30,16 @@ class Page {
 
     public function getLoginstatus($session_current) {
         $sessions = $this->db->getUserSession();
-        if ($session_current==null) {
-            return false;
-        }
-        foreach ($sessions as $session) {
-            if ($session_current==$session) {
-                $this->isSession = $session;
-                return true;
+        if ($session_current!=null) {
+            foreach ($sessions as $session) {
+                if ($session_current==$session) {
+                    $this->isSession = $session;
+                    return true;
+                }
             }
         }
+        header('Location: '.$this->ROOTLIB);
+        die();
         return false;
     }
 
