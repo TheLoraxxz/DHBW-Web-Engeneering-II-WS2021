@@ -33,14 +33,13 @@ class Page {
         if ($session_current!=null) {
             foreach ($sessions as $session) {
                 if ($session_current==$session) {
-                    $this->isSession = $session;
+                    $this->isSession =substr($session,0,1);
                     return true;
                 }
             }
         }
         header('Location: '.$this->ROOTLIB);
         die();
-        return false;
     }
 
     /**
@@ -84,6 +83,9 @@ class Page {
         }
     }
 
+    /**
+     * gives out the prubt oage
+     */
     public function printPage() {
         echo('<!DOCTYPE html>
               <html>');
@@ -94,18 +96,53 @@ class Page {
             <link rel="stylesheet" href="'.$this->ROOTLIB  .'css/bootstrap/bootstrap.css">
             <title>'.$this->title.'</title>
         ');
-        foreach ($this->js as $js) {
+        foreach ($this->js as $js) { ///for each js file that is added it is included in the script
             echo('<script src="'.$js.'"></script>');
         }
-        foreach ($this->css as $css) {
+        foreach ($this->css as $css) { //same is for css file
             echo ('<link rel="stylesheet" href="'.$css.'">');
         }
         echo("</head>");
         echo("<body>");
-        if(!$this->isSession==null) {
-            echo('');
+        if(!$this->isSession==null) { //if it logs in it inserts the header elsewise you just see blank
+            $nav ="";
+            switch ($this->isSession) { //depending on the session it shows the corrisponding header
+                case 1:
+                    $nav ='
+                        <a class="nav-link">Noten</a>
+                        <a class="nav-link">Admin</a>
+                        <a class="nav-link">Projekte</a>
+                    ';
+                    break;
+                case 2:
+                    $nav ='
+                        <a class="nav-link">Bewertungen</a>
+                        <a class="nav-link">Projekte</a>
+                    ';
+                    break;
+                case 3:
+                    $nav = '
+                        <a class="nav-link">Noten</a>
+                    ';
+                    break;
+            }
+            echo('
+                <nav class="navbar navbar-light bg-light navbar-expand-sm">
+                    <div class="container-fluid">
+                        <a class="navbar-brand">Gradlappain</a>
+                        <div class="collapse navbar-collapse" id="navbar">
+                            <div class="navbar-nav">
+                              '.$nav.'
+                            </div>
+                        </div>
+                        <a class="nav-link">Stammdaten</a>
+
+                    </div>
+                </nav>
+                ');
+            //prints nav bar
         }
-        if (count($this->messages)>0) {
+        if (count($this->messages)>0) { //each error message or message in general is printed
             foreach ($this->messages as $message) {
                 if ($message["type"]=="error") {
                     echo('
