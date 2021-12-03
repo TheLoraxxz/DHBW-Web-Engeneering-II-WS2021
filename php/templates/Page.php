@@ -34,6 +34,7 @@ class Page {
             foreach ($sessions as $session) {
                 if ($session_current==$session) {
                     $this->isSession =substr($session,0,1);
+                    var_dump($this->isSession);
                     return true;
                 }
             }

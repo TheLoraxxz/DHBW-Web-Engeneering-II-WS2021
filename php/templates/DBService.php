@@ -150,11 +150,9 @@ class DBService {
                     add constraint user_role_pk
                         primary key (user_role_id);  
                 alter table user_role modify user_role_id int auto_increment;
-
                 INSERT INTO role (read_simple_enable, name) VALUES (1,'admin');
                 INSERT INTO role (read_simple_enable, name) VALUES (1,'student');
                 INSERT INTO role (read_simple_enable, name) VALUES (1,'secretary');
-
                 INSERT INTO user (password, email, name, surename, course_id) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', 'admin','',null);
                 INSERT INTO user_role (role_id, user_id) VALUES (1, 1);
                 
@@ -174,6 +172,7 @@ class DBService {
 
         return $session;
     }
+
 
     public function verifyLogin($login,$password) {
         $login = str_replace([";"," "],"",$login);

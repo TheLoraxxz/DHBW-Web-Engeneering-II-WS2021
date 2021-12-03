@@ -1,6 +1,6 @@
 <?php
 include_once ("./php/templates/Page.php");
-
+include_once ("./php/templates/DBService.php");
 
 
 $page = new Page();
