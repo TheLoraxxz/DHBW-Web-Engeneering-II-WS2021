@@ -5,6 +5,10 @@ include_once ("./php/templates/DBService.php");
 
 $page = new Page();
 $service = $page->getDBService();
+if (isset($_GET["action"])) {
+    setcookie("GradlappainCook", "", time() - 3600);
+}
+
 if ((isset($_POST["login"]) and isset($_POST["password"]))) {
     if($service->verifyLogin($_POST["login"],$_POST["password"])) {
         $string = '<script>

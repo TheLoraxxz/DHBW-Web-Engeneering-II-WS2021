@@ -158,7 +158,9 @@ class DBService {
                 INSERT INTO role (read_simple_enable, name) VALUES (1,'secretary');
                 INSERT INTO user (password, email, name, surename, course_id,login) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', '','',null,'admin');
                 INSERT INTO user_role (role_id, user_id) VALUES (1, 1);
-                
+                INSERT INTO db_pain.institution (name) VALUES ('DHBW Mosbach');
+                INSERT INTO db_pain.course (institution, name) VALUES (1, 'INF20B');
+                INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10$PD/tR.8orNEKkLcyEYooFOO44HDgd9K1l2/d8z3Dn8b.tGRbNcpYu', null, 'user', null, null, 1);
             ");
         }
     }
