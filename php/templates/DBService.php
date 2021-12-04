@@ -54,6 +54,7 @@ class DBService {
                     user_id int,
                     password varchar(60) not null,
                     email varchar(500) null,
+                    login varchar(500) null,
                     name varchar(500) null,
                     surename varchar(500) null,
                     course_id int null,
@@ -88,6 +89,7 @@ class DBService {
                     group_id int,
                     name varchar(5000) null,
                     submitted boolean default false null,
+                    submitted_time DATETIME null,
                     project_id int null,
                     constraint group__project
                         foreign key (project_id) references project (project_id)
@@ -154,7 +156,7 @@ class DBService {
                 INSERT INTO role (read_simple_enable, name) VALUES (1,'admin');
                 INSERT INTO role (read_simple_enable, name) VALUES (1,'student');
                 INSERT INTO role (read_simple_enable, name) VALUES (1,'secretary');
-                INSERT INTO user (password, email, name, surename, course_id) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', 'admin','',null);
+                INSERT INTO user (password, email, name, surename, course_id,login) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', '','',null,'admin');
                 INSERT INTO user_role (role_id, user_id) VALUES (1, 1);
                 
             ");
@@ -179,7 +181,7 @@ class DBService {
         $login = str_replace([";"," "],"",$login);
         $query = $this->conn->query("
             SELECT password,user_id FROM user
-            WHERE user_id='".$login."' OR email='".$login."' OR name ='".$login."'
+            WHERE login ='".$login."'
         ");
         $result = mysqli_fetch_all($query);
         if (count($result)!=1) {
