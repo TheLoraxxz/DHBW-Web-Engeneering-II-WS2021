@@ -73,6 +73,7 @@ class DBService {
                     project_id int,
                     points_reachable int not null,
                     path_to_matrix varchar(1000) null,
+                    submission_date DATETIME not null,
                     name varchar(1000) null
                 );
                 create unique index project_project_id_uindex

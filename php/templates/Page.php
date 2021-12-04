@@ -7,7 +7,7 @@ class Page {
     private $db;
     private $isSession= null;
     private $messages = [];
-
+    private $Element;
     private $ROOTLIB;
     public function __construct() {
         $this->db = new DBService();
@@ -34,7 +34,6 @@ class Page {
             foreach ($sessions as $session) {
                 if ($session_current==$session) {
                     $this->isSession =substr($session,0,1);
-                    var_dump($this->isSession);
                     return true;
                 }
             }
@@ -56,6 +55,10 @@ class Page {
         } else {
             throw new Exception("KEIN VALIDES JS FILe");
         }
+    }
+
+    private function addElement($element) {
+        $this->Element = $element;
     }
 
     /**
@@ -82,6 +85,10 @@ class Page {
             $error = ["type"=>"error","message"=>$message];
             array_push($this->messages,$error);
         }
+    }
+
+    public function getSession() {
+        return (int) $this->isSession;
     }
 
     /**
@@ -152,6 +159,9 @@ class Page {
                     </div>');
                 }
             }
+        }
+        if (isset($this->Element)) {
+            echo($this->Element->printElement);
         }
         echo($this->htmlString);
         echo("</body>");
