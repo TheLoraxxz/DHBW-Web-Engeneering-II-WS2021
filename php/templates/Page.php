@@ -144,8 +144,8 @@ class Page {
                               '.$nav.'
                             </div>
                         </div>
-                        <a class="nav-link">Stammdaten</a>
-                        <a class="nav-link" href="'.$this->ROOTLIB.'index.php?action=logout"><img src="'.$this->ROOTLIB.'assets/Icons/logout.svg"></a>
+                        <a class="nav-link navbar-icon"><img src="'.$this->ROOTLIB.'assets/Icons/profile.svg"></a>
+                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB.'index.php?action=logout"><img src="'.$this->ROOTLIB.'assets/Icons/logout.svg"></a>
 
                     </div>
                 </nav>

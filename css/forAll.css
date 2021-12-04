@@ -8,3 +8,6 @@ body {
 .error {
     margin-top: 20px;
 }
+.navbar-icon img{
+    opacity: 70%;
+}

@@ -8,8 +8,8 @@ $db = $page->getDBService();
 
 switch ($page->getSession()) {
     case 1:
-
-        var_dump("you are admin");
-        var_dump(password_hash("user", PASSWORD_BCRYPT ));
+        break;
+    case 2:
+        break;
 }
 $page->printPage();
