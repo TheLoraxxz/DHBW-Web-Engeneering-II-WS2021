@@ -7,7 +7,7 @@ class Page {
     private $db;
     private $isSession= null;
     private $messages = [];
-
+    private $Element;
     private $ROOTLIB;
     public function __construct() {
         $this->db = new DBService();
@@ -57,6 +57,10 @@ class Page {
         }
     }
 
+    private function addElement($element) {
+        $this->Element = $element;
+    }
+
     /**
      * @param $hrefToCss
      * @throws Exception
@@ -81,6 +85,10 @@ class Page {
             $error = ["type"=>"error","message"=>$message];
             array_push($this->messages,$error);
         }
+    }
+
+    public function getSession() {
+        return (int) $this->isSession;
     }
 
     /**
@@ -151,6 +159,9 @@ class Page {
                     </div>');
                 }
             }
+        }
+        if (isset($this->Element)) {
+            echo($this->Element->printElement);
         }
         echo($this->htmlString);
         echo("</body>");
