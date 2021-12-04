@@ -1,6 +1,6 @@
 @font-face {
     font-family: 'Ubuntu';
-    src: url("./../assets/Fonts/Ubuntu/Ubuntu-Regular.ttf");
+    src: url("../../assets/Fonts/Ubuntu/Ubuntu-Regular.ttf");
 }
 body {
     font-family: "Ubuntu";

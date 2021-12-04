@@ -75,6 +75,7 @@ class DBService {
                     points_reachable int not null,
                     path_to_matrix varchar(1000) null,
                     submission_date DATETIME not null,
+                    max_of_students int not null,
                     name varchar(1000) null
                 );
                 create unique index project_project_id_uindex
@@ -196,6 +197,25 @@ class DBService {
             return true;
         }
         return false;
+    }
+
+    public function getAdminTable() {
+        $query = $this->conn->query("
+            SELECT proj.name,proj.path_to_matrix as path,
+                (SELECT COUNT(*)
+                FROM groupings grup
+                WHERE grup.project_id=proj.project_id)
+            as count,
+                (SELECT COUNT(*)
+                FROM groupings grup
+                WHERE grup.project_id=proj.project_id AND grup.submitted=true)
+            as completed,
+            submission_date as date
+            FROM project as proj
+            WHERE submission_date>=CURRENT_DATE()-1;
+        ");
+        $result = mysqli_fetch_all($query);
+        return $result;
     }
 
 }
