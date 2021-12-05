@@ -12,6 +12,8 @@ switch ($page->getSession()) {
         $table->addColumn("ID",0,false);
         $table->addColumn("Projekt",1);
         $table->addColumn("Submission Date",5);
+        $table->addColumn("Completed",4);
+        $table->addColumn("Groups overall",3);
         $editButton = '<button class="btn btn-secondary" onclick="editProject(this);">Edit</button>';
         $table->addColumn("Edit Project",-1,true,$editButton);
         $table->addColumn("See",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
