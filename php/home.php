@@ -9,6 +9,8 @@ $db = $page->getDBService();
 switch ($page->getSession()) {
     case 1:
         $table = new Table($db->getAdminTable());
+        $table->addColumn("Projekt",0);
+        $table->addColumn("Submission Date",4);
         $page->addElement($table);
         break;
     case 2:

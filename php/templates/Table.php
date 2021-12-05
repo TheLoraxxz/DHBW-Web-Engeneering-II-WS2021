@@ -10,12 +10,14 @@ class Table
         $this->data = $data;
     }
 
-    public function addColumn($name, $columnInData, $order, $innerHTTML = null)
+    public function addColumn($name, $columnInData, $innerHTTML = null,$inserted=false)
     {
         if ($innerHTTML == null) {
-            array_push($this->columns, ["name" => $name, "HTML" => null, "col" => $columnInData, "order" => $order]);
+            array_push($this->columns, ["name" => $name, "HTML" => null, "col" => $columnInData]);
+        } else {
+            array_push($this->columns, ["name" => $name, "HTML" => $innerHTTML, "col" => $columnInData]);
         }
-        array_push($this->columns, ["name" => $name, "HTML" => $innerHTTML, "col" => $columnInData]);
+
     }
 
 
@@ -26,8 +28,8 @@ class Table
                     <thead>
                         <tr>';
         if (count($this->columns) > 0) {
-            for ($i = 0; $i < count($this->columns); $i++) {
-                $string = $string . '<td>' . $this->columns[$i] . '</td>';
+            for ($i = 0; $i < count($this->columns); ++$i) {
+                $string = $string . '<td>' . $this->columns[$i]["name"] . '</td>';
             }
         } else {
             for ($i = 0; $i < count($this->data[0]); $i++) {
@@ -43,9 +45,9 @@ class Table
             if (count($this->columns) > 0) {
                 for ($j = 0; $j < count($this->columns); $j++) {
                     if ($this->columns[$j]["HTML"] == null) {
-                        $string = '<td>' . $this->data[$this->columns[$j]["col"]] . '</td>';
+                        $string =$string.'<td>' . $this->data[$i][$this->columns[$j]["col"]] . '</td>';
                     } else {
-                        $string = '<td>' . $this->columns[$j]["HTML"] . '</td>';
+                        $string =$string.'<td>' . $this->columns[$j]["HTML"] . '</td>';
                     }
                 }
             } else {
