@@ -54,6 +54,7 @@ class DBService {
                     user_id int,
                     password varchar(60) not null,
                     email varchar(500) null,
+                    login varchar(500) null,
                     name varchar(500) null,
                     surename varchar(500) null,
                     course_id int null,
@@ -74,6 +75,7 @@ class DBService {
                     points_reachable int not null,
                     path_to_matrix varchar(1000) null,
                     submission_date DATETIME not null,
+                    max_of_students int not null,
                     name varchar(1000) null
                 );
                 create unique index project_project_id_uindex
@@ -88,6 +90,7 @@ class DBService {
                     group_id int,
                     name varchar(5000) null,
                     submitted boolean default false null,
+                    submitted_time DATETIME null,
                     project_id int null,
                     constraint group__project
                         foreign key (project_id) references project (project_id)
@@ -151,12 +154,15 @@ class DBService {
                     add constraint user_role_pk
                         primary key (user_role_id);  
                 alter table user_role modify user_role_id int auto_increment;
-                INSERT INTO role (read_simple_enable, name) VALUES (1,'admin');
-                INSERT INTO role (read_simple_enable, name) VALUES (1,'student');
-                INSERT INTO role (read_simple_enable, name) VALUES (1,'secretary');
-                INSERT INTO user (password, email, name, surename, course_id) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', 'admin','',null);
-                INSERT INTO user_role (role_id, user_id) VALUES (1, 1);
                 
+                INSERT INTO role (name) VALUES ('admin');
+                INSERT INTO role (name) VALUES ('student');
+                INSERT INTO role (name) VALUES ('secretary');
+                INSERT INTO user (password, email, name, surename, course_id,login) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', '','',null,'admin');
+                INSERT INTO user_role (role_id, user_id) VALUES (1, 1);
+                INSERT INTO db_pain.institution (name) VALUES ('DHBW Mosbach');
+                INSERT INTO db_pain.course (institution, name) VALUES (1, 'INF20B');
+                INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10\$PD/tR.8orNEKkLcyEYooFOO44HDgd9K1l2/d8z3Dn8b.tGRbNcpYu', null, 'user', null, null, 1);
             ");
         }
     }
@@ -179,7 +185,7 @@ class DBService {
         $login = str_replace([";"," "],"",$login);
         $query = $this->conn->query("
             SELECT password,user_id FROM user
-            WHERE user_id='".$login."' OR email='".$login."' OR name ='".$login."'
+            WHERE login ='".$login."'
         ");
         $result = mysqli_fetch_all($query);
         if (count($result)!=1) {
@@ -191,6 +197,25 @@ class DBService {
             return true;
         }
         return false;
+    }
+
+    public function getAdminTable() {
+        $query = $this->conn->query("
+            SELECT proj.name,proj.path_to_matrix as path,
+                (SELECT COUNT(*)
+                FROM groupings grup
+                WHERE grup.project_id=proj.project_id)
+            as count,
+                (SELECT COUNT(*)
+                FROM groupings grup
+                WHERE grup.project_id=proj.project_id AND grup.submitted=true)
+            as completed,
+            submission_date as date
+            FROM project as proj
+            WHERE submission_date>=CURRENT_DATE()-1;
+        ");
+        $result = mysqli_fetch_all($query);
+        return $result;
     }
 
 }

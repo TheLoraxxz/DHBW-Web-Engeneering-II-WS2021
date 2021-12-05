@@ -13,7 +13,8 @@ class Page {
         $this->db = new DBService();
         $rootlib = dirname(__FILE__); //gets the directory this one is in --> used for adding scripts
         $this->ROOTLIB = substr($rootlib,strpos($rootlib,"htdocs")+6)."/../../";
-        $this->addCs("forAll.css");
+        $this->addCs("template/forAll.css");
+        $this->addJs("forAll.js");
 
     }
 
@@ -57,7 +58,7 @@ class Page {
         }
     }
 
-    private function addElement($element) {
+    public function addElement($element) {
         $this->Element = $element;
     }
 
@@ -95,6 +96,9 @@ class Page {
      * gives out the prubt oage
      */
     public function printPage() {
+        if (isset($this->Element)) {
+            $this->addCs($this->Element->css);
+        }
         echo('<!DOCTYPE html>
               <html>');
         echo(' 
@@ -143,8 +147,8 @@ class Page {
                               '.$nav.'
                             </div>
                         </div>
-                        <a class="nav-link">Stammdaten</a>
-
+                        <a class="nav-link navbar-icon"><img src="'.$this->ROOTLIB.'assets/Icons/profile.svg"></a>
+                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB.'index.php?action=logout"><img src="'.$this->ROOTLIB.'assets/Icons/logout.svg"></a>
                     </div>
                 </nav>
                 ');
@@ -161,7 +165,7 @@ class Page {
             }
         }
         if (isset($this->Element)) {
-            echo($this->Element->printElement);
+            echo($this->Element->printElement());
         }
         echo($this->htmlString);
         echo("</body>");
