@@ -201,7 +201,7 @@ class DBService {
 
     public function getAdminTable() {
         $query = $this->conn->query("
-            SELECT proj.name,proj.path_to_matrix as path,
+            SELECT proj.project_id,proj.name,proj.path_to_matrix as path,
                 (SELECT COUNT(*)
                 FROM groupings grup
                 WHERE grup.project_id=proj.project_id)

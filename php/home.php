@@ -9,9 +9,16 @@ $db = $page->getDBService();
 switch ($page->getSession()) {
     case 1:
         $table = new Table($db->getAdminTable());
-        $table->addColumn("Projekt",0);
-        $table->addColumn("Submission Date",4);
+        $table->addColumn("ID",0,false);
+        $table->addColumn("Projekt",1);
+        $table->addColumn("Submission Date",5);
+        $table->addColumn("Completed",4);
+        $table->addColumn("Groups overall",3);
+        $editButton = '<button class="btn btn-secondary" onclick="editProject(this);">Edit</button>';
+        $table->addColumn("Edit Project",-1,true,$editButton);
+        $table->addColumn("See",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
         $page->addElement($table);
+        $page->addJs("tablebuttons.js");
         break;
     case 2:
         break;
