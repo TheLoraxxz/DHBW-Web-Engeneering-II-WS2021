@@ -9,13 +9,12 @@ $db = $page->getDBService();
 switch ($page->getSession()) {
     case 1:
         $table = new Table($db->getAdminTable());
-        $table->addColumn("ID",0);
+        $table->addColumn("ID",0,false);
         $table->addColumn("Projekt",1);
         $table->addColumn("Submission Date",5);
-        $editButton = '<button class="btn btn-secondary">Edit</button>';
-        $table->addColumn("Status",-1,$editButton);
-
-        $table->addColumn("See",-1,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
+        $editButton = '<button class="btn btn-secondary" onclick="editProject(this);">Edit</button>';
+        $table->addColumn("Edit Project",-1,true,$editButton);
+        $table->addColumn("See",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
         $page->addElement($table);
         $page->addJs("tablebuttons.js");
         break;
