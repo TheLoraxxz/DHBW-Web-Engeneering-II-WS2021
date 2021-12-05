@@ -5,8 +5,7 @@ class Table
     private $data = null;
     private $columns = [];
     public $css = "template/table.css";
-    public function __construct($data)
-    {
+    public function __construct($data) {
         $this->data = $data;
     }
 
@@ -41,7 +40,7 @@ class Table
                 </thead>
                 <tbody>';
         for ($i = 0; $i < count($this->data); ++$i) {
-            $string = $string . '<tr>';
+            $string = $string . '<tr id="'.$i.'">';
             if (count($this->columns) > 0) {
                 for ($j = 0; $j < count($this->columns); $j++) {
                     if ($this->columns[$j]["HTML"] == null) {
