@@ -5,10 +5,9 @@ include_once("./templates/Table.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
-
-switch ($page->getSession()) {
+switch ($page->getRole()) {
     case 1:
-        $table = new Table($db->getAdminTable());
+        $table = new Table($db->getAdminHomeTable());
         $table->addColumn("ID",0,false);
         $table->addColumn("Projekt",1);
         $table->addColumn("Submission Date",5);
@@ -23,6 +22,8 @@ switch ($page->getSession()) {
         $page->addJs("tablebuttons_home.js");
         break;
     case 2:
+        $table = new Table($db->getUserHomeTable($page->getSession()));
+        $page->addElement($table);
         break;
     case 3:
         break;

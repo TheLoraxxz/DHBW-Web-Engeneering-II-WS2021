@@ -163,6 +163,9 @@ class DBService {
                 INSERT INTO db_pain.institution (name) VALUES ('DHBW Mosbach');
                 INSERT INTO db_pain.course (institution, name) VALUES (1, 'INF20B');
                 INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10\$PD/tR.8orNEKkLcyEYooFOO44HDgd9K1l2/d8z3Dn8b.tGRbNcpYu', null, 'user', null, null, 1);
+                INSERT INTO user_role (role_id, user_id) VALUES (2, 2);
+                INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10\$eob34iDut5D6M2XvvaiYbuWGx0VBwl0PWdMsXJj26x38jnIGigDFm', null, 'secretary', null, null, null);
+                INSERT INTO user_role (role_id, user_id) VALUES (3, 3);
             ");
         }
     }
@@ -179,7 +182,11 @@ class DBService {
 
         return $session;
     }
-
+    public function getRole($user_id) {
+        $role = $this->conn->query("SELECT role_id FROM user_role
+        WHERE user_id=".$user_id);
+        return mysqli_fetch_all($role);
+    }
 
     public function verifyLogin($login,$password) {
         $login = str_replace([";"," "],"",$login);
@@ -199,13 +206,13 @@ class DBService {
         return false;
     }
 
-    public function getAdminTable() {
+    public function getAdminHomeTable() {
         $query = $this->conn->query("
             SELECT proj.project_id,proj.name,proj.path_to_matrix as path,
                 (SELECT COUNT(*)
                 FROM groupings grup
                 WHERE grup.project_id=proj.project_id)
-            as count,
+            as count, 
                 (SELECT COUNT(*)
                 FROM groupings grup
                 WHERE grup.project_id=proj.project_id AND grup.submitted=true)
@@ -217,5 +224,13 @@ class DBService {
         $result = mysqli_fetch_all($query);
         return $result;
     }
-
+    public function getUserHomeTable($userId) {
+        $query = $this->conn->query("
+            SELECT groop.name,p.submission_date,p.name FROM groupings as groop
+            INNER JOIN rating rat on groop.group_id = rat.group_id
+            INNER JOIN user u on rat.user_id = u.user_id
+            INNER JOIN project p on groop.project_id = p.project_id
+            WHERE u.user_id =".$userId);
+        return mysqli_fetch_all($query);
+    }
 }

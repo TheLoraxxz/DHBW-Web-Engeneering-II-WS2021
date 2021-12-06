@@ -6,6 +6,7 @@ class Page {
     private $js = [];
     private $db;
     private $isSession= null;
+    private $role = null;
     private $messages = [];
     private $Element;
     private $ROOTLIB;
@@ -35,6 +36,7 @@ class Page {
             foreach ($sessions as $session) {
                 if ($session_current==$session) {
                     $this->isSession =substr($session,0,1);
+                    $this->role = $this->db->getRole($this->isSession)[0][0];
                     return true;
                 }
             }
@@ -91,7 +93,9 @@ class Page {
     public function getSession() {
         return (int) $this->isSession;
     }
-
+    public function getRole() {
+        return (int) $this->role;
+    }
     /**
      * gives out the prubt oage
      */
