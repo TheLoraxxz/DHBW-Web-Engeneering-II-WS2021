@@ -75,6 +75,7 @@ class DBService {
                     points_reachable int not null,
                     path_to_matrix varchar(1000) null,
                     submission_date DATETIME not null,
+                    open_to_invite boolean default false null,
                     max_of_students int not null,
                     name varchar(1000) null
                 );
