@@ -4,6 +4,7 @@ class Table
 {
     private $data = null;
     private $columns = [];
+    private $button = [];
     public $css = "template/table.css";
     public function __construct($data) {
         $this->data = $data;
@@ -19,9 +20,22 @@ class Table
 
     }
 
+    public function addButton($name,$link) {
+        array_push($this->button,["name"=>$name,"link"=>$link]);
+    }
 
     public function printElement() {
-        $string = '
+        $string = '';
+        if (count($this->button)>0) {
+            $string = '<div class="buttongroup"><div class="btn-group btns">';
+            for ($i=0;$i<count($this->button);$i++) {
+                $string = $string.'<button  class="btn btn-outline-secondary" onclick="function x() {
+                  window.location.href=\''.$this->button[$i]["link"].'\'
+                }">'.$this->button[$i]["name"].'</button>';
+            }
+            $string = $string.'</div></div>';
+        }
+        $string =$string.'
             <div class="container-fluid tableCustom">
                 <table class="table table-striped">
                     <thead>

@@ -17,8 +17,10 @@ switch ($page->getSession()) {
         $editButton = '<button class="btn btn-secondary" onclick="editProject(this);">Edit</button>';
         $table->addColumn("Edit Project",-1,true,$editButton);
         $table->addColumn("See",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
+        $table->addButton("New Project","");
+        $table->addButton("New Group","");
         $page->addElement($table);
-        $page->addJs("tablebuttons.js");
+        $page->addJs("tablebuttons_home.js");
         break;
     case 2:
         break;

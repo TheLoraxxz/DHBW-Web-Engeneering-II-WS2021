@@ -1,3 +1,8 @@
 .tableCustom {
     margin-top: 20px;
 }
+.buttongroup {
+    display: flex;
+    justify-content: right;
+    margin-right: 30px;
+}
