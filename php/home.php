@@ -16,6 +16,8 @@ switch ($page->getRole()) {
         $editButton = '<button class="btn btn-secondary" onclick="editProject(this);">Edit</button>';
         $table->addColumn("Edit Project",-1,true,$editButton);
         $table->addColumn("See",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
+        $table->addColumn("Gruppeneinladung sperren",-1,true,'<button class="btn btn-dark" onClick="lockData(this);">Sperren</button>');
+
         $table->addButton("New Project","");
         $table->addButton("New Group","");
         $page->addElement($table);
