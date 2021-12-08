@@ -29,10 +29,9 @@ class Table
 
     public function printElement()
     {
-        $string = '';
+        $string = '<div class="container-fluid tableCustom">';
         if (count($this->button) > 0) {
-            $string = '<div class="container-fluid tableCustom">
-                            <div class="buttongroup"><div class="btn-group btns">';
+            $string = $string.'<div class="buttongroup"><div class="btn-group btns">';
             for ($i = 0; $i < count($this->button); $i++) {
                 $string = $string . '<button  class="btn btn-outline-secondary" onclick="function x() {
                   window.location.href=\'' . $this->button[$i]["link"] . '\'

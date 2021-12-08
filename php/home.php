@@ -23,6 +23,13 @@ switch ($page->getRole()) {
         break;
     case 2:
         $table = new Table($db->getUserHomeTable($page->getSession()));
+        $table->addColumn("ID",0,false);
+        $table->addColumn("Name",1);
+        $table->addColumn("Date",2);
+        $table->addColumn("Details einsehen",-1,true,'<button class="btn btn-secondary">See Details</button>');
+        $table->addColumn("Abgeben",-1,true,'<button class="btn btn-primary">Abgeben</button>');
+
+        $page->addJs("tablebuttons_home.js");
         $page->addElement($table);
         break;
     case 3:

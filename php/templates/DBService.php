@@ -227,11 +227,17 @@ class DBService {
     }
     public function getUserHomeTable($userId) {
         $query = $this->conn->query("
-            SELECT groop.name,p.submission_date,p.name FROM groupings as groop
+            SELECT groop.group_id, groop.name,p.submission_date,p.name FROM groupings as groop
             INNER JOIN rating rat on groop.group_id = rat.group_id
             INNER JOIN user u on rat.user_id = u.user_id
             INNER JOIN project p on groop.project_id = p.project_id
             WHERE u.user_id =".$userId);
-        return mysqli_fetch_all($query);
+        $result = mysqli_fetch_all($query);
+        for($i=0;$i<count($result);$i++) {
+            $date = $result[$i][2];
+            $datetime = new DateTime($date);
+            $result[$i][2] = date_format($datetime,"d.m.Y H:i")." Uhr";
+        }
+        return $result;
     }
 }

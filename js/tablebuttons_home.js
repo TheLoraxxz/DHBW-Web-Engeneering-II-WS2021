@@ -10,3 +10,8 @@ function editProject(button) {
     var project_id =document.getElementById(rowId).firstElementChild.innerHTML;
     window.location.href = "./project/project.php?action=edit&projectId="+project_id;
 }
+
+
+function date_home(div) {
+
+}
