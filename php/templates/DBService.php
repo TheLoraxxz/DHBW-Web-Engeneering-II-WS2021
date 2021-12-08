@@ -223,6 +223,11 @@ class DBService {
             WHERE submission_date>=CURRENT_DATE()-1;
         ");
         $result = mysqli_fetch_all($query);
+        for($i=0;$i<count($result);$i++) {
+            $date = $result[$i][5];
+            $datetime = new DateTime($date);
+            $result[$i][5] = date_format($datetime,"d.m.Y H:i")." Uhr";
+        }
         return $result;
     }
     public function getUserHomeTable($userId) {
