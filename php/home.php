@@ -35,6 +35,7 @@ switch ($page->getRole()) {
         $page->addElement($table);
         break;
     case 3:
+
         break;
 }
 $page->printPage();
