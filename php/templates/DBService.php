@@ -181,14 +181,16 @@ class DBService {
                 INSERT INTO role (name) VALUES ('admin');
                 INSERT INTO role (name) VALUES ('student');
                 INSERT INTO role (name) VALUES ('secretary');
-                INSERT INTO user (password, email, name, surename, course_id,login) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', '','',null,'admin');
+                INSERT INTO user (password, email, name, surename, login) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', null,null,'admin');
                 INSERT INTO user_role (role_id, user_id) VALUES (1, 1);
                 INSERT INTO db_pain.institution (name) VALUES ('DHBW Mosbach');
                 INSERT INTO db_pain.course (institution, name) VALUES (1, 'INF20B');
-                INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10\$PD/tR.8orNEKkLcyEYooFOO44HDgd9K1l2/d8z3Dn8b.tGRbNcpYu', null, 'user', null, null);
+                INSERT INTO db_pain.user (password, email, login, name, surename) VALUES ('$2y$10\$PD/tR.8orNEKkLcyEYooFOO44HDgd9K1l2/d8z3Dn8b.tGRbNcpYu', null, 'user', null, null);
                 INSERT INTO user_role (role_id, user_id) VALUES (2, 2);
-                INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10\$eob34iDut5D6M2XvvaiYbuWGx0VBwl0PWdMsXJj26x38jnIGigDFm', null, 'secretary', null, null, null);
+                INSERT INTO db_pain.user (password, email, login, name, surename) VALUES ('$2y$10\$eob34iDut5D6M2XvvaiYbuWGx0VBwl0PWdMsXJj26x38jnIGigDFm', null, 'secretary', null, null);
                 INSERT INTO user_role (role_id, user_id) VALUES (3, 3);
+                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (2, 1, 1);
+                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (3, null, 1);
             ");
         }
     }
