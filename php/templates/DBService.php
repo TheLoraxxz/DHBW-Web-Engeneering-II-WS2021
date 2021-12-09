@@ -106,6 +106,7 @@ class DBService {
                     user_id int null,
                     group_id int null,
                     points float null,
+                    is_admin boolean default false null,
                     constraint rating___groupings
                         foreign key (group_id) references groupings (group_id),
                     constraint rating___user
@@ -268,5 +269,8 @@ class DBService {
             $result[$i][2] = date_format($datetime,"d.m.Y H:i")." Uhr";
         }
         return $result;
+    }
+    public function getSecretareHomeTable($secretaryId) {
+
     }
 }

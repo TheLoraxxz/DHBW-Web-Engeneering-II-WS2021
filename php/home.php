@@ -39,3 +39,4 @@ switch ($page->getRole()) {
         break;
 }
 $page->printPage();
+
