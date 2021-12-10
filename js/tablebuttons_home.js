@@ -15,7 +15,3 @@ function lockData(button) {
     var project_id =document.getElementById(rowId).firstElementChild.innerHTML;
     window.location.href = "./project/project.php?action=lockn &projectId="+project_id;
 }
-
-function date_home(div) {
-
-}

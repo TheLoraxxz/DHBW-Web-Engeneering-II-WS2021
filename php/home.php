@@ -1,6 +1,5 @@
 <?php
 include_once("./templates/Page.php");
-include_once("./templates/DBService.php");
 include_once("./templates/Table.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
@@ -42,7 +41,7 @@ switch ($page->getRole()) {
         $table->addColumn("Gesamtpunktzahl",5);
         $table->addColumn("Kurse",2);
         $table->addColumn("Abgabezeit",4);
-        $table->addButton("Noten ausdrucken","");
+        $table->addButton("Noten ausdrucken","./pdf/print_pdf.php?soruce=home");
         $page->addElement($table);
         break;
 }

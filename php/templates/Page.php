@@ -1,4 +1,5 @@
 <?php
+require ('DBService.php');
 class Page {
     private $htmlString = "";
     private $title = "Gradlappain";

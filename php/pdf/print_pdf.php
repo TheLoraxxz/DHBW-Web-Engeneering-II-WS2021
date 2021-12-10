@@ -1,13 +1,7 @@
 <?php
-require ('../templates/Page.php');
-require (Page::getRoot()."php-libaries/PDF/fpdf.php");
+require_once ('./../templates/Page.php');
+require_once ('../../php-libaries/PDF/pdf.php');
+$page = new Page();
 
-class PDF extends FPDF {
-    function BasicTable($data,$header) {
-        foreach ($header as $col) {
-            $this->Cell(40,10,$col,1);
-        }
-        $this->Ln();
 
-    }
-}
+var_dump($_GET["source"]);
