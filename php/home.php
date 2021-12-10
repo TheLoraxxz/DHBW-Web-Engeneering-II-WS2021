@@ -35,7 +35,14 @@ switch ($page->getRole()) {
         $page->addElement($table);
         break;
     case 3:
-
+        $table = new Table($db->getSecretareHomeTable($page->getSession()));
+        $table->addColumn("Name",1);
+        $table->addColumn("Vorname",0);
+        $table->addColumn("Punkte",3);
+        $table->addColumn("Kurse",2);
+        $table->addColumn("Abgabezeit",4);
+        $table->addButton("Noten ausdrucken","");
+        $page->addElement($table);
         break;
 }
 $page->printPage();

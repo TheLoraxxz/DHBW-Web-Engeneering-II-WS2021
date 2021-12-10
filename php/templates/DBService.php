@@ -265,8 +265,13 @@ class DBService {
         $result = mysqli_fetch_all($query);
         for($i=0;$i<count($result);$i++) {
             $date = $result[$i][2];
-            $datetime = new DateTime($date);
-            $result[$i][2] = date_format($datetime,"d.m.Y H:i")." Uhr";
+            try {
+                $datetime = new DateTime($date);
+                $result[$i][2] = date_format($datetime,"d.m.Y H:i")." Uhr";
+            } catch (Exception $e) {
+                $result[$i][2] =$date;
+            }
+
         }
         return $result;
     }
@@ -284,5 +289,18 @@ class DBService {
                 INNER JOIN user_mapping um on inst.institution_id = um.institution_id
                 WHERE um.user_id=".$secretaryId.");");
         $result = mysqli_fetch_all($query);
+        for($i=0;$i<count($result);$i++) {
+            $date = $result[$i][4];
+            if($result[$i][3]==null) {
+                $result[$i][3] ="keine Punkte gesetzt";
+            }
+            try {
+                $datetime = new DateTime($date);
+                $result[$i][4] = date_format($datetime,"d.m.Y");
+            } catch (Exception $e) {
+                $result[$i][4] =$date;
+            }
+        }
+        return $result;
     }
 }
