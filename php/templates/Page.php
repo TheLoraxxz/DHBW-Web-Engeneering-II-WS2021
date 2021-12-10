@@ -12,8 +12,7 @@ class Page {
     private $ROOTLIB;
     public function __construct() {
         $this->db = new DBService();
-        $rootlib = dirname(__FILE__); //gets the directory this one is in --> used for adding scripts
-        $this->ROOTLIB = substr($rootlib,strpos($rootlib,"htdocs")+6)."/../../";
+        $this->ROOTLIB = self::getRoot();
         $this->addCs("template/forAll.css");
         $this->addJs("forAll.js");
 
@@ -59,7 +58,10 @@ class Page {
             throw new Exception("KEIN VALIDES JS FILe");
         }
     }
-
+    public static function getRoot() {
+        $rootlib = dirname(__FILE__); //gets the directory this one is in --> used for adding scripts
+        return substr($rootlib,strpos($rootlib,"htdocs")+6)."/../../";
+    }
     public function addElement($element) {
         $this->Element = $element;
     }
