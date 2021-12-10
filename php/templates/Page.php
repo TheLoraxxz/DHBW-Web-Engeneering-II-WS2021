@@ -86,11 +86,9 @@ class Page {
 
     public function showError($message) {
         $message =strip_tags($message);
+        $error = ["type"=>"error","message"=>$message];
+        array_push($this->messages,$error);
 
-        if(strlen($message)<30) {
-            $error = ["type"=>"error","message"=>$message];
-            array_push($this->messages,$error);
-        }
     }
 
     public function getSession() {

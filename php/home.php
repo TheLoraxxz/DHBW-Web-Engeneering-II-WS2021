@@ -34,6 +34,9 @@ switch ($page->getRole()) {
         $page->addElement($table);
         break;
     case 3:
+        if (isset($_GET["error"]) and $_GET["error"]=="noData") {
+            $page->showError("Keine Daten zum ausdrucken verfügbar");
+        }
         $table = new Table($db->getSecretareHomeTable($page->getSession()));
         $table->addColumn("Name",1);
         $table->addColumn("Vorname",0);
@@ -41,7 +44,7 @@ switch ($page->getRole()) {
         $table->addColumn("Gesamtpunktzahl",5);
         $table->addColumn("Kurse",2);
         $table->addColumn("Abgabezeit",4);
-        $table->addButton("Noten ausdrucken","./pdf/print_pdf.php?soruce=home");
+        $table->addButton("Noten ausdrucken","./pdf/print_pdf.php?source=home");
         $page->addElement($table);
         break;
 }
