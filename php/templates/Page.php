@@ -1,16 +1,17 @@
 <?php
 require ('DBService.php');
 class Page {
-    private $htmlString = "";
-    private $title = "Gradlappain";
-    private $css = [];
-    private $js = [];
-    private $db;
-    private $isSession= null;
-    private $role = null;
-    private $messages = [];
-    private $Element;
-    private $ROOTLIB;
+    protected $htmlString = "";
+    protected $title = "Gradlappain";
+    protected $css = [];
+    protected $js = [];
+    protected $db;
+    protected $isSession= null;
+    protected $role = null;
+    protected $messages = [];
+    protected $Element;
+    protected $subMenu =[];
+    protected $ROOTLIB;
     public function __construct() {
         $this->db = new DBService();
         $this->ROOTLIB = self::getRoot();
@@ -18,7 +19,12 @@ class Page {
         $this->addJs("forAll.js");
 
     }
+    public function addSubMenu($name,$link) {
+        if (count($name)>0 and count($link)>0) {
+            array_push($this->subMenu,["name"=>$name,"link"=>$link]);
+        }
 
+    }
     public function setTitle($title) {
         $this->title = $title;
     }
@@ -127,7 +133,16 @@ class Page {
                 case 1:
                     $nav ='
                         <a class="nav-link">Noten</a>
-                        <a class="nav-link">Admin</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Admin
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#">Action</a></li>
+                            <li><a class="dropdown-item" href="#">Another action</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        </ul>
+                        <a class="nav-link" href="'.self::getRoot().'php/admin/admin_home.php">Admin</a>
                         <a class="nav-link">Projekte</a>
                     ';
                     break;
