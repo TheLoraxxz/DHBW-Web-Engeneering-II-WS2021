@@ -106,6 +106,7 @@ class DBService {
                     user_id int null,
                     group_id int null,
                     points float null,
+                    is_admin boolean default false null,
                     constraint rating___groupings
                         foreign key (group_id) references groupings (group_id),
                     constraint rating___user
@@ -264,8 +265,41 @@ class DBService {
         $result = mysqli_fetch_all($query);
         for($i=0;$i<count($result);$i++) {
             $date = $result[$i][2];
-            $datetime = new DateTime($date);
-            $result[$i][2] = date_format($datetime,"d.m.Y H:i")." Uhr";
+            try {
+                $datetime = new DateTime($date);
+                $result[$i][2] = date_format($datetime,"d.m.Y H:i")." Uhr";
+            } catch (Exception $e) {
+                $result[$i][2] =$date;
+            }
+
+        }
+        return $result;
+    }
+    public function getSecretareHomeTable($secretaryId) {
+        $query = $this->conn->query("
+            SELECT u.surename,u.name,c.name,rating.points,p.submission_date,p.points_reachable
+            FROM rating
+            INNER JOIN groupings g on rating.group_id = g.group_id
+            RIGHT JOIN project p on p.project_id = g.project_id
+            INNER JOIN user u on rating.user_id = u.user_id
+            LEFT JOIN project_class pc on p.project_id = pc.project_id
+            LEFT JOIN course c on pc.course_id = c.course_id
+            INNER JOIN institution i on c.institution = i.institution_id
+            WHERE i.institution_id = (SELECT inst.institution_id FROM institution inst
+                INNER JOIN user_mapping um on inst.institution_id = um.institution_id
+                WHERE um.user_id=".$secretaryId.");");
+        $result = mysqli_fetch_all($query);
+        for($i=0;$i<count($result);$i++) {
+            $date = $result[$i][4];
+            if($result[$i][3]==null) {
+                $result[$i][3] ="keine Punkte gesetzt";
+            }
+            try {
+                $datetime = new DateTime($date);
+                $result[$i][4] = date_format($datetime,"d.m.Y");
+            } catch (Exception $e) {
+                $result[$i][4] =$date;
+            }
         }
         return $result;
     }
