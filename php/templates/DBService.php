@@ -277,7 +277,7 @@ class DBService {
     }
     public function getSecretareHomeTable($secretaryId) {
         $query = $this->conn->query("
-            SELECT u.surename,u.name,c.name,rating.points,p.submission_date
+            SELECT u.surename,u.name,c.name,rating.points,p.submission_date,p.points_reachable
             FROM rating
             INNER JOIN groupings g on rating.group_id = g.group_id
             RIGHT JOIN project p on p.project_id = g.project_id

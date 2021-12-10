@@ -39,6 +39,7 @@ switch ($page->getRole()) {
         $table->addColumn("Name",1);
         $table->addColumn("Vorname",0);
         $table->addColumn("Punkte",3);
+        $table->addColumn("Gesamtpunktzahl",5);
         $table->addColumn("Kurse",2);
         $table->addColumn("Abgabezeit",4);
         $table->addButton("Noten ausdrucken","");
