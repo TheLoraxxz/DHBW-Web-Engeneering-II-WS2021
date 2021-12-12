@@ -14,8 +14,14 @@ class Page {
     protected $ROOTLIB;
     public function __construct() {
         $this->db = new DBService();
+        if (!$this->db) {
+            $this->showError("Datenbankfehler");
+            $this->printPage();
+            exit();
+        }
         $this->ROOTLIB = self::getRoot();
         $this->addCs("template/forAll.css");
+        $this->addJs("js_Libary/bootstrap/bootstrap.js");
         $this->addJs("forAll.js");
 
     }
@@ -133,16 +139,13 @@ class Page {
                 case 1:
                     $nav ='
                         <a class="nav-link">Noten</a>
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Admin
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#">Action</a></li>
-                            <li><a class="dropdown-item" href="#">Another action</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">Something else here</a></li>
+                            <li><a class="dropdown-item" href="'.self::getRoot().'php/admin/admin_home.php">Home</a></li>
+                            <li><a class="dropdown-item" href="'.self::getRoot().'php/admin/create_user.php">User Management</a></li>
                         </ul>
-                        <a class="nav-link" href="'.self::getRoot().'php/admin/admin_home.php">Admin</a>
                         <a class="nav-link">Projekte</a>
                     ';
                     break;

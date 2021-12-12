@@ -177,7 +177,9 @@ class DBService {
                         primary key (mapping_id);
                 
                 alter table user_mapping modify mapping_id int auto_increment;
-
+                
+                create unique index user_login_uindex
+                	on user (login);
                 
                 INSERT INTO role (name) VALUES ('admin');
                 INSERT INTO role (name) VALUES ('student');
@@ -194,6 +196,7 @@ class DBService {
                 INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (3, null, 1);
             ");
         }
+        return $res;
     }
 
     public function getUserSession() {
@@ -302,5 +305,10 @@ class DBService {
             }
         }
         return $result;
+    }
+    public function getCourses() {
+        $query = $this->conn->query("
+            SELECT course_id, name FROM course;
+        ");
     }
 }
