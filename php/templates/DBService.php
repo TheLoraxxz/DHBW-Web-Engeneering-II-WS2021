@@ -310,5 +310,23 @@ class DBService {
         $query = $this->conn->query("
             SELECT course_id, name FROM course;
         ");
+        return mysqli_fetch_all($query);
+    }
+    public function createNewUsers($number,$course) {
+        $password =password_hash('123456',PASSWORD_BCRYPT);
+        $possibilities = "1234567890abcdefghijklmnopqrstuvwxyz_-.ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        for($i=0;$i<$number;++$i) {
+            $randomLogin = '';
+            for ($j=0;$j<6;++$j) {
+                $randomLogin = $randomLogin.$possibilities[rand(0,strlen($possibilities))];
+            }
+            $this->conn->query("
+                INSERT INTO user (password, email, name, surename, login) VALUES (".$password." ,null, null,null,".$i.");
+            ");
+            $this->conn->query("
+                
+            ");
+        }
+
     }
 }
