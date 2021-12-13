@@ -56,7 +56,11 @@ class DBService {
                     email varchar(500) null,
                     login varchar(500) null,
                     name varchar(500) null,
-                    surename varchar(500) null
+                    surename varchar(500) null,
+                    course_id int null,
+                    constraint user___course
+                        foreign key (course_id) references course (course_id)
+                            on update cascade
                 );
                 create unique index user_user_id_uindex
                     on user (user_id);
@@ -106,7 +110,6 @@ class DBService {
                     user_id int null,
                     group_id int null,
                     points float null,
-                    is_admin boolean default false null,
                     constraint rating___groupings
                         foreign key (group_id) references groupings (group_id),
                     constraint rating___user
@@ -153,45 +156,17 @@ class DBService {
                         primary key (user_role_id);  
                 alter table user_role modify user_role_id int auto_increment;
                 
-                create table user_mapping
-                (
-                    mapping_id int,
-                    user_id int null,
-                    course_id int null,
-                    institution_id int null,
-                    constraint maping_user
-                        foreign key (user_id) references user (user_id)
-                            on delete cascade,
-                    constraint mapping_course
-                        foreign key (course_id) references course (course_id)
-                            on update cascade on delete cascade,
-                    constraint mapping_institution
-                        foreign key (institution_id) references institution (institution_id)
-                            on delete cascade
-                );
-                create unique index user_mapping_mapping_id_uindex
-                    on user_mapping (mapping_id);
-                
-                alter table user_mapping
-                    add constraint user_mapping_pk
-                        primary key (mapping_id);
-                
-                alter table user_mapping modify mapping_id int auto_increment;
-
-                
                 INSERT INTO role (name) VALUES ('admin');
                 INSERT INTO role (name) VALUES ('student');
                 INSERT INTO role (name) VALUES ('secretary');
-                INSERT INTO user (password, email, name, surename, login) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', null,null,'admin');
+                INSERT INTO user (password, email, name, surename, course_id,login) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', '','',null,'admin');
                 INSERT INTO user_role (role_id, user_id) VALUES (1, 1);
                 INSERT INTO db_pain.institution (name) VALUES ('DHBW Mosbach');
                 INSERT INTO db_pain.course (institution, name) VALUES (1, 'INF20B');
-                INSERT INTO db_pain.user (password, email, login, name, surename) VALUES ('$2y$10\$PD/tR.8orNEKkLcyEYooFOO44HDgd9K1l2/d8z3Dn8b.tGRbNcpYu', null, 'user', null, null);
+                INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10\$PD/tR.8orNEKkLcyEYooFOO44HDgd9K1l2/d8z3Dn8b.tGRbNcpYu', null, 'user', null, null, 1);
                 INSERT INTO user_role (role_id, user_id) VALUES (2, 2);
-                INSERT INTO db_pain.user (password, email, login, name, surename) VALUES ('$2y$10\$eob34iDut5D6M2XvvaiYbuWGx0VBwl0PWdMsXJj26x38jnIGigDFm', null, 'secretary', null, null);
+                INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10\$eob34iDut5D6M2XvvaiYbuWGx0VBwl0PWdMsXJj26x38jnIGigDFm', null, 'secretary', null, null, null);
                 INSERT INTO user_role (role_id, user_id) VALUES (3, 3);
-                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (2, 1, 1);
-                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (3, null, 1);
             ");
         }
     }
@@ -248,59 +223,15 @@ class DBService {
             WHERE submission_date>=CURRENT_DATE()-1;
         ");
         $result = mysqli_fetch_all($query);
-        for($i=0;$i<count($result);$i++) {
-            $date = $result[$i][5];
-            $datetime = new DateTime($date);
-            $result[$i][5] = date_format($datetime,"d.m.Y H:i")." Uhr";
-        }
         return $result;
     }
     public function getUserHomeTable($userId) {
         $query = $this->conn->query("
-            SELECT groop.group_id, groop.name,p.submission_date,p.name FROM groupings as groop
+            SELECT groop.name,p.submission_date,p.name FROM groupings as groop
             INNER JOIN rating rat on groop.group_id = rat.group_id
             INNER JOIN user u on rat.user_id = u.user_id
             INNER JOIN project p on groop.project_id = p.project_id
             WHERE u.user_id =".$userId);
-        $result = mysqli_fetch_all($query);
-        for($i=0;$i<count($result);$i++) {
-            $date = $result[$i][2];
-            try {
-                $datetime = new DateTime($date);
-                $result[$i][2] = date_format($datetime,"d.m.Y H:i")." Uhr";
-            } catch (Exception $e) {
-                $result[$i][2] =$date;
-            }
-
-        }
-        return $result;
-    }
-    public function getSecretareHomeTable($secretaryId) {
-        $query = $this->conn->query("
-            SELECT u.surename,u.name,c.name,rating.points,p.submission_date,p.points_reachable
-            FROM rating
-            INNER JOIN groupings g on rating.group_id = g.group_id
-            RIGHT JOIN project p on p.project_id = g.project_id
-            INNER JOIN user u on rating.user_id = u.user_id
-            LEFT JOIN project_class pc on p.project_id = pc.project_id
-            LEFT JOIN course c on pc.course_id = c.course_id
-            INNER JOIN institution i on c.institution = i.institution_id
-            WHERE i.institution_id = (SELECT inst.institution_id FROM institution inst
-                INNER JOIN user_mapping um on inst.institution_id = um.institution_id
-                WHERE um.user_id=".$secretaryId.");");
-        $result = mysqli_fetch_all($query);
-        for($i=0;$i<count($result);$i++) {
-            $date = $result[$i][4];
-            if($result[$i][3]==null) {
-                $result[$i][3] ="keine Punkte gesetzt";
-            }
-            try {
-                $datetime = new DateTime($date);
-                $result[$i][4] = date_format($datetime,"d.m.Y");
-            } catch (Exception $e) {
-                $result[$i][4] =$date;
-            }
-        }
-        return $result;
+        return mysqli_fetch_all($query);
     }
 }
