@@ -19,12 +19,6 @@ if(!isset($_POST["action"])) {
                 </label>
                 <input id="course_input" name="course" type="text" class="form-control">
             </div>
-            <div>
-                <label>
-                    Rolle
-                </label>
-                <input>
-            </div>
             <button class="btn btn-primary">Submit</button>
         </form>
         
@@ -36,15 +30,17 @@ if(!isset($_POST["action"])) {
     $infos = $_POST;
     $courses =$db->getCourses();
     $is_same = false;
+    var_dump($infos);
     foreach ($courses as $course) {
 
-        if ($course[1]==urldecode($infos["course"])) {
+        if ($course[1]==urlencode($infos["course"])) {
             $is_same = true;
             break;
         }
     }
     if ($is_same) {
-        $db->createNewUsers(intval($infos["number_of_accounts"]),$course[1]);
+
+        #$db->createNewUsers(intval($infos["number_of_accounts"]),$infos["course"],$infos["role_select"]);
     }
 
 }

@@ -295,7 +295,7 @@ class DBService {
         for($i=0;$i<count($result);$i++) {
             $date = $result[$i][4];
             if($result[$i][3]==null) {
-                $result[$i][3] ="keine Punkte gesetzt";
+                $result[$i][3] ="-----";
             }
             try {
                 $datetime = new DateTime($date);
@@ -312,7 +312,9 @@ class DBService {
         ");
         return mysqli_fetch_all($query);
     }
-    public function createNewUsers($number,$course) {
+
+
+    public function createNewUsers($number,$course,$role) {
         $password =password_hash('123456',PASSWORD_BCRYPT);
         $possibilities = "1234567890abcdefghijklmnopqrstuvwxyz_-.ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         for($i=0;$i<$number;++$i) {
@@ -323,10 +325,31 @@ class DBService {
             $this->conn->query("
                 INSERT INTO user (password, email, name, surename, login) VALUES (".$password." ,null, null,null,".$i.");
             ");
+            $query = $this->conn->query("
+                SELECT LAST_INSERT_ID() FROM user LIMIT 1
+            ");
+            $user_id = mysqli_fetch_all($query)[0][0];
+            $query = $this->conn->query("
+                SELECT course.course_id,i.institution_id
+                FROM course
+                INNER JOIN institution i on course.institution = i.institution_id
+                WHERE course.name='".$course."'
+
+
+            ");
+            $result = mysqli_fetch_all($query);
+            $query = $this->conn->query("
+                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (".$user_id.",".$result[0][0].", ".$result[0][1].")
+            ");
+            $result = mysqli_fetch_all($query);
+            if($result==false) {
+                return null;
+            }
             $this->conn->query("
-                
+                INSERT INTO db_pain.user_role (role_id, user_id) VALUES (2, '".$user_id."');
             ");
         }
+        return true;
 
     }
 }
