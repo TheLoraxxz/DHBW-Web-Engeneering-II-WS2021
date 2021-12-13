@@ -30,7 +30,6 @@ if(!isset($_POST["action"])) {
     $infos = $_POST;
     $courses =$db->getCourses();
     $is_same = false;
-    var_dump($infos);
     foreach ($courses as $course) {
 
         if ($course[1]==urlencode($infos["course"])) {
@@ -39,8 +38,8 @@ if(!isset($_POST["action"])) {
         }
     }
     if ($is_same) {
-
-        #$db->createNewUsers(intval($infos["number_of_accounts"]),$infos["course"],$infos["role_select"]);
+        var_dump(intval($infos["number_of_accounts"]));
+        $db->createNewUsers(intval($infos["number_of_accounts"]),$infos["course"]);
     }
 
 }

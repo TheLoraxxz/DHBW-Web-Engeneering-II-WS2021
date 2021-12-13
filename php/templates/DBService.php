@@ -314,21 +314,23 @@ class DBService {
     }
 
 
-    public function createNewUsers($number,$course,$role) {
+    public function createNewUsers($number,$course) {
         $password =password_hash('123456',PASSWORD_BCRYPT);
         $possibilities = "1234567890abcdefghijklmnopqrstuvwxyz_-.ABCDEFGHIJKLMNOPQRSTUVWXYZ";
         for($i=0;$i<$number;++$i) {
+            var_dump($i);
             $randomLogin = '';
             for ($j=0;$j<6;++$j) {
                 $randomLogin = $randomLogin.$possibilities[rand(0,strlen($possibilities))];
             }
-            $this->conn->query("
-                INSERT INTO user (password, email, name, surename, login) VALUES (".$password." ,null, null,null,".$i.");
+            $this->conn->multi_query("
+                INSERT INTO user (password, email, name, surename, login) VALUES ('".$password."' ,null, null,null,'".$randomLogin."');
             ");
             $query = $this->conn->query("
                 SELECT LAST_INSERT_ID() FROM user LIMIT 1
             ");
             $user_id = mysqli_fetch_all($query)[0][0];
+            var_dump($user_id);
             $query = $this->conn->query("
                 SELECT course.course_id,i.institution_id
                 FROM course
@@ -338,10 +340,10 @@ class DBService {
 
             ");
             $result = mysqli_fetch_all($query);
-            $query = $this->conn->query("
+            var_dump($result);
+            $result = $this->conn->multi_query("
                 INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (".$user_id.",".$result[0][0].", ".$result[0][1].")
             ");
-            $result = mysqli_fetch_all($query);
             if($result==false) {
                 return null;
             }
