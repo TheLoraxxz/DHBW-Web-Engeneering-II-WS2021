@@ -1,6 +1,6 @@
 <?php
 require_once ('./../templates/Page.php');
-
+require_once ('./../templates/Table.php');
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
@@ -38,8 +38,15 @@ if(!isset($_POST["action"])) {
         }
     }
     if ($is_same) {
-        var_dump(intval($infos["number_of_accounts"]));
-        $db->createNewUsers(intval($infos["number_of_accounts"]),$infos["course"]);
+        $tableData =$db->createNewUsers(intval($infos["number_of_accounts"]),$infos["course"]);
+        $table = new Table($tableData);
+        $table->addColumn("Benutzername","name");
+        $table->addColumn("Password","password");
+        $table->addColumn("Kurs","Kurs");
+        $table->addButton("Zurück",Page::getRoot()."admin/admin_home.php");
+        $table->addButton("Drucken",Page::getRoot()."pdf/print_pdf.php?start=".$tableData[0]["id"]."&end=".$tableData[count($tableData)-1]["id"]);
+        $table->addTableHeading("Übersicht über neu erstellte User");
+        $page->addElement($table);
     }
 
 }

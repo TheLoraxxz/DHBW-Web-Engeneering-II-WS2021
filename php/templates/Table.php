@@ -6,10 +6,14 @@ class Table
     private $columns = [];
     private $button = [];
     public $css = "template/table.css";
-
+    private $header = "";
     public function __construct($data)
     {
         $this->data = $data;
+    }
+
+    public function addTableHeading($string) {
+        $this->header = $string;
     }
 
     public function addColumn($name, $columnInData, $show = true, $innerHTTML = null)
@@ -27,9 +31,12 @@ class Table
         array_push($this->button, ["name" => $name, "link" => $link]);
     }
 
-    public function printElement()
-    {
+    public function printElement() {
+
         $string = '<div class="container-fluid tableCustom">';
+        if (strlen($this->header)>0) {
+            $string = $string.'<h3>'.$this->header.'</h3>';
+        }
         if (count($this->button) > 0) {
             $string = $string.'<div class="buttongroup"><div class="btn-group btns">';
             for ($i = 0; $i < count($this->button); $i++) {
