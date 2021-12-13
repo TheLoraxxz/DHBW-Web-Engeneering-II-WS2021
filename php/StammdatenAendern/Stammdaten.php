@@ -5,7 +5,7 @@ $page = new Page();
 $db = $page->getDBService();
 $auswahl= 0;
 
-$daten = $db->Stammdaten(1);
+$daten = $db->getStammdaten(1);
 echo "aktuelle UserID: ".$page->getSession();
 
 
@@ -13,20 +13,20 @@ if (isset($_POST["name"])) {
     echo "<br>".$_POST["name"];
     $auswahl=1;
     $stammdaten=$_POST["name"];
-    $db->StammdatenUpdate($stammdaten, 1, $auswahl);
+    $db->stammdatenUpdate($stammdaten, 1, $auswahl);
 }
 if (isset($_POST["email"])) {
     echo "<br>".$_POST["email"];
     $auswahl=2;
     $stammdaten=$_POST["email"];
-    $db->StammdatenUpdate($stammdaten, 1, $auswahl);
+    $db->stammdatenUpdate($stammdaten, 1, $auswahl);
 }
 if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
     if (($_POST["pw"]==$_POST["pwWdh"])) {
         echo "<br>".$_POST["pw"];
         $auswahl=3;
         $stammdaten=$_POST["pw"];
-        $db->StammdatenUpdate($stammdaten, 1, $auswahl);
+        $db->stammdatenUpdate($stammdaten, 1, $auswahl);
     }
     else
         echo "pw and pwWdh must match";

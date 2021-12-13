@@ -234,4 +234,31 @@ class DBService {
             WHERE u.user_id =".$userId);
         return mysqli_fetch_all($query);
     }
+    public function getStammdaten($userId) {
+        $query = $this->conn->query("
+            SELECT login, email, password FROM user u
+            WHERE u.user_id =".$userId);
+        return mysqli_fetch_all($query);
+    }
+    public function stammdatenUpdate($stammdaten, $userId, $auswahl) {
+        if ($auswahl==1) {
+            $this->conn->query("
+            UPDATE user u
+            SET login=$stammdaten
+            WHERE u.user_id =".$userId);
+
+        }
+        if ($auswahl==2) {
+            $this->conn->query("
+            UPDATE user u
+            SET email=$stammdaten
+            WHERE u.user_id =".$userId);
+        }
+        if ($auswahl==3) {
+            $this->conn->query("
+            UPDATE user u
+            SET password=$stammdaten
+            WHERE u.user_id =".$userId);
+        }
+    }
 }
