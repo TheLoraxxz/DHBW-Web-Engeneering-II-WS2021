@@ -358,6 +358,5 @@ class DBService {
             WHERE us.user_id>=".$users[0]." and us.user_id<=".$users[count($users)-1]."+1
         ");
         return mysqli_fetch_all($query,MYSQLI_ASSOC);
-
     }
 }

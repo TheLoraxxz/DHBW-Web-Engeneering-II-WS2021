@@ -27,27 +27,28 @@ if(!isset($_POST["action"])) {
     $page->addCs("admin/create_user.css");
     $page->addHtml($html);
 } else {
-    $infos = $_POST;
-    $courses =$db->getCourses();
-    $is_same = false;
-    foreach ($courses as $course) {
+    if ($_POST["action"]=="create") {
+        $infos = $_POST;
+        $courses =$db->getCourses();
+        $is_same = false;
+        foreach ($courses as $course) {
 
-        if ($course[1]==urlencode($infos["course"])) {
-            $is_same = true;
-            break;
+            if ($course[1]==urlencode($infos["course"])) {
+                $is_same = true;
+                break;
+            }
+        }
+        if ($is_same) {
+            $tableData =$db->createNewUsers(intval($infos["number_of_accounts"]),$infos["course"]);
+            $table = new Table($tableData);
+            $table->addColumn("Benutzername","name");
+            $table->addColumn("Password","password");
+            $table->addColumn("Kurs","Kurs");
+            $table->addButton("Zurück",Page::getRoot()."admin/admin_home.php");
+            $table->addButton("Drucken",Page::getRoot()."pdf/print_pdf.php?start=".$tableData[0]["id"]."&end=".$tableData[count($tableData)-1]["id"]);
+            $table->addTableHeading("Übersicht über neu erstellte User");
+            $page->addElement($table);
         }
     }
-    if ($is_same) {
-        $tableData =$db->createNewUsers(intval($infos["number_of_accounts"]),$infos["course"]);
-        $table = new Table($tableData);
-        $table->addColumn("Benutzername","name");
-        $table->addColumn("Password","password");
-        $table->addColumn("Kurs","Kurs");
-        $table->addButton("Zurück",Page::getRoot()."admin/admin_home.php");
-        $table->addButton("Drucken",Page::getRoot()."pdf/print_pdf.php?start=".$tableData[0]["id"]."&end=".$tableData[count($tableData)-1]["id"]);
-        $table->addTableHeading("Übersicht über neu erstellte User");
-        $page->addElement($table);
-    }
-
 }
 $page->printPage();
