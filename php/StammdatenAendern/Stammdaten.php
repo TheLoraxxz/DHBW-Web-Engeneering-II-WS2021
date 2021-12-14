@@ -5,34 +5,33 @@ $page = new Page();
 $db = $page->getDBService();
 $auswahl= 0;
 $user = $page->getSession();
-
 $daten = $db->getStammdaten(1);
 echo "aktuelle UserID: ".$user;
 
 
-/*if (isset($_POST["name"])) {
+if (isset($_POST["name"])) {
     echo "<br>".$_POST["name"];
     $auswahl=1;
-    $stammdaten=$_POST["name"];
+    $stammdaten="'".$_POST["name"]."'";
     $db->stammdatenUpdate($stammdaten, 1, $auswahl);
 }
 if (isset($_POST["email"])) {
     echo "<br>".$_POST["email"];
     $auswahl=2;
-    $stammdaten=$_POST["email"];
+    $stammdaten="'".$_POST["email"]."'";
     $db->stammdatenUpdate($stammdaten, 1, $auswahl);
 }
 if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
     if (($_POST["pw"]==$_POST["pwWdh"])) {
         echo "<br>".$_POST["pw"];
         $auswahl=3;
-        $stammdaten=$_POST["pw"];
+        $stammdaten="'".$_POST["pw"]."'";
         $db->stammdatenUpdate($stammdaten, 1, $auswahl);
     }
     else
-        echo "pw and pwWdh must match";
-}*/
-
+        #echo "pw and pwWdh must match";
+        echo '<script>alert("pw and pwWdh must match")</script>';
+}
 
 
 
@@ -46,19 +45,19 @@ $string = '
             <div>
                 <label class="info_text">Name: '. $daten[0][0].'</label>
                 <br>
-                <button class="btn-sm btn-primary" >Ändern</button>
+                <a class="btn-sm btn-primary text-decoration-none" href="SDLogin.php" >Ändern</a>
                 <br>
                 <br>
             <div>
                 <label class="info_text">Email: '. $daten[0][1].' </label>
                 <br>
-                <button class="btn-sm btn-primary">Ändern</button>
+                <a class="btn-sm btn-primary text-decoration-none" href="SDEmail.php">Ändern</a>
                 <br>
                 <br>
             </div>
                 <label class="info_text">Passwort: <br>'. $daten[0][2].'</label>
                 <br>
-                <button class="btn-sm btn-primary">Ändern</button>
+                <a class="btn-sm btn-primary text-decoration-none" href="SDPassword.php">Ändern</a>
             </div>
         </form>
         <div class="col-sm"></div>

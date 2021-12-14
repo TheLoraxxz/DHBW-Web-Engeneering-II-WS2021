@@ -22,7 +22,7 @@ $string = '
             <div>
             <br>
                 <input name="name" placeholder="Neuer Name">
-                <button class="btn-sm btn-primary">Ändern</button>
+                <button class="btn-sm btn-primary">Speichern</button>
                 <br>
                 <br>
             </div>

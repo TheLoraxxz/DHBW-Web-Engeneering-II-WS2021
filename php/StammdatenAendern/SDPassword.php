@@ -7,8 +7,7 @@ $user = $page->getSession();
 
 $daten = $db->getStammdaten(1);
 echo "aktuelle UserID: ".$user;
-echo "EmailSeite";
-
+echo "PasswordSeite";
 
 
 
@@ -25,7 +24,7 @@ $string = '
                 <input name="pwWdh" placeholder="Neues Passwort wiederholen">
                 <br>
                 <br>
-                <button class="btn-sm btn-primary">Ändern</button>
+                <button class="btn-sm btn-primary">Speichern</button>
             </div>
         </form>
         <div class="col-sm"></div>
