@@ -4,12 +4,13 @@ include_once("../templates/DBService.php");
 $page = new Page();
 $db = $page->getDBService();
 $auswahl= 0;
+$user = $page->getSession();
 
 $daten = $db->getStammdaten(1);
-echo "aktuelle UserID: ".$page->getSession();
+echo "aktuelle UserID: ".$user;
 
 
-if (isset($_POST["name"])) {
+/*if (isset($_POST["name"])) {
     echo "<br>".$_POST["name"];
     $auswahl=1;
     $stammdaten=$_POST["name"];
@@ -30,7 +31,8 @@ if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
     }
     else
         echo "pw and pwWdh must match";
-}
+}*/
+
 
 
 
@@ -39,28 +41,23 @@ $string = '
 <div  class="container">
     <div class="row">
         <div class="col-lg"></div>   
-        <form class="col-lg main_window" action="Stammdaten.php" method="post">
+        <form class="col-lg main_window">
             <h2>Stammdaten ändern</h2>
             <div>
-                <label class="info_text">Name: '. $daten[0][0].' </label>
-                <label></label>                
+                <label class="info_text">Name: '. $daten[0][0].'</label>
                 <br>
-                <input name="name" placeholder="Neuer Name">
-                <button class="btn-sm btn-primary">Ändern</button>
+                <button class="btn-sm btn-primary" >Ändern</button>
                 <br>
                 <br>
             <div>
                 <label class="info_text">Email: '. $daten[0][1].' </label>
                 <br>
-                <input name="email" placeholder="Neue Email">
                 <button class="btn-sm btn-primary">Ändern</button>
                 <br>
                 <br>
             </div>
                 <label class="info_text">Passwort: <br>'. $daten[0][2].'</label>
                 <br>
-                <input name="pw" placeholder="Neues Passwort">
-                <input name="pwWdh" placeholder="Neues Passwort wiederholen">
                 <button class="btn-sm btn-primary">Ändern</button>
             </div>
         </form>

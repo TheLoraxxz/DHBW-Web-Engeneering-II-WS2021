@@ -246,7 +246,6 @@ class DBService {
             UPDATE user u
             SET login=$stammdaten
             WHERE u.user_id =".$userId);
-
         }
         if ($auswahl==2) {
             $this->conn->query("
