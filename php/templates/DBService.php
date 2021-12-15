@@ -421,4 +421,10 @@ class DBService {
         $update = $update."WHERE user.user_id=".$id;
         $this->conn->query($update);
     }
+
+    public function lockGroupInventation($id) {
+        $this->conn->query("
+            UPDATE project SET open_to_invite = FALSE 
+            WHERE project_id=".$id);
+    }
 }
