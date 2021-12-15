@@ -12,7 +12,7 @@ $string = '
     <div class="row">
         <div class="col-lg"></div>   
         <form class="col-lg main_window" action="Stammdaten.php" method="post">
-            <h2>Stammdaten ändern</h2>
+            <h2>Email ändern</h2>
             <div>
                 <br>
                 <input name="email" placeholder="Neue Email">

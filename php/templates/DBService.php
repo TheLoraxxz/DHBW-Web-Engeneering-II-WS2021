@@ -236,7 +236,7 @@ class DBService {
     }
     public function getStammdaten($userId) {
         $query = $this->conn->query("
-            SELECT login, email, password FROM user u
+            SELECT login, email, password, name, surename FROM user u
             WHERE u.user_id =".$userId);
         return mysqli_fetch_all($query);
     }
@@ -257,6 +257,18 @@ class DBService {
             $this->conn->query("
             UPDATE user u
             SET password=$stammdaten
+            WHERE u.user_id =".$userId);
+        }
+        if ($auswahl==4) {
+            $this->conn->query("
+            UPDATE user u
+            SET name=$stammdaten
+            WHERE u.user_id =".$userId);
+        }
+        if ($auswahl==5) {
+            $this->conn->query("
+            UPDATE user u
+            SET surename=$stammdaten
             WHERE u.user_id =".$userId);
         }
     }

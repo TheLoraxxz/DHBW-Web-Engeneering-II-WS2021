@@ -11,10 +11,10 @@ $string = '
     <div class="row">
         <div class="col-lg"></div>   
         <form class="col-lg main_window" action="Stammdaten.php" method="post">
-            <h2>Name ändern</h2>
+            <h2>Login ändern</h2>
             <div>
             <br>
-                <input name="name" placeholder="Neuer Name">
+                <input name="login" placeholder="Neuer Login">
                 <button class="btn-sm btn-primary">Speichern</button>
                 <br>
                 <br>

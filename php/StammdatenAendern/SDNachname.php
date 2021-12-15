@@ -4,7 +4,6 @@ include_once("../templates/DBService.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
-$user = $page->getSession();
 
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
 $string = '
@@ -12,14 +11,13 @@ $string = '
     <div class="row">
         <div class="col-lg"></div>   
         <form class="col-lg main_window" action="Stammdaten.php" method="post">
-            <h2>Passwort ändern</h2>
+            <h2>Nachname ändern</h2>
             <div>
-                <br>
-                <input name="pw" placeholder="Neues Passwort">
-                <input name="pwWdh" placeholder="Neues Passwort wiederholen">
-                <br>
-                <br>
+            <br>
+                <input name="nachname" placeholder="Neuer Nachname">
                 <button class="btn-sm btn-primary">Speichern</button>
+                <br>
+                <br>
             </div>
         </form>
         <div class="col-sm"></div>
