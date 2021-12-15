@@ -303,4 +303,19 @@ class DBService {
         }
         return $result;
     }
+
+    public function setProjekt($name, $max_of_students, $points_reachable, $submission_date, $open_to_invite, $path_to_matrix) {
+        $query = $this->conn->query("
+        INSERT INTO project (name, max_of_students, points_reachable, submission_date, open_to_invite, path_to_matrix)
+        VALUES ($name, $max_of_students, $points_reachable, $submission_date, $open_to_invite, $path_to_matrix) ");
+        return 1;
+    }
+
+    public function getProjekt($projekt_id) {
+        $query = $this->conn->query("
+            SELECT project_id,  name, max_of_students, points_reachable, submission_date, open_to_invite, path_to_matrix FROM project pro
+            WHERE pro.project_id =" .$projekt_id);
+        return mysqli_fetch_fall($query);
+    }
+
 }
