@@ -18,7 +18,7 @@ switch ($page->getRole()) {
         $table->addColumn("See",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
         $table->addColumn("Gruppeneinladung sperren",-1,true,'<button class="btn btn-dark" onClick="lockData(this);">Sperren</button>');
 
-        $table->addButton("New Project","");
+        $table->addButton("New Project","./project/createProject.php");
         $table->addButton("New Group","");
         $page->addElement($table);
         $page->addJs("tablebuttons_home.js");

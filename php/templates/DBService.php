@@ -306,8 +306,8 @@ class DBService {
 
     public function setProjekt($name, $max_of_students, $points_reachable, $submission_date, $open_to_invite, $path_to_matrix) {
         $query = $this->conn->query("
-        INSERT INTO project (name, max_of_students, points_reachable, submission_date, open_to_invite, path_to_matrix)
-        VALUES ($name, $max_of_students, $points_reachable, $submission_date, $open_to_invite, $path_to_matrix) ");
+        INSERT INTO project (points_reachable, path_to_matrix, submission_date, open_to_invite, max_of_students, name)
+        VALUES (".$points_reachable.", ".$path_to_matrix.", ".$submission_date.", ".$open_to_invite.", ".$max_of_students.",".$name.") ");
         return 1;
     }
 

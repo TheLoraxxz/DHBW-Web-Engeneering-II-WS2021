@@ -14,7 +14,7 @@ if($invite == "Ja") {
 }
 
 if(isset($_POST["name"])) {
-    $db->setProjekt($_POST["name"],$_POST["max_of_students"],$_POST["points_reachable"],$_POST["submission_date"],$invite, $_POST["path_to_matrix"]);
+    $db->setProjekt($_POST["points_reachable"], $_POST["path_to_matrix"], $_POST["submission_date"], $invite, $_POST["max_of_students"], $_POST["name"]);
 }
 
 $string = '
@@ -27,7 +27,5 @@ $string = '
     </div>
 ';
 
-
 $page->addHtml($string);
 $page->printPage();
-?>
