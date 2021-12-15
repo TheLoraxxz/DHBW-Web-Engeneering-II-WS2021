@@ -53,9 +53,6 @@ function submit() {
 
 }
 function resetPasswordButton(button) {
-    row=button.parentElement.parentElement.parentElement
-    id = row.firstChild.innerHTML;
-    window.location.href = './create_user.php?action=reset_password&id='+id;
-
-
+    cells=button.parentElement.parentElement.parentElement.children
+    window.location.href = './create_user.php?action=reset_password&id='+cells[0].innerHTML+"&login="+cells[1].innerHTML;
 }

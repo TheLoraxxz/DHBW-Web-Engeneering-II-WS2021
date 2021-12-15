@@ -102,6 +102,10 @@ class Page {
         array_push($this->messages,$error);
 
     }
+    public function showSuccess($message) {
+        $message =strip_tags($message);
+        array_push($this->messages,["type"=>"success","message"=>$message]);
+    }
 
     public function getSession() {
         return (int) $this->isSession;
@@ -164,7 +168,7 @@ class Page {
             echo('
                 <nav class="navbar navbar-light bg-light navbar-expand-sm">
                     <div class="container-fluid">
-                        <a class="navbar-brand">Gradlappain</a>
+                        <a class="navbar-brand" href="'.self::getRoot().'index.php">Gradlappain</a>
                         <div class="collapse navbar-collapse" id="navbar">
                             <div class="navbar-nav">
                               '.$nav.'
@@ -181,8 +185,13 @@ class Page {
             foreach ($this->messages as $message) {
                 if ($message["type"]=="error") {
                     echo('
-                    <div class="container error">
+                    <div class="container message">
                         <div class="alert alert-danger">'.$message["message"].'</div>
+                    </div>');
+                } else if ($message["type"]=="success") {
+                    echo ('                    
+                    <div class="container message">
+                        <div class="alert alert-success">'.$message["message"].'</div>
                     </div>');
                 }
             }

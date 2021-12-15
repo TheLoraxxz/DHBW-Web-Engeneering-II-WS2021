@@ -405,7 +405,20 @@ class DBService {
         return mysqli_fetch_all($query,MYSQLI_ASSOC);
     }
 
-    public function updateUser($id,$password,$login,$email=null,$name=null,$sureename=null) {
-
+    public function updateUser($id,$password,$login,$email=null,$name=null,$surename=null) {
+        $update = "
+            UPDATE db_pain.user user
+            SET user.login = '".$login."' AND user.password = '".$password."' ";
+        if($email!= null) {
+            $update = $update."AND user.email='".$email."' ";
+        }
+        if ($name!=null) {
+            $update = $update."AND user.name='".$name."' ";
+        }
+        if ($surename!=null) {
+            $surename = $update."AND user.name='".$name."' ";
+        }
+        $update = $update."WHERE user.user_id=".$id;
+        $this->conn->query($update);
     }
 }
