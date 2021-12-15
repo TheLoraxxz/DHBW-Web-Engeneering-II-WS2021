@@ -6,6 +6,8 @@ $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 if ($page->getRole()==1) {
     if (isset($_GET["action"])) {
+
+
         if ($_GET["action"] == "overview") {
             $table = new Table($db->getAllUsersByID(0, "(SELECT MAX(us.user_id) LIMIT 1)"));
             $table->addTableHeading("User Übersicht");
@@ -32,8 +34,9 @@ if ($page->getRole()==1) {
                 $page->showSuccess("Password erfolgreich zurück gesetzt!");
 
             }
-        } else if ($_GET["action"] == "multiple_user") {
 
+
+        } else if ($_GET["action"] == "multiple_user") {
             $html = '
             <div class="container-fluid main row">
                 <div class="col-3">
@@ -62,6 +65,7 @@ if ($page->getRole()==1) {
                 <div class="row">
                     <div class="col-3">
                         <button class="btn btn-primary" onclick="submit()">Submit</button>
+                        <a href="create_user.php?action=overview"><button class="btn btn-outline-secondary">Zurück</button></a>
                     </div>
                 </div>        
             </div>
@@ -76,11 +80,67 @@ if ($page->getRole()==1) {
                 $page->addCs("admin/create_user.css");
                 $page->addJs("admin/create_user.js");
             } catch (Exception $e) {
+                var_dump($e);
             }
             $page->addHtml($html);
-        } else if ($_GET["action"] == "single_user") {
-            var_dump($_GET);
 
+
+        } else if ($_GET["action"] == "single_user") {
+            $html = '
+                <div class="container-fluid main">
+                    <div class="row">
+                        <div class="col-5">
+                            <h5>Neuen Nutzer erstellen</h5>
+                            <div class="mb-3">
+                                <label class="form-label" for="login_input">Login:</label>
+                                <input id="login_input" type="text" class="form-control mb-3">
+                                <label class="form-label" for="email_input">E-Mail:</label>
+                                <input type="text" id="email_input" class="form-control mb-3">
+                            </div>
+                            <div class="input-group">
+                                <span class="input-group-text">Vorname:</span>
+                                <input class="form-control" type="text" id="surename_input" >
+                                <span class="input-group-text">Nachname:</span>
+                                <input class="form-control" type="text" id="name_input">
+                            </div>
+                            <hr>
+                            <p>Rollenberechtigung:</p>
+                            <div>
+                                <div class="form-check">
+                                    <input type="radio" name="role" value="2" class="form-check-input" id="role_input_S">
+                                    <label class="form-check-label" for="role_input_S">Student</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" name="role" value="3" class="form-check-input" id="role_input_Se">
+                                    <label class="form-check-label" for="role_input_Se">Secretary</label>
+                                </div>
+                                <div class="form-check">
+                                    <input type="radio" name="role" value="1" class="form-check-input" id="role_input_A">
+                                    <label class="form-check-label" for="role_input_A">Admin</label>
+                                </div>
+                            </div>
+                            <hr>
+                            <p>Zugehörigkeit:</p>
+                            <div>
+                                <label class="form-label" for="kurs_input">Kurs:</label>
+                                <div class="input-group">
+                                    <input type="text" id="kurs_input" class="form-control">
+                                    <button class="btn btn-outline-info">Neuer Kurs</button>
+                                </div>
+                                <label class="form-label" for="institut_input">Institut:</label>
+                                <input type="text" class="form-control" id="institut_input">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            ';
+            try {
+                $page->addCs("admin/create_user.css");
+                $page->addJs("admin/create_user.js");
+            } catch (Exception $e) {
+                var_dump($e);
+            }
+            $page->addHtml($html);
             //if the Pasword is beeing reseted
         } else if ($_GET["action"] == "reset_password") {
 
@@ -91,6 +151,10 @@ if ($page->getRole()==1) {
 
         }
     }
+
+
+
+
     if (isset($_POST["action"])) {
         $course = "";
         if ($_POST["action"] == "create_kurs") {
@@ -120,6 +184,8 @@ if ($page->getRole()==1) {
 
     }
     $page->printPage();
+
+
 } else {
     $page->showError("Keinen Zugriff");
     $page->printPage();

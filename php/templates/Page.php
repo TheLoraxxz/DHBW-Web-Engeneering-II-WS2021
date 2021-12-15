@@ -147,7 +147,7 @@ class Page {
                             Admin
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="'.self::getRoot().'php/admin/admin_home.php">Home</a></li>
+                            <li><a class="dropdown-item" href="'.self::getRoot().'">Home</a></li>
                             <li><a class="dropdown-item" href="'.self::getRoot().'php/admin/create_user.php?action=overview">User Management</a></li>
                         </ul>
                         <a class="nav-link">Projekte</a>
