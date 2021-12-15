@@ -7,48 +7,72 @@ $db = $page->getDBService();
 if(!isset($_POST["action"])) {
     $html = '
     <div class="container-fluid main row">
-        <form class="mb-3 col-3" action="create_user.php" method="post">
-            <input name="action" type="text" style="display: none" value="create">
-            <div class="mb-3">
+        <div class="col-3">
+            <h5>Account</h5>
+             <div class="mb-3">
                 <label class="mb-1 form-label" for="number_of_accounts_input">Anzahl der zu kreeierenden Accounts</label>
-                <input type="number" class="form-control" name="number_of_accounts" id="number_of_accounts_input">
+                <input type="number" class="form-control" id="number_of_accounts_input">
             </div>
-            <div class="mb-3">
-                <label class="mb-1 form-label" for="course_input">
-                    Kurs
-                </label>
-                <input id="course_input" name="course" type="text" class="form-control">
+            <div class="input-group mb-3">
+                <span class="input-group-text" >Kurs</span>
+                <input id="course_input" type="text" class="form-control">
+                <button class="btn btn-outline-secondary" onclick="hideShowCourse()">Neuer Kurs</button>
             </div>
-            <button class="btn btn-primary">Submit</button>
-        </form>
-        
+        </div>
+        <div class="col-3" style="display: none" id="kurs">
+            <h5>Kurs</h5>
+            <div class="kurs-input" >
+                <label for="course_name" class="form-label">Name</label>
+                <input type="text" id="course_name" class="form-control">
+                <label class="form-label" for="institut_input">Institut</label>
+                <input type="text" id="institut_input"  class="form-control">
+            </div>
+            <button class="btn btn-info" onclick="saveCourse()">Save</button>
+            <button class="btn btn-secondary" onclick="hideShowCourse()">Cancel</button>
+        </div>
+        <div class="row">
+            <div class="col-3">
+                <button class="btn btn-primary" onclick="submit()">Submit</button>
+            </div>
+        </div>        
     </div>
+    <form style="display: none" id="submitform" method="post" action="create_user.php">
+         <input name="action" id="action">
+         <input name="course_name" id="course">
+         <input name="institut" id="institut">
+         <input id="number_of_accounts" name="number">
+         
+    </form>
     ';
     $page->addCs("admin/create_user.css");
+    $page->addJs("admin/create_user.js");
     $page->addHtml($html);
 } else {
-    if ($_POST["action"]=="create") {
-        $infos = $_POST;
-        $courses =$db->getCourses();
-        $is_same = false;
-        foreach ($courses as $course) {
-
-            if ($course[1]==urlencode($infos["course"])) {
-                $is_same = true;
-                break;
-            }
-        }
-        if ($is_same) {
-            $tableData =$db->createNewUsers(intval($infos["number_of_accounts"]),$infos["course"]);
-            $table = new Table($tableData);
-            $table->addColumn("Benutzername","name");
-            $table->addColumn("Password","password");
-            $table->addColumn("Kurs","Kurs");
-            $table->addButton("Zurück",Page::getRoot()."admin/admin_home.php");
-            $table->addButton("Drucken",Page::getRoot()."pdf/print_pdf.php?start=".$tableData[0]["id"]."&end=".$tableData[count($tableData)-1]["id"]);
-            $table->addTableHeading("Übersicht über neu erstellte User");
-            $page->addElement($table);
-        }
+    $course = "";
+    if ($_POST["action"]=="create_kurs") {
+        $course = $db->createNewCourse($_POST["course_name"],$_POST["institut"]);
+    }  else if ($_POST["action"]=="create") {
+        $course = $_POST["course_name"];
     }
+    $tableData =$db->createNewUsers(intval($_POST["number"]),$_POST["course_name"]);
+    if ($tableData==null) {
+        $page->showError("Fehler beim einfügen in der Datenbank ");
+    } elseif ($tableData==-1) {
+        $page->showError("Kurs: ,,".$_POST["course_name"]."nicht gefunden");
+        $html = '
+            <div class="container-fluid"><a href="create_user.php"><button class="btn btn-primary">Zurück</button></a></div>
+        ';
+        $page->addHtml($html);
+    }else {
+        $table = new Table($tableData);
+        $table->addColumn("Benutzername","name");
+        $table->addColumn("Password","password");
+        $table->addColumn("Kurs","Kurs");
+        $table->addButton("Zurück",Page::getRoot()."admin/admin_home.php");
+        $table->addButton("Drucken",Page::getRoot()."pdf/print_pdf.php?start=".$tableData[0]["id"]."&end=".$tableData[count($tableData)-1]["id"]);
+        $table->addTableHeading("Übersicht über neu erstellte User");
+        $page->addElement($table);
+    }
+
 }
 $page->printPage();
