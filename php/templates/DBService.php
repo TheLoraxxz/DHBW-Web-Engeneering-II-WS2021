@@ -392,7 +392,20 @@ class DBService {
             WHERE course.course_id=LAST_INSERT_ID()
         ");
         return mysqli_fetch_all($course)[0][0];
+    }
 
+    public function getAllUsersByID($start,$end) {
+        $query = $this->conn->query("
+            SELECT DISTINCT us.user_id as id, us.login as name, c.name as Kurs, '123456' as password
+            FROM user us
+                     INNER JOIN user_mapping um on us.user_id = um.user_id
+                     INNER JOIn course c on um.course_id = c.course_id
+            WHERE us.user_id>='".$start."' and us.user_id<=".$end."
+        ");
+        return mysqli_fetch_all($query,MYSQLI_ASSOC);
+    }
+
+    public function updateUser($id,$password,$login,$email=null,$name=null,$sureename=null) {
 
     }
 }

@@ -25,7 +25,15 @@ if (isset($_GET["source"])) {
             }
 
         }
-    } elseif ($_GET["source"]=="create_user.php") {
+    } elseif ($_GET["source"]=="create_user") {
+        $db = $page->getDBService();
 
+        $data =$db->getAllUsersByID(intval($_GET["start"]),intval($_GET["end"]));
+
+        $pdf = new PDF();
+        $pdf->SetFont('Arial','',8);
+        $pdf->AddPage();
+        $pdf->printTableBasic($data,['ID','Name','Kurs','Password']);
+        $pdf->Output();
     }
 }

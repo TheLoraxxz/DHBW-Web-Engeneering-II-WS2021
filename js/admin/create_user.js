@@ -34,12 +34,12 @@ function submit() {
         let action
         if (save) {
             if (document.getElementById("course_name").value.length>0) {
-                course_name = JSON.stringify(document.getElementById("course_name").value)
+                course_name = document.getElementById("course_name").value;
                 action ="create_kurs";
                 document.getElementById("institut").value = document.getElementById("institut_input").value
             }
         } else {
-            course_name = JSON.stringify(document.getElementById("course_input").value)
+            course_name = document.getElementById("course_input").value;
             action = "create";
         }
         if(course_name.length>0) {
@@ -50,5 +50,12 @@ function submit() {
 
         }
     }
+
+}
+function resetPasswordButton(button) {
+    row=button.parentElement.parentElement.parentElement
+    id = row.firstChild.innerHTML;
+    window.location.href = './create_user.php?action=reset_password&id='+id;
+
 
 }
