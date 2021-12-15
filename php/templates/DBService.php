@@ -551,5 +551,17 @@ class DBService {
             ");
             return mysqli_fetch_all($query,MYSQLI_ASSOC);
         }
+        if ($auswahl==4) {
+            $this->conn->query("
+            UPDATE user u
+            SET name=$stammdaten
+            WHERE u.user_id =".$userId);
+        }
+        if ($auswahl==5) {
+            $this->conn->query("
+            UPDATE user u
+            SET surename=$stammdaten
+            WHERE u.user_id =".$userId);
+        }
     }
 }
