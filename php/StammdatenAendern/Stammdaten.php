@@ -13,12 +13,14 @@ if (isset($_POST["login"])) {
     $stammdaten="'".$_POST["login"]."'";
     $db->stammdatenUpdate($stammdaten, $user, $auswahl);
     header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    $page->showSuccess("Login gespeichert");
 }
 if (isset($_POST["email"])) {
     $auswahl=2;
     $stammdaten="'".$_POST["email"]."'";
     $db->stammdatenUpdate($stammdaten, $user, $auswahl);
     header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    $page->showSuccess("Email gespeichert");
 }
 if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
     if (($_POST["pw"]==$_POST["pwWdh"])) {
@@ -26,22 +28,24 @@ if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
         $password = password_hash($_POST["pw"],PASSWORD_BCRYPT);
         $db->stammdatenUpdate($password, $user, $auswahl);
         $db->verifyLogin($daten[0][0],$password);
-        #header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+        #$page->getLoginstatus($_COOKIE['GradlappainCook']);
+        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+        $page->showSuccess("Passwort gespeichert");
     }
-    else
-        #header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-        echo '<script>alert("pw and pwWdh must match!")</script>';
-    unset($_POST["pw"]);
-    unset($_POST["pwWdh"]);
+    else {
+        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+        $page->showError("Passwort und PasswortWDH müssen übereinstimmen!");
+    }
 }
 if (isset($_POST["name"]) and $daten[0][3]==NULL) {
     $auswahl=4;
     $stammdaten="'".$_POST["name"]."'";
     $db->stammdatenUpdate($stammdaten, $user, $auswahl);
-    #header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-}elseif (isset($_POST["name"]) and !($daten[0][3]==NULL)) {
-    #echo '<script>alert("Name kann nur einmal gesetzt werden!")</script>';
     header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    $page->showSuccess("Name geändert");
+}elseif (isset($_POST["name"]) and !($daten[0][3]==NULL)) {
+    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    $page->showError("Name kann nur einmal gesetzt werden!");
 }
 
 if (isset($_POST["nachname"]) and $daten[0][4]==NULL) {
@@ -49,11 +53,11 @@ if (isset($_POST["nachname"]) and $daten[0][4]==NULL) {
     $stammdaten="'".$_POST["nachname"]."'";
     $db->stammdatenUpdate($stammdaten, $user, $auswahl);
     header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-}elseif (isset($_POST["nachname"]) and !($daten[0][4]==NULL))
-    #echo '<script>alert("Nachname kann nur einmal gesetzt werden!")</script>';
+    $page->showSuccess("Nachname geändert");
+}elseif (isset($_POST["nachname"]) and !($daten[0][4]==NULL)) {
     header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-
-
+    $page->showError("Nachname kann nur einmal gesetzt werden!");
+}
 
 
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
