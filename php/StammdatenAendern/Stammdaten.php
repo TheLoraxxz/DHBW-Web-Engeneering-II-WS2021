@@ -39,8 +39,7 @@ if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
         $auswahl=3;
         $password = password_hash($_POST["pw"],PASSWORD_BCRYPT);
         $db->stammdatenUpdate($password, $user, $auswahl);
-        $db->verifyLogin($daten[0][0],$password);
-        #$page->getLoginstatus($_COOKIE['GradlappainCook']);
+        $db->verifyLogin($daten[0][0],$_POST["pw"]);
         header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
         $page->showSuccess("Passwort gespeichert");
     }

@@ -256,7 +256,7 @@ class DBService {
         if ($auswahl==3) {
             $this->conn->query("
             UPDATE user u
-            SET password='$stammdaten'
+            SET password='".$stammdaten."'
             WHERE u.user_id =".$userId);
         }
         if ($auswahl==4) {
