@@ -9,6 +9,10 @@ $user = $page->getSession();
 $daten = $db->getStammdaten($user);
 
 if (isset($_POST["login"])) {
+    if ($_POST["login"]=="") {
+        $page->showError("Bitte etwas eingeben!");
+        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    }
     $auswahl=1;
     $stammdaten="'".$_POST["login"]."'";
     $db->stammdatenUpdate($stammdaten, $user, $auswahl);
@@ -16,6 +20,10 @@ if (isset($_POST["login"])) {
     $page->showSuccess("Login gespeichert");
 }
 if (isset($_POST["email"])) {
+    if ($_POST["email"]=="") {
+        $page->showError("Bitte etwas eingeben!");
+        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    }
     $auswahl=2;
     $stammdaten="'".$_POST["email"]."'";
     $db->stammdatenUpdate($stammdaten, $user, $auswahl);
@@ -24,6 +32,10 @@ if (isset($_POST["email"])) {
 }
 if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
     if (($_POST["pw"]==$_POST["pwWdh"])) {
+        if ($_POST["pw"]=="") {
+            $page->showError("Bitte etwas eingeben!");
+            header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+        }
         $auswahl=3;
         $password = password_hash($_POST["pw"],PASSWORD_BCRYPT);
         $db->stammdatenUpdate($password, $user, $auswahl);
@@ -38,6 +50,10 @@ if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
     }
 }
 if (isset($_POST["name"]) and $daten[0][3]==NULL) {
+    if ($_POST["name"]=="") {
+        $page->showError("Bitte etwas eingeben!");
+        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    }
     $auswahl=4;
     $stammdaten="'".$_POST["name"]."'";
     $db->stammdatenUpdate($stammdaten, $user, $auswahl);
@@ -49,6 +65,10 @@ if (isset($_POST["name"]) and $daten[0][3]==NULL) {
 }
 
 if (isset($_POST["nachname"]) and $daten[0][4]==NULL) {
+    if ($_POST["nachname"]=="") {
+        $page->showError("Bitte etwas eingeben!");
+        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    }
     $auswahl=5;
     $stammdaten="'".$_POST["nachname"]."'";
     $db->stammdatenUpdate($stammdaten, $user, $auswahl);
