@@ -13,5 +13,5 @@ function editProject(button) {
 function lockData(button) {
     var rowId = button.parentElement.parentElement.getAttribute("id");
     var project_id =document.getElementById(rowId).firstElementChild.innerHTML;
-    window.location.href = "./project/project.php?action=lockn &projectId="+project_id;
+    window.location.href = "./project/project.php?action=lock&projectId="+project_id;
 }
