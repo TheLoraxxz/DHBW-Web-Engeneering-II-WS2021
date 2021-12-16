@@ -229,6 +229,7 @@ class DBService {
         }
 
         if (password_verify($password,$result[0][0])) {
+            setcookie("GradlappainCook", "", time() - 3600);
             setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
             return true;
         }
