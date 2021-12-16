@@ -88,7 +88,7 @@ if ($page->getRole()==1) {
         } else if ($_GET["action"] == "reset_password") {
 
             $password = password_hash("123456", PASSWORD_BCRYPT);
-            $db->updateUser($_GET["id"], $password, $_GET["login"]);
+            $db->updateUser($_GET["id"], $password);
             header('Location: ./create_user.php?action=overview&mes=success_reset');
             die();
 
