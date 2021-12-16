@@ -23,23 +23,22 @@ if (isset($_POST["email"])) {
 if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
     if (($_POST["pw"]==$_POST["pwWdh"])) {
         $auswahl=3;
-        $password =password_hash($_POST["pw"],PASSWORD_BCRYPT);
-        #$stammdaten="'".$_POST["pw"]."'";
+        $password = password_hash($_POST["pw"],PASSWORD_BCRYPT);
         $db->stammdatenUpdate($password, $user, $auswahl);
         $db->verifyLogin($daten[0][0],$password);
-        #echo $password;
-        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+        #header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
     }
     else
-        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-        #echo "pw and pwWdh must match";
-        #echo '<script>alert("pw and pwWdh must match!")</script>';
+        #header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+        echo '<script>alert("pw and pwWdh must match!")</script>';
+    unset($_POST["pw"]);
+    unset($_POST["pwWdh"]);
 }
 if (isset($_POST["name"]) and $daten[0][3]==NULL) {
     $auswahl=4;
     $stammdaten="'".$_POST["name"]."'";
     $db->stammdatenUpdate($stammdaten, $user, $auswahl);
-    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    #header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
 }elseif (isset($_POST["name"]) and !($daten[0][3]==NULL)) {
     #echo '<script>alert("Name kann nur einmal gesetzt werden!")</script>';
     header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
