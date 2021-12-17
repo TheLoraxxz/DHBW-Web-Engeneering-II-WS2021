@@ -7,15 +7,21 @@ class Table
     private $button = [];
     public $css = "template/table.css";
     private $header = "";
+    //data is stores (must be 2D array)
     public function __construct($data)
     {
         $this->data = $data;
     }
-
+    //adds a table header
     public function addTableHeading($string) {
         $this->header = $string;
     }
-
+    /**
+     * adds column the name --> name that the column has
+     * column in Data --> cis the index in the array
+     * show --> if true it is shown if false it is not hoswn
+     * innerHTML --> insets own HTML
+    */
     public function addColumn($name, $columnInData, $show = true, $innerHTTML = null)
     {
         if ($innerHTTML == null) {
@@ -25,12 +31,17 @@ class Table
         }
 
     }
-
+    /**
+     * adds button to the top of the table so you can have general buttons there
+    */
     public function addButton($name, $link)
     {
         array_push($this->button, ["name" => $name, "link" => $link]);
     }
-
+    /**
+     * is called by the page.php
+     * and it prints everything out
+    */
     public function printElement() {
 
         $string = '<div class="container-fluid tableCustom">';

@@ -12,6 +12,10 @@ class Page {
     protected $Element;
     protected $subMenu =[];
     protected $ROOTLIB;
+    /**
+     * on construction it creates the DBservice
+     * then adds the standard javascript and bootstrapp to it and then finishes
+    */
     public function __construct() {
         $this->db = new DBService();
         if (!$this->db) {
@@ -25,23 +29,30 @@ class Page {
         $this->addJs("forAll.js");
 
     }
-    public function addSubMenu($name,$link) {
-        if (count($name)>0 and count($link)>0) {
-            array_push($this->subMenu,["name"=>$name,"link"=>$link]);
-        }
-
-    }
+    /**
+     * sets the title of the Application
+    */
     public function setTitle($title) {
         $this->title = $title;
     }
+    /**
+     * gives you the db service to make it easier tzo include
+    */
     public function getDBService() {
         return $this->db;
     }
-
+    /**
+     * this continously adds html string which then will be printed out
+    */
     public function addHtml($string) {
         $this->htmlString=$this->htmlString.$string;
     }
 
+    /**
+     * sgets lgoinsession --> gets session
+     * looks whether session is the same if so it it returns true
+     * else it throws oyu to the home website
+    */
     public function getLoginstatus($session_current) {
         $sessions = $this->db->getUserSession();
         if ($session_current!=null) {
@@ -95,31 +106,42 @@ class Page {
         }
     }
 
-
+    /**
+     * one error is shown
+    */
     public function showError($message) {
         $message =strip_tags($message);
         $error = ["type"=>"error","message"=>$message];
         array_push($this->messages,$error);
 
     }
+    /**
+     * shows success --> adds properties to success
+     */
     public function showSuccess($message) {
         $message =strip_tags($message);
         array_push($this->messages,["type"=>"success","message"=>$message]);
     }
-
+    /**
+     * gets current session (the user id)
+    */
     public function getSession() {
         return (int) $this->isSession;
     }
+    /**
+     * gives back the the role 1 2 or 3
+    */
     public function getRole() {
         return (int) $this->role;
     }
     /**
-     * gives out the prubt oage
+     * print the page so it has a coherant look everywhere
      */
     public function printPage() {
         if (isset($this->Element)) {
             $this->addCs($this->Element->css);
         }
+        //adds error
         echo('<!DOCTYPE html>
               <html>');
         echo(' 

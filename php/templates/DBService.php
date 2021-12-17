@@ -1,11 +1,16 @@
 <?php
 
 class DBService {
+    //Data base connection properties;
     private $host = "127.0.0.1";
     private $username = "root";
     private $password = "";
     private $conn ;
-    private $key = "e&sTC/k+i}^ha;b9%[E'TXm;%a32}dvk}=kH.niwE(R\"q+3T<#";
+
+    /**
+     * this function connects to the database automatically and looks whether the Database db_pain exists
+     * if not then it creates the whole table structure automatically
+    */
     function __construct() {
         $this->conn = new mysqli($this->host,$this->username,$this->password);
         $res = $this->conn->multi_query("USE db_pain;");
@@ -216,7 +221,12 @@ class DBService {
         WHERE user_id=".$user_id);
         return mysqli_fetch_all($role);
     }
-
+    /**
+     * this function gets login and clear password
+     * It gets the login from the user and the user id
+     * it verifies whether  it is the same login and if not it returns false
+     * else it sets the cookie so the user is logged in and it treturns true
+    */
     public function verifyLogin($login,$password) {
         $login = str_replace([";"," "],"",$login);
         $query = $this->conn->query("
@@ -229,12 +239,18 @@ class DBService {
         }
 
         if (password_verify($password,$result[0][0])) {
-            setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            if (!isset($_COOKIE["GradlappainCook"])) {
+                setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            } else {
+                $_COOKIE["GradlappainCook"]=$result[0][1].$result[0][0];
+            }
             return true;
         }
         return false;
     }
-
+    /**
+     * admin table for the home.php adm,in table
+    */
     public function getAdminHomeTable() {
         $query = $this->conn->query("
             SELECT proj.project_id,proj.name,proj.path_to_matrix as path,
@@ -258,6 +274,10 @@ class DBService {
         }
         return $result;
     }
+
+    /**
+     * user home table is set
+    */
     public function getUserHomeTable($userId) {
         $query = $this->conn->query("
             SELECT groop.group_id, groop.name,p.submission_date,p.name FROM groupings as groop
@@ -278,6 +298,10 @@ class DBService {
         }
         return $result;
     }
+
+    /**
+     * gets the Data for the secretary table in home.php
+    */
     public function getSecretareHomeTable($secretaryId) {
         $query = $this->conn->query("
             SELECT u.surename,u.name,c.name,rating.points,p.submission_date,p.points_reachable
@@ -307,7 +331,11 @@ class DBService {
         return $result;
     }
 
-
+    /**
+     * gets the number of people and then the course
+     * checks whether course is set if not it returns false else
+     * it creates for each a new login and user
+    */
     public function createNewUsers($number,$course) {
         $password =password_hash('123456',PASSWORD_BCRYPT);
         $possibilities = "1234567890abcdefghijklmnopqrstuvwxyz_-.ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -356,7 +384,11 @@ class DBService {
         return mysqli_fetch_all($table_query,MYSQLI_ASSOC);
     }
 
-
+    /**
+     * Gets cours name and institution name
+     * IF the institution already exists it is used else it is new created
+     * Then the course is created
+     */
     public function createNewCourse($courseName,$institutionName) {
         $query = $this->conn->query("
             SELECT institution_id as id
@@ -393,7 +425,9 @@ class DBService {
         ");
         return mysqli_fetch_all($course)[0][0];
     }
-
+    /**
+     * get all users after creating multiple users
+    */
     public function getAllUsersByID($start,$end) {
         $query = $this->conn->query("
             SELECT DISTINCT us.user_id as id, us.login as name, c.name as Kurs, '123456' as password
@@ -405,6 +439,10 @@ class DBService {
         return mysqli_fetch_all($query,MYSQLI_ASSOC);
     }
 
+    /**
+     * updates the user and the passsword.
+     * If the login is set and email is set and name and surename is set then it is updated
+    */
     public function updateUser($id,$password,$login=null,$email=null,$name=null,$surename=null) {
         $update = "
             UPDATE db_pain.user us
@@ -425,9 +463,16 @@ class DBService {
         $this->conn->query($update);
     }
 
+    /**
+     * this locks the group inventation of the current project so there can nobody invite others
+     */
     public function lockGroupInventation($id) {
         $this->conn->query("
             UPDATE project SET open_to_invite = FALSE 
             WHERE project_id=".$id);
+    }
+
+    public function getAllProjects() {
+
     }
 }
