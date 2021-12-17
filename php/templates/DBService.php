@@ -56,11 +56,7 @@ class DBService {
                     email varchar(500) null,
                     login varchar(500) null,
                     name varchar(500) null,
-                    surename varchar(500) null,
-                    course_id int null,
-                    constraint user___course
-                        foreign key (course_id) references course (course_id)
-                            on update cascade
+                    surename varchar(500) null
                 );
                 create unique index user_user_id_uindex
                     on user (user_id);
@@ -110,6 +106,7 @@ class DBService {
                     user_id int null,
                     group_id int null,
                     points float null,
+                    is_admin boolean default false null,
                     constraint rating___groupings
                         foreign key (group_id) references groupings (group_id),
                     constraint rating___user
@@ -156,19 +153,50 @@ class DBService {
                         primary key (user_role_id);  
                 alter table user_role modify user_role_id int auto_increment;
                 
+                create table user_mapping
+                (
+                    mapping_id int,
+                    user_id int null,
+                    course_id int null,
+                    institution_id int null,
+                    constraint maping_user
+                        foreign key (user_id) references user (user_id)
+                            on delete cascade,
+                    constraint mapping_course
+                        foreign key (course_id) references course (course_id)
+                            on update cascade on delete cascade,
+                    constraint mapping_institution
+                        foreign key (institution_id) references institution (institution_id)
+                            on delete cascade
+                );
+                create unique index user_mapping_mapping_id_uindex
+                    on user_mapping (mapping_id);
+                
+                alter table user_mapping
+                    add constraint user_mapping_pk
+                        primary key (mapping_id);
+                
+                alter table user_mapping modify mapping_id int auto_increment;
+                
+                create unique index user_login_uindex
+                	on user (login);
+                
                 INSERT INTO role (name) VALUES ('admin');
                 INSERT INTO role (name) VALUES ('student');
                 INSERT INTO role (name) VALUES ('secretary');
-                INSERT INTO user (password, email, name, surename, course_id,login) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', '','',null,'admin');
+                INSERT INTO user (password, email, name, surename, login) VALUES ('$2y$10\$uWcx72oOw4hWi4iAUgvsNukA6U2TAdt21L3IwVu/CKtyIJ9Wbv/fS' ,'daniel@wierbicki.org', null,null,'admin');
                 INSERT INTO user_role (role_id, user_id) VALUES (1, 1);
                 INSERT INTO db_pain.institution (name) VALUES ('DHBW Mosbach');
                 INSERT INTO db_pain.course (institution, name) VALUES (1, 'INF20B');
-                INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10\$PD/tR.8orNEKkLcyEYooFOO44HDgd9K1l2/d8z3Dn8b.tGRbNcpYu', null, 'user', null, null, 1);
+                INSERT INTO db_pain.user (password, email, login, name, surename) VALUES ('$2y$10\$PD/tR.8orNEKkLcyEYooFOO44HDgd9K1l2/d8z3Dn8b.tGRbNcpYu', null, 'user', null, null);
                 INSERT INTO user_role (role_id, user_id) VALUES (2, 2);
-                INSERT INTO db_pain.user (password, email, login, name, surename, course_id) VALUES ('$2y$10\$eob34iDut5D6M2XvvaiYbuWGx0VBwl0PWdMsXJj26x38jnIGigDFm', null, 'secretary', null, null, null);
+                INSERT INTO db_pain.user (password, email, login, name, surename) VALUES ('$2y$10\$eob34iDut5D6M2XvvaiYbuWGx0VBwl0PWdMsXJj26x38jnIGigDFm', null, 'secretary', null, null);
                 INSERT INTO user_role (role_id, user_id) VALUES (3, 3);
+                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (2, 1, 1);
+                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (3, null, 1);
             ");
         }
+        return $res;
     }
 
     public function getUserSession() {
@@ -201,7 +229,11 @@ class DBService {
         }
 
         if (password_verify($password,$result[0][0])) {
-            setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            if (!isset($_COOKIE["GradlappainCook"])) {
+                setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            } else {
+                setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            }
             return true;
         }
         return false;
@@ -240,36 +272,111 @@ class DBService {
             WHERE u.user_id =".$userId);
         return mysqli_fetch_all($query);
     }
-    public function stammdatenUpdate($stammdaten, $userId, $auswahl) {
-        if ($auswahl==1) {
+    public function stammdatenUpdate($stammdaten, $userId, $auswahl)
+    {
+        if ($auswahl == 1) {
             $this->conn->query("
             UPDATE user u
             SET login=$stammdaten
-            WHERE u.user_id =".$userId);
+            WHERE u.user_id =" . $userId);
         }
-        if ($auswahl==2) {
+        if ($auswahl == 2) {
             $this->conn->query("
             UPDATE user u
             SET email=$stammdaten
-            WHERE u.user_id =".$userId);
+            WHERE u.user_id =" . $userId);
         }
-        if ($auswahl==3) {
+        if ($auswahl == 3) {
             $this->conn->query("
             UPDATE user u
-            SET password='".$stammdaten."'
-            WHERE u.user_id =".$userId);
+            SET password='" . $stammdaten . "'
+            WHERE u.user_id =" . $userId);
         }
-        if ($auswahl==4) {
+        if ($auswahl == 4) {
             $this->conn->query("
             UPDATE user u
             SET name=$stammdaten
-            WHERE u.user_id =".$userId);
+            WHERE u.user_id =" . $userId);
         }
-        if ($auswahl==5) {
+        if ($auswahl == 5) {
             $this->conn->query("
             UPDATE user u
             SET surename=$stammdaten
-            WHERE u.user_id =".$userId);
+            WHERE u.user_id =" . $userId);
         }
+    }
+
+    public function createNewCourse($courseName,$institutionName) {
+        $query = $this->conn->query("
+            SELECT institution_id as id
+            FROM institution
+            WHERE name='".$institutionName."'
+        ");
+        $id_inst = mysqli_fetch_all($query,MYSQLI_ASSOC);
+        if (count($id_inst)==0) {
+            $this->conn->query("
+                INSERT INTO db_pain.institution (name) VALUES ('".$institutionName."')
+            ");
+            $inst_query = $this->conn->query("
+                SELECT LAST_INSERT_ID() as last FROM institution LIMIT 1
+            ");
+            $id_inst = mysqli_fetch_all($inst_query,MYSQLI_ASSOC)[0]["last"];
+        } else {
+            $id_inst= $id_inst[0]["id"];
+        }
+        $get_course = $this->conn->query("
+            SELECT name FROM course WHERE name='".$courseName."'
+        ");
+        if (count(mysqli_fetch_all($get_course))>0) {
+            return $courseName;
+        }
+
+        //insert stuff
+        $this->conn->query("
+            INSERT INTO db_pain.course (institution, name) VALUES ($id_inst, '".$courseName."')
+        ");
+        $course = $this->conn->query("
+            SELECT course.name as courseName 
+            FROM course
+            WHERE course.course_id=LAST_INSERT_ID()
+        ");
+        return mysqli_fetch_all($course)[0][0];
+    }
+
+    public function getAllUsersByID($start,$end) {
+        $query = $this->conn->query("
+            SELECT DISTINCT us.user_id as id, us.login as name, c.name as Kurs, '123456' as password
+            FROM user us
+                     INNER JOIN user_mapping um on us.user_id = um.user_id
+                     INNER JOIn course c on um.course_id = c.course_id
+            WHERE us.user_id>='".$start."' and us.user_id<=".$end."
+        ");
+        return mysqli_fetch_all($query,MYSQLI_ASSOC);
+    }
+
+    public function updateUser($id,$password,$login=null,$email=null,$name=null,$surename=null) {
+        $update = "
+            UPDATE db_pain.user us
+            SET us.password = '".$password."' ";
+        if($login!=null) {
+            $update = $update."AND us.login = '".$login."'";
+        }
+        if($email!= null) {
+            $update = $update."AND us.email='".$email."' ";
+        }
+        if ($name!=null) {
+            $update = $update."AND us.name='".$name."' ";
+        }
+        if ($surename!=null) {
+            $surename = $update."AND us.name='".$name."' ";
+        }
+        $update = $update."WHERE us.user_id=".$id;
+        $this->conn->query($update);
+    }
+
+    public function lockGroupInventation($id) {
+        $this->conn->query("
+            UPDATE project SET open_to_invite = FALSE 
+            WHERE project_id=".$id);
     }
 }
