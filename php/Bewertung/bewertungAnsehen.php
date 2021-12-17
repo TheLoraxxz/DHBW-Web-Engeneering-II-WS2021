@@ -7,7 +7,8 @@ $db = $page->getDBService();
 
 switch ($page->getRole()) {
     case 1:
-        $table = new Table($db->getAdminHomeTable());
+        #admin
+        $table = new Table();
         $table->addColumn("ID",0,false);
         $table->addColumn("Name",1);
         $table->addColumn("Projekt",2);
@@ -17,7 +18,8 @@ switch ($page->getRole()) {
         $page->addElement($table);
         break;
     case 2:
-        $table = new Table($db->getUserHomeTable($page->getSession()));
+        #user
+        $table = new Table();
         $table->addColumn("ID",0,false);
         $table->addColumn("Name",1);
         $table->addColumn("Projekt",2);

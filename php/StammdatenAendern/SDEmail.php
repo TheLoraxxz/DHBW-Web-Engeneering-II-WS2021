@@ -6,12 +6,24 @@ $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 $user = $page->getSession();
 
+if (isset($_POST["email"])) {
+    if ($_POST["email"]=="") {
+        $page->showError("Bitte etwas eingeben!");
+        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    }
+    $auswahl=2;
+    $stammdaten="'".$_POST["email"]."'";
+    $db->stammdatenUpdate($stammdaten, $user, $auswahl);
+    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    $page->showSuccess("Email gespeichert");
+}
+
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
 $string = '
 <div  class="container">
     <div class="row">
         <div class="col-lg"></div>   
-        <form class="col-lg main_window" action="Stammdaten.php" method="post">
+        <form class="col-lg main_window" action="SDEmail.php.php" method="post">
             <h2>Email ändern</h2>
             <div>
                 <br>

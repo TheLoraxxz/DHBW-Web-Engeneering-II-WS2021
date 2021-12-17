@@ -229,8 +229,11 @@ class DBService {
         }
 
         if (password_verify($password,$result[0][0])) {
-            setcookie("GradlappainCook", "", time() - 3600);
-            setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            if (!isset($_COOKIE["GradlappainCook"])) {
+                setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            } else {
+                setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            }
             return true;
         }
         return false;
@@ -269,36 +272,58 @@ class DBService {
             WHERE u.user_id =".$userId);
         return mysqli_fetch_all($query);
     }
-    public function stammdatenUpdate($stammdaten, $userId, $auswahl) {
-        if ($auswahl==1) {
+    public function stammdatenUpdate($stammdaten, $userId, $auswahl)
+    {
+        if ($auswahl == 1) {
             $this->conn->query("
             UPDATE user u
             SET login=$stammdaten
-            WHERE u.user_id =".$userId);
+            WHERE u.user_id =" . $userId);
         }
-        if ($auswahl==2) {
+        if ($auswahl == 2) {
             $this->conn->query("
             UPDATE user u
             SET email=$stammdaten
-            WHERE u.user_id =".$userId);
+            WHERE u.user_id =" . $userId);
         }
-        if ($auswahl==3) {
+        if ($auswahl == 3) {
             $this->conn->query("
             UPDATE user u
-            SET password='".$stammdaten."'
-            WHERE u.user_id =".$userId);
+            SET password='" . $stammdaten . "'
+            WHERE u.user_id =" . $userId);
         }
-        if ($auswahl==4) {
+        if ($auswahl == 4) {
             $this->conn->query("
             UPDATE user u
             SET name=$stammdaten
-            WHERE u.user_id =".$userId);
+            WHERE u.user_id =" . $userId);
         }
-        if ($auswahl==5) {
+        if ($auswahl == 5) {
             $this->conn->query("
             UPDATE user u
             SET surename=$stammdaten
-            WHERE u.user_id =".$userId);
+            WHERE u.user_id =" . $userId);
+        }
+    }
+
+    public function createNewCourse($courseName,$institutionName) {
+        $query = $this->conn->query("
+            SELECT institution_id as id
+            FROM institution
+            WHERE name='".$institutionName."'
+        ");
+        $id_inst = mysqli_fetch_all($query,MYSQLI_ASSOC);
+        if (count($id_inst)==0) {
+            $this->conn->query("
+                INSERT INTO db_pain.institution (name) VALUES ('".$institutionName."')
+            ");
+            $inst_query = $this->conn->query("
+                SELECT LAST_INSERT_ID() as last FROM institution LIMIT 1
+            ");
+            $id_inst = mysqli_fetch_all($inst_query,MYSQLI_ASSOC)[0]["last"];
+        } else {
+            $id_inst= $id_inst[0]["id"];
+        }
         $get_course = $this->conn->query("
             SELECT name FROM course WHERE name='".$courseName."'
         ");
