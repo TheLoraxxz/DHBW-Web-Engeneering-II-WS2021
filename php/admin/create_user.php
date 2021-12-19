@@ -116,7 +116,7 @@ if ($page->getRole()==1) {
             $table->addColumn("Benutzername", "name");
             $table->addColumn("Password", "password");
             $table->addColumn("Kurs", "Kurs");
-            $table->addButton("Zurück", Page::getRoot() . "admin/admin_home.php");
+            $table->addButton("Zurück", Page::getRoot() ."home.php");
             $table->addButton("Drucken", Page::getRoot() . "pdf/print_pdf.php?source=create_user&start=" . $tableData[0]["id"] . "&end=" . $tableData[count($tableData) - 1]["id"]);
             $table->addTableHeading("Übersicht über neu erstellte User");
             $page->addElement($table);

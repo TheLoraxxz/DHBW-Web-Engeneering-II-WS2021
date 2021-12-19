@@ -161,7 +161,7 @@ class Page {
         echo("<body>");
         if(!$this->isSession==null) { //if it logs in it inserts the header elsewise you just see blank
             $nav ="";
-            switch ($this->isSession) { //depending on the session it shows the corrisponding header
+            switch ($this->role) { //depending on the session it shows the corrisponding header
                 case 1:
                     $nav ='
                         <a class="nav-link">Noten</a>

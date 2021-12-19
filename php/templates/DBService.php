@@ -473,6 +473,20 @@ class DBService {
     }
 
     public function getAllProjects() {
+        $query = $this->conn->query("
+            SELECT p.name,p.project_id 
+            FROM project as p
+            WHERE submission_date>=CURRENT_DATE()
+        ");
+        return mysqli_fetch_all($query,MYSQLI_ASSOC);
+    }
 
+
+    public function getAllSuitableUser($role,$userId,$project = null) {
+        if ($role==1) {
+
+        } else {
+
+        }
     }
 }
