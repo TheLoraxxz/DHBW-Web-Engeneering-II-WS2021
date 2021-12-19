@@ -12,6 +12,10 @@ class Page {
     protected $Element;
     protected $subMenu =[];
     protected $ROOTLIB;
+    /**
+     * on construction it creates the DBservice
+     * then adds the standard javascript and bootstrapp to it and then finishes
+    */
     public function __construct() {
         $this->db = new DBService();
         if (!$this->db) {
@@ -25,23 +29,30 @@ class Page {
         $this->addJs("forAll.js");
 
     }
-    public function addSubMenu($name,$link) {
-        if (count($name)>0 and count($link)>0) {
-            array_push($this->subMenu,["name"=>$name,"link"=>$link]);
-        }
-
-    }
+    /**
+     * sets the title of the Application
+    */
     public function setTitle($title) {
         $this->title = $title;
     }
+    /**
+     * gives you the db service to make it easier tzo include
+    */
     public function getDBService() {
         return $this->db;
     }
-
+    /**
+     * this continously adds html string which then will be printed out
+    */
     public function addHtml($string) {
         $this->htmlString=$this->htmlString.$string;
     }
 
+    /**
+     * sgets lgoinsession --> gets session
+     * looks whether session is the same if so it it returns true
+     * else it throws oyu to the home website
+    */
     public function getLoginstatus($session_current) {
         $sessions = $this->db->getUserSession();
         if ($session_current!=null) {
@@ -73,6 +84,11 @@ class Page {
     }
     public static function getRoot() {
         $rootlib = dirname(__FILE__); //gets the directory this one is in --> used for adding scripts
+        $off = 0;
+        while (strpos($rootlib,"\\",$off)) {
+            $rootlib[strpos($rootlib,"\\",$off)] = "/";
+            $off = strpos($rootlib,"\\",$off)+1;
+        }
         return substr($rootlib,strpos($rootlib,"htdocs")+6)."/../../";
     }
     public function addElement($element) {
@@ -95,31 +111,42 @@ class Page {
         }
     }
 
-
+    /**
+     * one error is shown
+    */
     public function showError($message) {
         $message =strip_tags($message);
         $error = ["type"=>"error","message"=>$message];
         array_push($this->messages,$error);
 
     }
+    /**
+     * shows success --> adds properties to success
+     */
     public function showSuccess($message) {
         $message =strip_tags($message);
         array_push($this->messages,["type"=>"success","message"=>$message]);
     }
-
+    /**
+     * gets current session (the user id)
+    */
     public function getSession() {
         return (int) $this->isSession;
     }
+    /**
+     * gives back the the role 1 2 or 3
+    */
     public function getRole() {
         return (int) $this->role;
     }
     /**
-     * gives out the prubt oage
+     * print the page so it has a coherant look everywhere
      */
     public function printPage() {
         if (isset($this->Element)) {
             $this->addCs($this->Element->css);
         }
+        //adds error
         echo('<!DOCTYPE html>
               <html>');
         echo(' 
@@ -139,7 +166,7 @@ class Page {
         echo("<body>");
         if(!$this->isSession==null) { //if it logs in it inserts the header elsewise you just see blank
             $nav ="";
-            switch ($this->isSession) { //depending on the session it shows the corrisponding header
+            switch ($this->role) { //depending on the session it shows the corrisponding header
                 case 1:
                     $nav ='
                         <a class="nav-link">Noten</a>
@@ -174,8 +201,8 @@ class Page {
                               '.$nav.'
                             </div>
                         </div>
-                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB  .'php/StammdatenAendern/Stammdaten.php"><img src="'.$this->ROOTLIB.'assets/Icons/profile.svg"></a>
-                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB.'index.php?action=logout"><img src="'.$this->ROOTLIB.'assets/Icons/logout.svg"></a>
+                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB  .'php/StammdatenAendern/Stammdaten.php"><img src="'.$this->ROOTLIB.'assets/Icons/profile.svg" alt="Stammdaten"></a>
+                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB.'index.php?action=logout"><img src="'.$this->ROOTLIB.'assets/Icons/logout.svg" alt="Logout"></a>
                     </div>
                 </nav>
                 ');
