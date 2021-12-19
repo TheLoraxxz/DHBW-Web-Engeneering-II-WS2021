@@ -379,4 +379,14 @@ class DBService {
             UPDATE project SET open_to_invite = FALSE 
             WHERE project_id=".$id);
     }
+
+    public function getUserBewertungTable($userID) {
+        $query = $this->conn->query("
+        SELECT r.points, g.name, p.name, p.points_reachable
+        FROM rating r
+            INNER JOIN groupings g on r.group_id = g.group_id
+            INNER JOIN project p on g.project_id = p.project_id
+        WHERE r.user_id =" . $userID);
+        return mysqli_fetch_all($query);
+    }
 }
