@@ -20,6 +20,7 @@ class DBService {
                 USE db_pain;
                 
                 create table institution(institution_id int,name varchar(1000) not null);
+                create table invites(ID int,Project_ID int, User_ID int);
                 create unique index institution_institution_id_uindex on institution (institution_id);
                 alter table institution	add constraint institution_pk primary key (institution_id);
                 alter table institution modify institution_id int auto_increment;
@@ -293,7 +294,6 @@ class DBService {
             } catch (Exception $e) {
                 $result[$i][2] =$date;
             }
-
         }
         return $result;
     }
@@ -526,5 +526,33 @@ class DBService {
         } else {
 
         }
+    }
+    public function getUserInvites($userId) {
+        $query = $this->conn->query("
+            SELECT inv.ID,p.name,p.submission_date FROM invites as inv
+            INNER JOIN user u on inv.User_ID = u.user_id
+            INNER JOIN project p on inv.Project_ID = p.project_id
+            WHERE u.user_id =".$userId);
+        $result = mysqli_fetch_all($query);
+        return $result;
+    }
+
+    public function isInvitational($projectID)
+    {
+        $query = $this->conn->query("
+            SELECT p.open_to_invite FROM project as p
+            WHERE p.project_id =".$projectID);
+        $result = mysqli_fetch_all($query);
+        return $result;
+    }
+
+    public function getAllUsersInCourse($userId) {
+        $query = $this->conn->query("
+            SELECT u.name FROM user as u
+            INNER JOIN user_mapping um on um.user_id = u.user_id
+            INNER JOIN course c on c.course_id = um.course_id
+            WHERE u.user_id =".$userId);
+        $result = mysqli_fetch_all($query);
+        return $result;
     }
 }
