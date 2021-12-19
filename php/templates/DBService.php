@@ -229,7 +229,11 @@ class DBService {
         }
 
         if (password_verify($password,$result[0][0])) {
-            setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            if (!isset($_COOKIE["GradlappainCook"])) {
+                setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            } else {
+                setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+            }
             return true;
         }
         return false;
@@ -251,111 +255,56 @@ class DBService {
             WHERE submission_date>=CURRENT_DATE()-1;
         ");
         $result = mysqli_fetch_all($query);
-        for($i=0;$i<count($result);$i++) {
-            $date = $result[$i][5];
-            $datetime = new DateTime($date);
-            $result[$i][5] = date_format($datetime,"d.m.Y H:i")." Uhr";
-        }
         return $result;
     }
     public function getUserHomeTable($userId) {
         $query = $this->conn->query("
-            SELECT groop.group_id, groop.name,p.submission_date,p.name FROM groupings as groop
+            SELECT groop.name,p.submission_date,p.name FROM groupings as groop
             INNER JOIN rating rat on groop.group_id = rat.group_id
             INNER JOIN user u on rat.user_id = u.user_id
             INNER JOIN project p on groop.project_id = p.project_id
             WHERE u.user_id =".$userId);
-        $result = mysqli_fetch_all($query);
-        for($i=0;$i<count($result);$i++) {
-            $date = $result[$i][2];
-            try {
-                $datetime = new DateTime($date);
-                $result[$i][2] = date_format($datetime,"d.m.Y H:i")." Uhr";
-            } catch (Exception $e) {
-                $result[$i][2] =$date;
-            }
-
-        }
-        return $result;
+        return mysqli_fetch_all($query);
     }
-    public function getSecretareHomeTable($secretaryId) {
+    public function getStammdaten($userId) {
         $query = $this->conn->query("
-            SELECT u.surename,u.name,c.name,rating.points,p.submission_date,p.points_reachable
-            FROM rating
-            INNER JOIN groupings g on rating.group_id = g.group_id
-            RIGHT JOIN project p on p.project_id = g.project_id
-            INNER JOIN user u on rating.user_id = u.user_id
-            LEFT JOIN project_class pc on p.project_id = pc.project_id
-            LEFT JOIN course c on pc.course_id = c.course_id
-            INNER JOIN institution i on c.institution = i.institution_id
-            WHERE i.institution_id = (SELECT inst.institution_id FROM institution inst
-                INNER JOIN user_mapping um on inst.institution_id = um.institution_id
-                WHERE um.user_id=".$secretaryId.");");
-        $result = mysqli_fetch_all($query);
-        for($i=0;$i<count($result);$i++) {
-            $date = $result[$i][4];
-            if($result[$i][3]==null) {
-                $result[$i][3] ="-----";
-            }
-            try {
-                $datetime = new DateTime($date);
-                $result[$i][4] = date_format($datetime,"d.m.Y");
-            } catch (Exception $e) {
-                $result[$i][4] =$date;
-            }
-        }
-        return $result;
+            SELECT login, email, password, name, surename FROM user u
+            WHERE u.user_id =".$userId);
+        return mysqli_fetch_all($query);
     }
-
-
-    public function createNewUsers($number,$course) {
-        $password =password_hash('123456',PASSWORD_BCRYPT);
-        $possibilities = "1234567890abcdefghijklmnopqrstuvwxyz_-.ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-        $users  = [];
-        for($i=0;$i<$number;++$i) {
-            $randomLogin = '';
-            for ($j=0;$j<6;++$j) {
-                $randomLogin = $randomLogin.$possibilities[rand(0,strlen($possibilities)-1)];
-            }
-            //select ocurse and institution id
-            $query = $this->conn->query("
-                SELECT course.course_id,i.institution_id
-                FROM course
-                INNER JOIN institution i on course.institution = i.institution_id
-                WHERE course.name='".$course."'
-
-
-            ");
-            $course_institution_id = mysqli_fetch_all($query);
-            if ($course_institution_id == false or count($course_institution_id)!=1) { //if it isnt found the course the course is returned
-                return -1;
-            }
-            $this->conn->multi_query("
-                INSERT INTO user (password, email, name, surename, login) VALUES ('".$password."' ,null, null,null,'".$randomLogin."');
-            ");
-            $query = $this->conn->query("
-                SELECT LAST_INSERT_ID() FROM user LIMIT 1
-            ");
-            $user_id = mysqli_fetch_all($query)[0][0];
-            array_push($users,$user_id);
-
-            $this->conn->multi_query("
-                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (".$user_id.",".$course_institution_id[0][0].", ".$course_institution_id[0][1].")
-            ");
+    public function stammdatenUpdate($stammdaten, $userId, $auswahl)
+    {
+        if ($auswahl == 1) {
             $this->conn->query("
-                INSERT INTO db_pain.user_role (role_id, user_id) VALUES (2, '".$user_id."');
-            ");
+            UPDATE user u
+            SET login=$stammdaten
+            WHERE u.user_id =" . $userId);
         }
-        $table_query =$this->conn->query("
-            SELECT DISTINCT us.user_id as id, us.login as name, c.name as Kurs, '123456' as password
-            FROM user us
-            INNER JOIN user_mapping um on us.user_id = um.user_id
-            INNER JOIn course c on um.course_id = c.course_id
-            WHERE us.user_id>=".$users[0]." and us.user_id<=".$users[count($users)-1]."+1
-        ");
-        return mysqli_fetch_all($table_query,MYSQLI_ASSOC);
+        if ($auswahl == 2) {
+            $this->conn->query("
+            UPDATE user u
+            SET email=$stammdaten
+            WHERE u.user_id =" . $userId);
+        }
+        if ($auswahl == 3) {
+            $this->conn->query("
+            UPDATE user u
+            SET password='" . $stammdaten . "'
+            WHERE u.user_id =" . $userId);
+        }
+        if ($auswahl == 4) {
+            $this->conn->query("
+            UPDATE user u
+            SET name=$stammdaten
+            WHERE u.user_id =" . $userId);
+        }
+        if ($auswahl == 5) {
+            $this->conn->query("
+            UPDATE user u
+            SET surename=$stammdaten
+            WHERE u.user_id =" . $userId);
+        }
     }
-
 
     public function createNewCourse($courseName,$institutionName) {
         $query = $this->conn->query("
@@ -405,20 +354,29 @@ class DBService {
         return mysqli_fetch_all($query,MYSQLI_ASSOC);
     }
 
-    public function updateUser($id,$password,$login,$email=null,$name=null,$surename=null) {
+    public function updateUser($id,$password,$login=null,$email=null,$name=null,$surename=null) {
         $update = "
-            UPDATE db_pain.user user
-            SET user.login = '".$login."' AND user.password = '".$password."' ";
+            UPDATE db_pain.user us
+            SET us.password = '".$password."' ";
+        if($login!=null) {
+            $update = $update."AND us.login = '".$login."'";
+        }
         if($email!= null) {
-            $update = $update."AND user.email='".$email."' ";
+            $update = $update."AND us.email='".$email."' ";
         }
         if ($name!=null) {
-            $update = $update."AND user.name='".$name."' ";
+            $update = $update."AND us.name='".$name."' ";
         }
         if ($surename!=null) {
-            $surename = $update."AND user.name='".$name."' ";
+            $surename = $update."AND us.name='".$name."' ";
         }
-        $update = $update."WHERE user.user_id=".$id;
+        $update = $update."WHERE us.user_id=".$id;
         $this->conn->query($update);
+    }
+
+    public function lockGroupInventation($id) {
+        $this->conn->query("
+            UPDATE project SET open_to_invite = FALSE 
+            WHERE project_id=".$id);
     }
 }

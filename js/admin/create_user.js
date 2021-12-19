@@ -54,5 +54,6 @@ function submit() {
 }
 function resetPasswordButton(button) {
     cells=button.parentElement.parentElement.parentElement.children
+    console.log(cells[0].innerHTML)
     window.location.href = './create_user.php?action=reset_password&id='+cells[0].innerHTML+"&login="+cells[1].innerHTML;
 }

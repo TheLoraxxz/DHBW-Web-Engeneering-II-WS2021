@@ -1,0 +1,17 @@
+.main_window {
+    margin-top: 10em;
+    box-shadow: #b4b4b0 4px 4px 4px 4px;
+    border-radius: 10px;
+    padding: 10px;
+
+    padding-top: 2em;
+    padding-bottom: 2em;
+}
+
+.info_text {
+    font-size:14pt;
+}
+
+a {
+    text-decoration: none; /* no underline */
+}
