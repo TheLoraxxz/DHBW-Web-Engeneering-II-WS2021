@@ -20,6 +20,7 @@ class DBService {
                 USE db_pain;
                 
                 create table institution(institution_id int,name varchar(1000) not null);
+                create table invites(ID int,Project_ID int, User_ID int);
                 create unique index institution_institution_id_uindex on institution (institution_id);
                 alter table institution	add constraint institution_pk primary key (institution_id);
                 alter table institution modify institution_id int auto_increment;
@@ -293,7 +294,6 @@ class DBService {
             } catch (Exception $e) {
                 $result[$i][2] =$date;
             }
-
         }
         return $result;
     }
@@ -338,11 +338,10 @@ class DBService {
     public function stammdatenUpdate($stammdaten, $userId, $auswahl)
     {
         if ($auswahl == 1) {
-            $query = $this->conn->query("
+            $this->conn->query("
             UPDATE user u
             SET login=$stammdaten
             WHERE u.user_id =" . $userId);
-            return $query;
         }
         if ($auswahl == 2) {
             $this->conn->query("
@@ -353,7 +352,7 @@ class DBService {
         if ($auswahl == 3) {
             $this->conn->query("
             UPDATE user u
-            SET password=$stammdaten
+            SET password='" . $stammdaten . "'
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 4) {
@@ -523,64 +522,37 @@ class DBService {
 
     public function getAllSuitableUser($role,$userId,$project = null) {
         if ($role==1) {
-            $query = $this->conn->query("
-            SELECT us.surename,us.name,us.login, pc.project_id as project,us.user_id as id
-            FROM user as us
-            INNER JOIN user_mapping um on us.user_id = um.user_id
-            RIGHT JOIN project_class pc on um.course_id = pc.course_id
-            INNER JOIN user_role ur on us.user_id = ur.user_id
-            INNER JOIN role r on ur.role_id = r.role_id
-            WHERE r.role_id=2
-            ");
-            return mysqli_fetch_all($query,1);
+
         } else {
-            $query = $this->conn->query("
-                 SELECT DISTINCT us.user_id as id,us.surename,us.name,us.login, p.project_id as project
-                 FROM user as us
-                 LEFT JOIN user_mapping um on us.user_id = um.user_id
-                 INNER JOIN project_class pc on um.course_id = pc.course_id
-                 INNER JOIN course c on pc.course_id = c.course_id
-                 INNER JOIN user_role ur on us.user_id = ur.user_id
-                 INNER JOIN role r on ur.role_id = r.role_id
-                 INNER JOIN project p on pc.project_id = p.project_id
-                 WHERE c.course_id=(
-                    SELECT cour.course_id
-                    FROM course as cour
-                    INNER JOIN user_mapping u on cour.course_id = u.course_id
-                    WHERE u.user_id=".$userId." LIMIT 1
-                 )  AND r.role_id=2
-            ");
-            return mysqli_fetch_all($query,MYSQLI_ASSOC);
+
         }
     }
+    public function getUserInvites($userId) {
+        $query = $this->conn->query("
+            SELECT inv.ID,p.name,p.submission_date FROM invites as inv
+            INNER JOIN user u on inv.User_ID = u.user_id
+            INNER JOIN project p on inv.Project_ID = p.project_id
+            WHERE u.user_id =".$userId);
+        $result = mysqli_fetch_all($query);
+        return $result;
+    }
 
-    public function getUserBewertungTable($userID) {
+    public function isInvitational($projectID)
+    {
         $query = $this->conn->query("
-        SELECT r.points, g.name, p.name, p.points_reachable
-        FROM rating r
-            INNER JOIN groupings g on r.group_id = g.group_id
-            INNER JOIN project p on g.project_id = p.project_id
-        WHERE r.user_id =" . $userID);
-        return mysqli_fetch_all($query);
+            SELECT p.open_to_invite FROM project as p
+            WHERE p.project_id =".$projectID);
+        $result = mysqli_fetch_all($query);
+        return $result;
     }
-    public function getGroupRatingStuff($groupID) {
+
+    public function getAllUsersInCourse($userId) {
         $query = $this->conn->query("
-        SELECT r.user_id, u.surename, r.points
-        FROM rating r
-            INNER JOIN user u on r.user_id = u.user_id
-        WHERE r.group_id=".$groupID);
-        return mysqli_fetch_all($query);
-    }
-    public function updatePoints($points, $user) {
-        $this->conn->query("
-            UPDATE rating SET points = '".$points."' 
-            WHERE user_id=".$user);
-    }
-    public function getPwAlt($user) {
-        $query = $this->conn->query("
-        SELECT password
-        FROM user
-        WHERE user_id=".$user);
-        return mysqli_fetch_all($query);
+            SELECT u.name FROM user as u
+            INNER JOIN user_mapping um on um.user_id = u.user_id
+            INNER JOIN course c on c.course_id = um.course_id
+            WHERE u.user_id =".$userId);
+        $result = mysqli_fetch_all($query);
+        return $result;
     }
 }

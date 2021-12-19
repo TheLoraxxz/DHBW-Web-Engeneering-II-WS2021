@@ -38,7 +38,15 @@ switch ($page->getRole()) {
         $table->addColumn("ID",0,false);
         $table->addColumn("Name",1);
         $table->addColumn("Date",2);
-        //you can see your own details. Abgeben is to submiut the project
+        //if open to invite
+        //wie bekomm ich die ProjectID her ???
+        $table->addColumn("Einladen",-1,$db->isInvitational(1), '<button class="btn btn-secondary">Einladen</button>');//invite other Students to a Project
+
+        if($db->getUserInvites($page->getSession()) != null)// Einladung vorhanden
+        {
+            $table->addButton("Einladungen",Page::getRoot()."php/user/project/AcceptInvite.php");
+        }
+        //you can see your own details. Abgeben is to submit the project
         $table->addColumn("Details einsehen",-1,true,'<button class="btn btn-secondary">See Details</button>');
         $table->addColumn("Abgeben",-1,true,'<button class="btn btn-primary">Abgeben</button>');
         $page->addJs("tablebuttons_home.js");

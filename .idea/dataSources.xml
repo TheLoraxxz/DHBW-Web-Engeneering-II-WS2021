@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="db_pain" uuid="6db95ecd-f157-467c-8f63-fb3a1fd7ae5f">
+    <data-source source="LOCAL" name="MariaDB - @localhost" uuid="4139f432-98b2-47d7-a44b-b2a26b130e09">
       <driver-ref>mariadb</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.mariadb.jdbc.Driver</jdbc-driver>
