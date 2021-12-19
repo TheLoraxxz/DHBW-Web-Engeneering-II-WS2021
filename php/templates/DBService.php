@@ -522,9 +522,34 @@ class DBService {
 
     public function getAllSuitableUser($role,$userId,$project = null) {
         if ($role==1) {
-
+            $query = $this->conn->query("
+            SELECT us.surename,us.name,us.login, pc.project_id as project,us.user_id as id
+            FROM user as us
+            INNER JOIN user_mapping um on us.user_id = um.user_id
+            RIGHT JOIN project_class pc on um.course_id = pc.course_id
+            INNER JOIN user_role ur on us.user_id = ur.user_id
+            INNER JOIN role r on ur.role_id = r.role_id
+            WHERE r.role_id=2
+            ");
+            return mysqli_fetch_all($query,1);
         } else {
-
+            $query = $this->conn->query("
+                 SELECT DISTINCT us.user_id as id,us.surename,us.name,us.login, p.project_id as project
+                 FROM user as us
+                 LEFT JOIN user_mapping um on us.user_id = um.user_id
+                 INNER JOIN project_class pc on um.course_id = pc.course_id
+                 INNER JOIN course c on pc.course_id = c.course_id
+                 INNER JOIN user_role ur on us.user_id = ur.user_id
+                 INNER JOIN role r on ur.role_id = r.role_id
+                 INNER JOIN project p on pc.project_id = p.project_id
+                 WHERE c.course_id=(
+                    SELECT cour.course_id
+                    FROM course as cour
+                    INNER JOIN user_mapping u on cour.course_id = u.course_id
+                    WHERE u.user_id=".$userId." LIMIT 1
+                 )  AND r.role_id=2
+            ");
+            return mysqli_fetch_all($query,MYSQLI_ASSOC);
         }
     }
 }

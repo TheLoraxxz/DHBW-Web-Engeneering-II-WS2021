@@ -1,13 +1,14 @@
 <?php
 include_once ("./php/templates/Page.php");
 
-
 $page = new Page();
 $service = $page->getDBService();
 //if it is logout it resets the cookie
+
 if (isset($_GET["action"])) {
     setcookie("GradlappainCook", "", time() - 3600);
 }
+
 // if the post is login and the password is set
 if ((isset($_POST["login"]) and isset($_POST["password"]))) {
     //if it is verified it redirects to home and if not it shows that the id is wrong
@@ -23,6 +24,7 @@ if ((isset($_POST["login"]) and isset($_POST["password"]))) {
         $page->showError("Logindaten sind falsch");
     }
 }
+
 //if it is set it automatically redirects to home.php
 if (isset($_COOKIE['GradlappainCook'])) {
     if($page->getLoginstatus($_COOKIE['GradlappainCook'])) {
@@ -37,7 +39,7 @@ $string = '
     <div class="row">
         <div class="col-sm"></div>   
         <form method="post" action="index.php" class="col-sm login_window">
-            <img src="./assets/img/Logo_Background.svg">
+            <img src="./assets/img/Logo_Background.svg" alt="Logo">
             <h1>Gradlappain</h1>
             <div>
                 <label class="form-label">Login</label>

@@ -11,8 +11,8 @@ if ($page->getRole()==1) {
         if ($_GET["action"] == "overview") {
             $table = new Table($db->getAllUsersByID(0, "(SELECT MAX(us.user_id) LIMIT 1)"));
             $table->addTableHeading("User Übersicht");
-            $table->addButton("Schüler hinzufügen", Page::getRoot() . "admin/create_user.php?action=multiple_user");
-            $table->addButton("Einzelner User hinzufügen", Page::getRoot() . "admin/create_edit_user.php?action=new");
+            $table->addButton("Schüler hinzufügen", Page::getRoot() . "php/admin/create_user.php?action=multiple_user");
+            $table->addButton("Einzelner User hinzufügen", Page::getRoot() . "php/admin/create_edit_user.php?action=new");
             $table->addColumn("ID", "id", false);
             $table->addColumn("Name", "name");
             $table->addColumn("Kurs", "Kurs");
