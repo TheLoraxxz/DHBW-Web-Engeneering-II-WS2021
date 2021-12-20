@@ -42,4 +42,5 @@ function SubmitProject(button)
     var rowId = button.parentElement.parentElement.firstElementChild.innerHTML;
     //safe timestamp and set submit bool
     //$db->SubmitGroupProject(rowID,timestamp);
+    window.location.href = "?action=lock&ProjektId=" +rowId;
 }
