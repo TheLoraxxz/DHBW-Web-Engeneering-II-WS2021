@@ -340,13 +340,13 @@ class DBService {
         if ($auswahl == 1) {
             $this->conn->query("
             UPDATE user u
-            SET login=$stammdaten
+            SET login='" . $stammdaten . "'
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 2) {
             $this->conn->query("
             UPDATE user u
-            SET email=$stammdaten
+            SET email='" . $stammdaten . "'
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 3) {
@@ -358,13 +358,13 @@ class DBService {
         if ($auswahl == 4) {
             $this->conn->query("
             UPDATE user u
-            SET name=$stammdaten
+            SET name='" . $stammdaten . "'
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 5) {
             $this->conn->query("
             UPDATE user u
-            SET surename=$stammdaten
+            SET surename='" . $stammdaten . "'
             WHERE u.user_id =" . $userId);
         }
     }
@@ -561,5 +561,18 @@ class DBService {
             INNER JOIN project p on g.project_id = p.project_id
         WHERE r.user_id =" . $userID);
         return mysqli_fetch_all($query);
+    }
+    public function getGroupRatingStuff($groupID) {
+        $query = $this->conn->query("
+        SELECT r.user_id, u.name 
+        FROM rating r
+            INNER JOIN user u on r.user_id = u.user_id
+        WHERE r.group_id=".$groupID);
+        return mysqli_fetch_all($query);
+    }
+    public function updatePoints($points, $user) {
+        $this->conn->query("
+            UPDATE rating SET points = '".$points."' 
+            WHERE user_id=".$user);
     }
 }

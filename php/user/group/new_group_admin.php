@@ -75,7 +75,6 @@ if($page->getRole()!=3) {
             <input type="text" id="course_id" name="course">
             <input type="text" id="name" name="group_name">
             <input type="text" id="member" name="member">
-            
         </form>
     </div>
     ';
