@@ -531,7 +531,7 @@ class DBService {
         $query = $this->conn->query("
             SELECT inv.ID,p.name,p.submission_date FROM invites as inv
             INNER JOIN user u on inv.User_ID = u.user_id
-            INNER JOIN project p on inv.Project_ID = p.project_id
+            INNER JOIN project p on inv.Group_ID = p.project_id
             WHERE u.user_id =".$userId);
         $result = mysqli_fetch_all($query);
         return $result;
@@ -556,8 +556,49 @@ class DBService {
         return $result;
     }
 
-    public function createInvite($projectId, $userId)
+    public function createInvite($groupId, $userId)
     {
-        $query = $this->conn->query("INSERT INTO invites (ID,Project_ID,User_ID) VALUES (null, $projectId,$userId)");
+        query("INSERT INTO invites (ID,Group_ID,User_ID) VALUES (null, $groupId,$userId)");
+    }
+
+    public function AddToGroup($userId, $groupId)
+    {
+        query("INSERT INTO rating (user_id,group_id,points,is_admin) VALUES ($userId,$groupId,0,0)");
+        if(query("
+            SELECT p.max_of_students FROM projects as p
+            INNER JOIN grouping g on g.project_id = p.project_id") >
+            query("
+            SELECT SUM(u.user_id) FROM user as u
+            INNER JOIN rating r on r.user_id = u.user_id"))
+        {
+            $this->RemoveInvite($userId,$groupId);
+        }
+        else
+        {
+            //alle ausstehende Einladungen löschen
+            foreach(query("
+            SELECT i.User_ID FROM invites as i
+            WHERE i.Group_ID =".$groupId) as $eachUser)
+            {
+                $this->RemoveInvite($eachUser, $groupId);
+            }
+            $this->lockGroupInventation($groupId);
+        }
+    }
+
+    public function RemoveInvite($userId, $groupId)
+    {
+        //remove the specified invite from the database
+        query("
+            Delete i.User_ID FROM invites as i
+            WHERE i.User_Id =".$userId."and i.Group_ID=".$groupId);
+    }
+
+    public function SubmitGroupProject($groupId, $timeStamp)
+    {
+        //update submitted und subtime in der Gruppe
+        query("
+            UPDATE groupings SET submitted=1, submitted_time=".$timeStamp.
+            "WHERE g.group_id=".$groupId);
     }
 }

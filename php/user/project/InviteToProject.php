@@ -4,10 +4,14 @@ include_once("../../templates/Table.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
-$table = new Table($db->getAllUsersInCourse($page->getSession(),1)); // get der Projekt id
+$userId = $_GET['userId'];
+$table = new Table($db->getAllUsersInCourse($page->getSession(),$userId));
 $table->addColumn("id",0,false);
 $table->addColumn("Name",1);
-$table->addColumn("",-1,true, '<button class="btn btn-secondary" onclick="CreateInvite(this, 1);">Invite</button>');// get der Projekt id
+$table->addColumn("",-1,true, '<button class="btn btn-secondary" onclick="CreateInvite(this,'.$userId.');">Invite</button>');
 $page->addElement($table);
-$page->addJs("User/inviteToProject.js");
+try {
+    $page->addJs("User/inviteToProject.js");
+} catch (Exception $e) {
+}
 $page->printPage();
