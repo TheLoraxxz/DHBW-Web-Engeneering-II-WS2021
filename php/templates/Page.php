@@ -1,24 +1,36 @@
 <?php
+require ('DBService.php');
 class Page {
-    private $htmlString = "";
-    private $title = "Gradlappain";
-    private $css = [];
-    private $js = [];
-    private $db;
-    private $isSession= null;
-    private $role = null;
-    private $messages = [];
-    private $Element;
-    private $ROOTLIB;
+    protected $htmlString = "";
+    protected $title = "Gradlappain";
+    protected $css = [];
+    protected $js = [];
+    protected $db;
+    protected $isSession= null;
+    protected $role = null;
+    protected $messages = [];
+    protected $Element;
+    protected $subMenu =[];
+    protected $ROOTLIB;
     public function __construct() {
         $this->db = new DBService();
-        $rootlib = dirname(__FILE__); //gets the directory this one is in --> used for adding scripts
-        $this->ROOTLIB = substr($rootlib,strpos($rootlib,"htdocs")+6)."/../../";
+        if (!$this->db) {
+            $this->showError("Datenbankfehler");
+            $this->printPage();
+            exit();
+        }
+        $this->ROOTLIB = self::getRoot();
         $this->addCs("template/forAll.css");
+        $this->addJs("js_Libary/bootstrap/bootstrap.js");
         $this->addJs("forAll.js");
 
     }
+    public function addSubMenu($name,$link) {
+        if (count($name)>0 and count($link)>0) {
+            array_push($this->subMenu,["name"=>$name,"link"=>$link]);
+        }
 
+    }
     public function setTitle($title) {
         $this->title = $title;
     }
@@ -59,7 +71,10 @@ class Page {
             throw new Exception("KEIN VALIDES JS FILe");
         }
     }
-
+    public static function getRoot() {
+        $rootlib = dirname(__FILE__); //gets the directory this one is in --> used for adding scripts
+        return substr($rootlib,strpos($rootlib,"htdocs")+6)."/../../";
+    }
     public function addElement($element) {
         $this->Element = $element;
     }
@@ -83,11 +98,13 @@ class Page {
 
     public function showError($message) {
         $message =strip_tags($message);
+        $error = ["type"=>"error","message"=>$message];
+        array_push($this->messages,$error);
 
-        if(strlen($message)<30) {
-            $error = ["type"=>"error","message"=>$message];
-            array_push($this->messages,$error);
-        }
+    }
+    public function showSuccess($message) {
+        $message =strip_tags($message);
+        array_push($this->messages,["type"=>"success","message"=>$message]);
     }
 
     public function getSession() {
@@ -126,7 +143,13 @@ class Page {
                 case 1:
                     $nav ='
                         <a class="nav-link">Noten</a>
-                        <a class="nav-link">Admin</a>
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            Admin
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="'.self::getRoot().'">Home</a></li>
+                            <li><a class="dropdown-item" href="'.self::getRoot().'php/admin/create_user.php?action=overview">User Management</a></li>
+                        </ul>
                         <a class="nav-link">Projekte</a>
                     ';
                     break;
@@ -145,7 +168,7 @@ class Page {
             echo('
                 <nav class="navbar navbar-light bg-light navbar-expand-sm">
                     <div class="container-fluid">
-                        <a class="navbar-brand">Gradlappain</a>
+                        <a class="navbar-brand" href="'.self::getRoot().'index.php">Gradlappain</a>
                         <div class="collapse navbar-collapse" id="navbar">
                             <div class="navbar-nav">
                               '.$nav.'
@@ -162,8 +185,13 @@ class Page {
             foreach ($this->messages as $message) {
                 if ($message["type"]=="error") {
                     echo('
-                    <div class="container error">
+                    <div class="container message">
                         <div class="alert alert-danger">'.$message["message"].'</div>
+                    </div>');
+                } else if ($message["type"]=="success") {
+                    echo ('                    
+                    <div class="container message">
+                        <div class="alert alert-success">'.$message["message"].'</div>
                     </div>');
                 }
             }

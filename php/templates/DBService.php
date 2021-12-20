@@ -177,7 +177,9 @@ class DBService {
                         primary key (mapping_id);
                 
                 alter table user_mapping modify mapping_id int auto_increment;
-
+                
+                create unique index user_login_uindex
+                	on user (login);
                 
                 INSERT INTO role (name) VALUES ('admin');
                 INSERT INTO role (name) VALUES ('student');
@@ -292,7 +294,7 @@ class DBService {
         for($i=0;$i<count($result);$i++) {
             $date = $result[$i][4];
             if($result[$i][3]==null) {
-                $result[$i][3] ="keine Punkte gesetzt";
+                $result[$i][3] ="-----";
             }
             try {
                 $datetime = new DateTime($date);
@@ -318,4 +320,126 @@ class DBService {
         return mysqli_fetch_fall($query);
     }
 
+
+    public function createNewUsers($number,$course) {
+        $password =password_hash('123456',PASSWORD_BCRYPT);
+        $possibilities = "1234567890abcdefghijklmnopqrstuvwxyz_-.ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $users  = [];
+        for($i=0;$i<$number;++$i) {
+            $randomLogin = '';
+            for ($j=0;$j<6;++$j) {
+                $randomLogin = $randomLogin.$possibilities[rand(0,strlen($possibilities)-1)];
+            }
+            //select ocurse and institution id
+            $query = $this->conn->query("
+                SELECT course.course_id,i.institution_id
+                FROM course
+                INNER JOIN institution i on course.institution = i.institution_id
+                WHERE course.name='".$course."'
+
+
+            ");
+            $course_institution_id = mysqli_fetch_all($query);
+            if ($course_institution_id == false or count($course_institution_id)!=1) { //if it isnt found the course the course is returned
+                return -1;
+            }
+            $this->conn->multi_query("
+                INSERT INTO user (password, email, name, surename, login) VALUES ('".$password."' ,null, null,null,'".$randomLogin."');
+            ");
+            $query = $this->conn->query("
+                SELECT LAST_INSERT_ID() FROM user LIMIT 1
+            ");
+            $user_id = mysqli_fetch_all($query)[0][0];
+            array_push($users,$user_id);
+
+            $this->conn->multi_query("
+                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (".$user_id.",".$course_institution_id[0][0].", ".$course_institution_id[0][1].")
+            ");
+            $this->conn->query("
+                INSERT INTO db_pain.user_role (role_id, user_id) VALUES (2, '".$user_id."');
+            ");
+        }
+        $table_query =$this->conn->query("
+            SELECT DISTINCT us.user_id as id, us.login as name, c.name as Kurs, '123456' as password
+            FROM user us
+            INNER JOIN user_mapping um on us.user_id = um.user_id
+            INNER JOIn course c on um.course_id = c.course_id
+            WHERE us.user_id>=".$users[0]." and us.user_id<=".$users[count($users)-1]."+1
+        ");
+        return mysqli_fetch_all($table_query,MYSQLI_ASSOC);
+    }
+
+
+    public function createNewCourse($courseName,$institutionName) {
+        $query = $this->conn->query("
+            SELECT institution_id as id
+            FROM institution
+            WHERE name='".$institutionName."'
+        ");
+        $id_inst = mysqli_fetch_all($query,MYSQLI_ASSOC);
+        if (count($id_inst)==0) {
+            $this->conn->query("
+                INSERT INTO db_pain.institution (name) VALUES ('".$institutionName."')
+            ");
+            $inst_query = $this->conn->query("
+                SELECT LAST_INSERT_ID() as last FROM institution LIMIT 1
+            ");
+            $id_inst = mysqli_fetch_all($inst_query,MYSQLI_ASSOC)[0]["last"];
+        } else {
+            $id_inst= $id_inst[0]["id"];
+        }
+        $get_course = $this->conn->query("
+            SELECT name FROM course WHERE name='".$courseName."'
+        ");
+        if (count(mysqli_fetch_all($get_course))>0) {
+            return $courseName;
+        }
+
+        //insert stuff
+        $this->conn->query("
+            INSERT INTO db_pain.course (institution, name) VALUES ($id_inst, '".$courseName."')
+        ");
+        $course = $this->conn->query("
+            SELECT course.name as courseName 
+            FROM course
+            WHERE course.course_id=LAST_INSERT_ID()
+        ");
+        return mysqli_fetch_all($course)[0][0];
+    }
+
+    public function getAllUsersByID($start,$end) {
+        $query = $this->conn->query("
+            SELECT DISTINCT us.user_id as id, us.login as name, c.name as Kurs, '123456' as password
+            FROM user us
+                     INNER JOIN user_mapping um on us.user_id = um.user_id
+                     INNER JOIn course c on um.course_id = c.course_id
+            WHERE us.user_id>='".$start."' and us.user_id<=".$end."
+        ");
+        return mysqli_fetch_all($query,MYSQLI_ASSOC);
+    }
+
+    public function updateUser($id,$password,$login,$email=null,$name=null,$surename=null) {
+        $update = "
+            UPDATE db_pain.user user
+            SET user.login = '".$login."' AND user.password = '".$password."' ";
+        if($email!= null) {
+            $update = $update."AND user.email='".$email."' ";
+        }
+        if ($name!=null) {
+            $update = $update."AND user.name='".$name."' ";
+        }
+        if ($surename!=null) {
+            $surename = $update."AND user.name='".$name."' ";
+        }
+        $update = $update."WHERE user.user_id=".$id;
+        $this->conn->query($update);
+    }
 }
+
+
+
+
+
+
+
+
