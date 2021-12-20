@@ -182,7 +182,7 @@ class Page {
                     break;
                 case 2:
                     $nav ='
-                        <a class="nav-link">Bewertungen</a>
+                        <a class="nav-link" href="'.$this->ROOTLIB  .'php/Bewertung/userBewertungAnsehen.php">Bewertungen</a>
                         <a class="nav-link">Projekte</a>
                     ';
                     break;
