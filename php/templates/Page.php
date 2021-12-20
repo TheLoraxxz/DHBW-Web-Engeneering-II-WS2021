@@ -84,6 +84,11 @@ class Page {
     }
     public static function getRoot() {
         $rootlib = dirname(__FILE__); //gets the directory this one is in --> used for adding scripts
+        $off = 0;
+        while (strpos($rootlib,"\\",$off)) {
+            $rootlib[strpos($rootlib,"\\",$off)] = "/";
+            $off = strpos($rootlib,"\\",$off)+1;
+        }
         return substr($rootlib,strpos($rootlib,"htdocs")+6)."/../../";
     }
     public function addElement($element) {
