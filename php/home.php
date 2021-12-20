@@ -37,15 +37,15 @@ switch ($page->getRole()) {
         $table->addColumn("Date",2);
         //if open to invite
         //wie bekomm ich die ProjectID her ???
-        $table->addColumn("Einladen",-1,$db->isInvitational(1), '<button class="btn btn-secondary">Einladen</button>');//invite other Students to a Project
+        $table->addColumn("Einladen",-1,$db->isInvitational(1),'<button class="btn btn-secondary" onclick="changeViewToInvite(this);">Edit</button>');// '<button class="btn btn-secondary" oncklick="changeViewToInvite(this);">Einladen</button>');//invite other Students to a Project
 
         if($db->getUserInvites($page->getSession()) != null)// Einladung vorhanden
         {
             $table->addButton("Einladungen",Page::getRoot()."php/user/project/AcceptInvite.php");
         }
         //you can see your own details. Abgeben is to submit the project
-        $table->addColumn("Details einsehen",-1,true,'<button class="btn btn-secondary">See Details</button>');
-        $table->addColumn("Abgeben",-1,true,'<button class="btn btn-primary">Abgeben</button>');
+        $table->addColumn("Details einsehen",-1,true,'<button class="btn btn-secondary" onclick="viewProjectDetails(this);">See Details</button>');
+        $table->addColumn("Abgeben",-1,true,'<button class="btn btn-primary" onclick="SubmitProject(this);">Abgeben</button>');
         $page->addJs("tablebuttons_home.js");
         $page->addElement($table);
         break;
@@ -68,4 +68,3 @@ switch ($page->getRole()) {
         break;
 }
 $page->printPage();
-

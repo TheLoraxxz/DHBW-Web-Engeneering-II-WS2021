@@ -546,13 +546,18 @@ class DBService {
         return $result;
     }
 
-    public function getAllUsersInCourse($userId) {
+    public function getAllUsersInCourse($userId, $projectId) {
         $query = $this->conn->query("
-            SELECT u.name FROM user as u
+            SELECT u.user_id , u.name FROM user as u
             INNER JOIN user_mapping um on um.user_id = u.user_id
             INNER JOIN course c on c.course_id = um.course_id
-            WHERE u.user_id =".$userId);
+            WHERE u.user_id !=".$userId);
         $result = mysqli_fetch_all($query);
         return $result;
+    }
+
+    public function createInvite($projectId, $userId)
+    {
+        $query = $this->conn->query("INSERT INTO invites (ID,Project_ID,User_ID) VALUES (null, $projectId,$userId)");
     }
 }
