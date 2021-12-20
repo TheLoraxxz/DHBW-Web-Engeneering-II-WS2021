@@ -34,7 +34,9 @@ function sort() {
         listPeople.children[i].setAttribute("style","display:block")
     }
     for (var i =0;i<listPeople.children.length;++i) {
-        if (!(listPeople.children[i].children[0].children[2].innerHTML==val_proj)) {
+        var list_projects = JSON.parse(listPeople.children[i].children[0].children[2].innerHTML);
+
+        if (!(list_projects.find((res)=>{return val_proj===res.project_id}))) {
             listPeople.children[i].setAttribute("style","display:none")
         }
     }

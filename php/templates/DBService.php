@@ -531,23 +531,37 @@ class DBService {
         }
 
     }
-
+    public function getProjectsToUSer($user_id) {
+        $query = $this->conn->query("
+            SELECT p.project_id FROM project as p
+            INNER join project_class pc on p.project_id = pc.project_id
+            INNER join user_mapping um on pc.course_id = um.course_id
+            WHERE user_id=".$user_id."
+        ");
+        $projects = mysqli_fetch_all($query,1);
+        $project_new = [];
+        foreach ($projects as $project) {
+            array_push($project_new,$project);
+        }
+        return json_encode($project_new);
+    }
 
     public function getAllSuitableUser($role,$userId) {
         if ($role==1) {
             $query = $this->conn->query("
-            SELECT us.surename,us.name,us.login, pc.project_id as project,us.user_id as id
-            FROM user as us
-            INNER JOIN user_mapping um on us.user_id = um.user_id
-            RIGHT JOIN project_class pc on um.course_id = pc.course_id
-            INNER JOIN user_role ur on us.user_id = ur.user_id
-            INNER JOIN role r on ur.role_id = r.role_id
-            WHERE r.role_id=2
+                SELECT DISTINCT us.surename,us.name,us.login,us.user_id as id
+                FROM user as us
+                 INNER JOIN user_mapping um on us.user_id = um.user_id
+                 RIGHT JOIN project_class pc on um.course_id = pc.course_id
+                 INNER JOIN user_role ur on us.user_id = ur.user_id
+                 INNER JOIN role r on ur.role_id = r.role_id
+                WHERE r.role_id=2   
+
             ");
             return mysqli_fetch_all($query,1);
         } else {
             $query = $this->conn->query("
-                 SELECT DISTINCT us.user_id as id,us.surename,us.name,us.login, p.project_id as project
+                 SELECT DISTINCT us.user_id as id,us.surename,us.name,us.login
                  FROM user as us
                  LEFT JOIN user_mapping um on us.user_id = um.user_id
                  INNER JOIN project_class pc on um.course_id = pc.course_id
