@@ -14,24 +14,27 @@ switch ($page->getRole()) {
         //add Data from SQL
         $table->addColumn("ID",0,false);
         $table->addColumn("Projekt",1);
-        $table->addColumn("Submission Date",5);
-        $table->addColumn("Completed",4);
-        $table->addColumn("Groups overall",3);
+        $table->addColumn("Eingabe Datum",5);
+        $table->addColumn("Gruppen Abgegeben",4);
+        $table->addColumn("Gruppen insgesamt",3);
         //buttons that each column so you can edit the porject or lock the group
         $editButton = '<button class="btn btn-secondary" onclick="editProject(this);">Edit</button>';
-        $table->addColumn("Edit Project",-1,true,$editButton);
-        $table->addColumn("See",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
+        $table->addColumn("Projekt bearbeiten",-1,true,$editButton);
+        $table->addColumn("Ansehen",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
         $table->addColumn("Gruppeneinladung sperren",-1,true,'<button class="btn btn-dark" onClick="lockData(this);">Sperren</button>');
         //button that links to group or project
-        $table->addButton("New Project","");
-        $table->addButton("New Group",Page::getRoot()."php/user/group/new_group_admin.php");
+        $table->addButton("Neues Projekt","");
+        $table->addButton("Neue Gruppe",Page::getRoot()."php/user/group/new_group_admin.php");
         $page->addElement($table);
         $page->addJs("tablebuttons_home.js");
+        if (isset($_GET["success"]) and $_GET["success"]=="newGroup")
+            $page->showSuccess("Neue Gruppe wurde erfolgreich eingefügt");
         break;
     //if it is a user
     case 2:
         $table = new Table($db->getUserHomeTable($page->getSession()));
         //add data  and add ID / name  / Date where you have to submit
+        $table->addButton("Neue Gruppe",$page::getRoot()."php/user/group/new_group_admin.php");
         $table->addColumn("ID",0,false);
         $table->addColumn("Name",1);
         $table->addColumn("Date",2);

@@ -2,3 +2,6 @@
     max-height: 400px;
     overflow-y: scroll;
 }
+.buttons {
+    margin-top: 20px;
+}
