@@ -5,7 +5,11 @@ class DBService {
     private $username = "root";
     private $password = "";
     private $conn ;
-    private $key = "e&sTC/k+i}^ha;b9%[E'TXm;%a32}dvk}=kH.niwE(R\"q+3T<#";
+
+    /**
+     * this function connects to the database automatically and looks whether the Database db_pain exists
+     * if not then it creates the whole table structure automatically
+    */
     function __construct() {
         $this->conn = new mysqli($this->host,$this->username,$this->password);
         $res = $this->conn->multi_query("USE db_pain;");
@@ -216,7 +220,12 @@ class DBService {
         WHERE user_id=".$user_id);
         return mysqli_fetch_all($role);
     }
-
+    /**
+     * this function gets login and clear password
+     * It gets the login from the user and the user id
+     * it verifies whether  it is the same login and if not it returns false
+     * else it sets the cookie so the user is logged in and it treturns true
+    */
     public function verifyLogin($login,$password) {
         $login = str_replace([";"," "],"",$login);
         $query = $this->conn->query("
@@ -232,13 +241,15 @@ class DBService {
             if (!isset($_COOKIE["GradlappainCook"])) {
                 setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
             } else {
-                setcookie("GradlappainCook" ,$result[0][1].$result[0][0]);
+                $_COOKIE["GradlappainCook"]=$result[0][1].$result[0][0];
             }
             return true;
         }
         return false;
     }
-
+    /**
+     * admin table for the home.php adm,in table
+    */
     public function getAdminHomeTable() {
         $query = $this->conn->query("
             SELECT proj.project_id,proj.name,proj.path_to_matrix as path,
@@ -255,16 +266,68 @@ class DBService {
             WHERE submission_date>=CURRENT_DATE()-1;
         ");
         $result = mysqli_fetch_all($query);
+        for($i=0;$i<count($result);$i++) {
+            $date = $result[$i][5];
+            $datetime = new DateTime($date);
+            $result[$i][5] = date_format($datetime,"d.m.Y H:i")." Uhr";
+        }
         return $result;
     }
+
+    /**
+     * user home table is set
+    */
     public function getUserHomeTable($userId) {
         $query = $this->conn->query("
-            SELECT groop.name,p.submission_date,p.name FROM groupings as groop
+            SELECT groop.group_id, groop.name,p.submission_date,p.name FROM groupings as groop
             INNER JOIN rating rat on groop.group_id = rat.group_id
             INNER JOIN user u on rat.user_id = u.user_id
             INNER JOIN project p on groop.project_id = p.project_id
             WHERE u.user_id =".$userId);
-        return mysqli_fetch_all($query);
+        $result = mysqli_fetch_all($query);
+        for($i=0;$i<count($result);$i++) {
+            $date = $result[$i][2];
+            try {
+                $datetime = new DateTime($date);
+                $result[$i][2] = date_format($datetime,"d.m.Y H:i")." Uhr";
+            } catch (Exception $e) {
+                $result[$i][2] =$date;
+            }
+
+        }
+        return $result;
+    }
+
+    /**
+     * gets the Data for the secretary table in home.php
+    */
+    public function getSecretareHomeTable($secretaryId) {
+        $query = $this->conn->query("
+            SELECT u.surename,u.name,c.name,rating.points,p.submission_date,p.points_reachable
+            FROM rating
+            INNER JOIN groupings g on rating.group_id = g.group_id
+            RIGHT JOIN project p on p.project_id = g.project_id
+            INNER JOIN user u on rating.user_id = u.user_id
+            LEFT JOIN project_class pc on p.project_id = pc.project_id
+            LEFT JOIN course c on pc.course_id = c.course_id
+            INNER JOIN institution i on c.institution = i.institution_id
+            WHERE i.institution_id = (SELECT inst.institution_id FROM institution inst
+                INNER JOIN user_mapping um on inst.institution_id = um.institution_id
+                WHERE um.user_id=".$secretaryId.");");
+        $result = mysqli_fetch_all($query);
+        for($i=0;$i<count($result);$i++) {
+            $date = $result[$i][4];
+            if($result[$i][3]==null) {
+                $result[$i][3] ="-----";
+            }
+            try {
+                $datetime = new DateTime($date);
+                $result[$i][4] = date_format($datetime,"d.m.Y");
+            } catch (Exception $e) {
+                $result[$i][4] =$date;
+            }
+        }
+        return $result;
     }
     public function getStammdaten($userId) {
         $query = $this->conn->query("
@@ -277,13 +340,13 @@ class DBService {
         if ($auswahl == 1) {
             $this->conn->query("
             UPDATE user u
-            SET login=$stammdaten
+            SET login='" . $stammdaten . "'
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 2) {
             $this->conn->query("
             UPDATE user u
-            SET email=$stammdaten
+            SET email='" . $stammdaten . "'
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 3) {
@@ -295,17 +358,75 @@ class DBService {
         if ($auswahl == 4) {
             $this->conn->query("
             UPDATE user u
-            SET name=$stammdaten
+            SET name='" . $stammdaten . "'
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 5) {
             $this->conn->query("
             UPDATE user u
-            SET surename=$stammdaten
+            SET surename='" . $stammdaten . "'
             WHERE u.user_id =" . $userId);
         }
     }
 
+    /**
+     * gets the number of people and then the course
+     * checks whether course is set if not it returns false else
+     * it creates for each a new login and user
+    */
+    public function createNewUsers($number,$course) {
+        $password =password_hash('123456',PASSWORD_BCRYPT);
+        $possibilities = "1234567890abcdefghijklmnopqrstuvwxyz_-.ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+        $users  = [];
+        for($i=0;$i<$number;++$i) {
+            $randomLogin = '';
+            for ($j=0;$j<6;++$j) {
+                $randomLogin = $randomLogin.$possibilities[rand(0,strlen($possibilities)-1)];
+            }
+            //select ocurse and institution id
+            $query = $this->conn->query("
+                SELECT course.course_id,i.institution_id
+                FROM course
+                INNER JOIN institution i on course.institution = i.institution_id
+                WHERE course.name='".$course."'
+
+
+            ");
+            $course_institution_id = mysqli_fetch_all($query);
+            if ($course_institution_id == false or count($course_institution_id)!=1) { //if it isnt found the course the course is returned
+                return -1;
+            }
+            $this->conn->multi_query("
+                INSERT INTO user (password, email, name, surename, login) VALUES ('".$password."' ,null, null,null,'".$randomLogin."');
+            ");
+            $query = $this->conn->query("
+                SELECT LAST_INSERT_ID() FROM user LIMIT 1
+            ");
+            $user_id = mysqli_fetch_all($query)[0][0];
+            array_push($users,$user_id);
+
+            $this->conn->multi_query("
+                INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (".$user_id.",".$course_institution_id[0][0].", ".$course_institution_id[0][1].")
+            ");
+            $this->conn->query("
+                INSERT INTO db_pain.user_role (role_id, user_id) VALUES (2, '".$user_id."');
+            ");
+        }
+        $table_query =$this->conn->query("
+            SELECT DISTINCT us.user_id as id, us.login as name, c.name as Kurs, '123456' as password
+            FROM user us
+            INNER JOIN user_mapping um on us.user_id = um.user_id
+            INNER JOIn course c on um.course_id = c.course_id
+            WHERE us.user_id>=".$users[0]." and us.user_id<=".$users[count($users)-1]."+1
+        ");
+        return mysqli_fetch_all($table_query,MYSQLI_ASSOC);
+    }
+
+    /**
+     * Gets cours name and institution name
+     * IF the institution already exists it is used else it is new created
+     * Then the course is created
+     */
     public function createNewCourse($courseName,$institutionName) {
         $query = $this->conn->query("
             SELECT institution_id as id
@@ -342,7 +463,9 @@ class DBService {
         ");
         return mysqli_fetch_all($course)[0][0];
     }
-
+    /**
+     * get all users after creating multiple users
+    */
     public function getAllUsersByID($start,$end) {
         $query = $this->conn->query("
             SELECT DISTINCT us.user_id as id, us.login as name, c.name as Kurs, '123456' as password
@@ -354,6 +477,10 @@ class DBService {
         return mysqli_fetch_all($query,MYSQLI_ASSOC);
     }
 
+    /**
+     * updates the user and the passsword.
+     * If the login is set and email is set and name and surename is set then it is updated
+    */
     public function updateUser($id,$password,$login=null,$email=null,$name=null,$surename=null) {
         $update = "
             UPDATE db_pain.user us
@@ -374,10 +501,56 @@ class DBService {
         $this->conn->query($update);
     }
 
+    /**
+     * this locks the group inventation of the current project so there can nobody invite others
+     */
     public function lockGroupInventation($id) {
         $this->conn->query("
             UPDATE project SET open_to_invite = FALSE 
             WHERE project_id=".$id);
+    }
+
+    public function getAllProjects() {
+        $query = $this->conn->query("
+            SELECT p.name,p.project_id 
+            FROM project as p
+            WHERE submission_date>=CURRENT_DATE()
+        ");
+        return mysqli_fetch_all($query,MYSQLI_ASSOC);
+    }
+
+
+    public function getAllSuitableUser($role,$userId,$project = null) {
+        if ($role==1) {
+            $query = $this->conn->query("
+            SELECT us.surename,us.name,us.login, pc.project_id as project,us.user_id as id
+            FROM user as us
+            INNER JOIN user_mapping um on us.user_id = um.user_id
+            RIGHT JOIN project_class pc on um.course_id = pc.course_id
+            INNER JOIN user_role ur on us.user_id = ur.user_id
+            INNER JOIN role r on ur.role_id = r.role_id
+            WHERE r.role_id=2
+            ");
+            return mysqli_fetch_all($query,1);
+        } else {
+            $query = $this->conn->query("
+                 SELECT DISTINCT us.user_id as id,us.surename,us.name,us.login, p.project_id as project
+                 FROM user as us
+                 LEFT JOIN user_mapping um on us.user_id = um.user_id
+                 INNER JOIN project_class pc on um.course_id = pc.course_id
+                 INNER JOIN course c on pc.course_id = c.course_id
+                 INNER JOIN user_role ur on us.user_id = ur.user_id
+                 INNER JOIN role r on ur.role_id = r.role_id
+                 INNER JOIN project p on pc.project_id = p.project_id
+                 WHERE c.course_id=(
+                    SELECT cour.course_id
+                    FROM course as cour
+                    INNER JOIN user_mapping u on cour.course_id = u.course_id
+                    WHERE u.user_id=".$userId." LIMIT 1
+                 )  AND r.role_id=2
+            ");
+            return mysqli_fetch_all($query,MYSQLI_ASSOC);
+        }
     }
 
     public function getUserBewertungTable($userID) {
@@ -388,5 +561,18 @@ class DBService {
             INNER JOIN project p on g.project_id = p.project_id
         WHERE r.user_id =" . $userID);
         return mysqli_fetch_all($query);
+    }
+    public function getGroupRatingStuff($groupID) {
+        $query = $this->conn->query("
+        SELECT r.user_id, u.name 
+        FROM rating r
+            INNER JOIN user u on r.user_id = u.user_id
+        WHERE r.group_id=".$groupID);
+        return mysqli_fetch_all($query);
+    }
+    public function updatePoints($points, $user) {
+        $this->conn->query("
+            UPDATE rating SET points = '".$points."' 
+            WHERE user_id=".$user);
     }
 }
