@@ -37,7 +37,7 @@ switch ($page->getRole()) {
         $table->addColumn("Date",2);
         //if open to invite
         //wie bekomm ich die ProjectID her ???
-        $table->addColumn("Einladen",-1,$db->isInvitational(1),'<button class="btn btn-secondary" onclick="changeViewToInvite(this);">Edit</button>');// '<button class="btn btn-secondary" oncklick="changeViewToInvite(this);">Einladen</button>');//invite other Students to a Project
+        $table->addColumn("Einladen",-1,true/*$db->isInvitational(ProjektId)*/,'<button class="btn btn-secondary" onclick="changeViewToInvite(this);">Edit</button>');// '<button class="btn btn-secondary" oncklick="changeViewToInvite(this);">Einladen</button>');//invite other Students to a Project
 
         if($db->getUserInvites($page->getSession()) != null)// Einladung vorhanden
         {
