@@ -3,29 +3,49 @@ include_once('../../templates/Page.php');
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
+if (isset($_POST) and count($_POST)>0) {
+    if ($page->getRole()==1) {
+        $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"]));
+    } else {
+        $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"],$page->getSession(),false));
+    }
+    header('Location: '.$page::getRoot().'php/home.php?success=newGroup');
+    die();
+}
+
 $html = '
 <div class="container-fluid main">
     <div class="row">
     <div class="col-md-3">
 ';
 //wenn es ein admin ist zeigt es noch die auswahl welches projekt man selektieren möchte
-if ($page->getRole()==1) {
+if($page->getRole()!=3) {
     $html = $html.'
         <div class="form-floating">
             <select class="form-select" id="projects_input">
                 <option selected>-</option>';
-    $projects = $db->getAllProjects();
+    if ($page->getRole()==1) {
+        $projects = $db->getAllProjects();
+    } else {
+        $projects = $db->getAllProjects($page->getSession());
+        if (count($projects)==0) {
+            $page->showSuccess("Keine Gruppen zu erstellen!");
+            $page->addHtml('<div class="container-fluid main"><button onclick="goBack()" class="btn btn-primary">Zurück</button></div>');
+            $page->addJs("admin/create_group.js");
+            $page->printPage();
+            exit();
+        }
+    }
+
     for ($i=0;$i<count($projects);++$i) {
-        $html = $html.'<option onclick="sort()" value="'.$projects[$i]["project_id"].'">'.$projects[$i]["name"].'</option>';
+        $html = $html.'
+        <option onclick="sort()" value="'.$projects[$i]["project_id"].'|'.$projects[$i]["max"].'">'.$projects[$i]["name"].'</option>';
+
     }
     $html = $html.'
             </select>
             <label class="form-label" >Project auswählen</label>
         </div>
-    ';
-}
-if($page->getRole()!=3) {
-    $html = $html.'
             <div>
                 <label for="group_name" class="form-label">Name:</label>
                 <input id="group_name" class="form-control">
@@ -33,8 +53,12 @@ if($page->getRole()!=3) {
             <div>
                 <label class="form-label" for="inventations">Teilnehmer</label>
                 <div class="input-group">
-                    <input class="form-control" id="inventations">
+                    <input class="form-control" id="inventations" disabled>
                     <button class="btn btn-outline-secondary" onclick="openList()">Invite</button>
+                </div>
+                <div class="buttons">
+                    <button class="btn btn-primary" onclick="submitForm()">Einreichen</button>
+                    <button class="btn btn-secondary" onclick="goBack()">Zurück</button>
                 </div>
             </div>
     </div>
@@ -71,11 +95,10 @@ if($page->getRole()!=3) {
     $html = $html.'                </ul>
             </div>
         </div>
-        <form style="display: none;" action="new_group_admin.php" method="post">
+        <form style="display: none;" action="new_group_admin.php" method="post" id="submitform">
             <input type="text" id="course_id" name="course">
             <input type="text" id="name" name="group_name">
-            <input type="text" id="member" name="member">
-            
+            <input type="text" id="member" name="member"> 
         </form>
     </div>
     ';
