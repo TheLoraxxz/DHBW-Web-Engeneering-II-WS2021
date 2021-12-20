@@ -510,17 +510,30 @@ class DBService {
             WHERE project_id=".$id);
     }
 
-    public function getAllProjects() {
-        $query = $this->conn->query("
-            SELECT p.name,p.project_id 
+    public function getAllProjects($current_id=null) {
+        if ($current_id==null) {
+            $query = $this->conn->query("
+            SELECT p.name,p.project_id,p.max_of_students as max
             FROM project as p
             WHERE submission_date>=CURRENT_DATE()
+
         ");
-        return mysqli_fetch_all($query,MYSQLI_ASSOC);
+            return mysqli_fetch_all($query,MYSQLI_ASSOC);
+        } else {
+            $query = $this->conn->query("
+                SELECT p.name,p.project_id,p.max_of_students as max
+                FROM project as p
+                LEFT JOIN project_class pc on p.project_id = pc.project_id
+                LEFT JOIN user_mapping um on pc.course_id = um.course_id
+                WHERE submission_date>=CURRENT_DATE() and um.user_id=".$current_id." and p.open_to_invite=True
+            ");
+            return mysqli_fetch_all($query,MYSQLI_ASSOC);
+        }
+
     }
 
 
-    public function getAllSuitableUser($role,$userId,$project = null) {
+    public function getAllSuitableUser($role,$userId) {
         if ($role==1) {
             $query = $this->conn->query("
             SELECT us.surename,us.name,us.login, pc.project_id as project,us.user_id as id
@@ -547,9 +560,37 @@ class DBService {
                     FROM course as cour
                     INNER JOIN user_mapping u on cour.course_id = u.course_id
                     WHERE u.user_id=".$userId." LIMIT 1
-                 )  AND r.role_id=2
+                 )  AND r.role_id=2 AND us.user_id!=".$userId."
             ");
             return mysqli_fetch_all($query,MYSQLI_ASSOC);
+        }
+    }
+
+
+
+    public function createGroup($course_id,$name,$member,$currentId=null,$isAdmin=true) {
+        $this->conn->query("
+            INSERT INTO db_pain.groupings (name, submitted, submitted_time, project_id) VALUES ('".$name."', DEFAULT, null, ".$course_id.")
+        ");
+        $query = $this->conn->query("
+            SELECT LAST_INSERT_ID() FROM project LIMIT 1
+        ");
+        $group_id = mysqli_fetch_all($query)[0][0];
+        if ($isAdmin) {
+            foreach ($member as $user_id) {
+                $this->conn->query("
+                    INSERT INTO db_pain.rating (user_id, group_id, points, is_admin) VALUES (".$user_id.", ".$group_id.", null, DEFAULT)
+                ");
+            }
+        } else {
+            $this->conn->query("
+                    INSERT INTO db_pain.rating (user_id, group_id, points, is_admin) VALUES (".$currentId.", ".$group_id.", null, DEFAULT)
+                ");
+            foreach ($member as $user_id) {
+                $this->conn->query("
+                    INSERT INTO db_pain.rating (user_id, group_id, points, is_admin) VALUES (".$user_id.", ".$group_id.", null, DEFAULT)
+                ");
+            }
         }
     }
 }
