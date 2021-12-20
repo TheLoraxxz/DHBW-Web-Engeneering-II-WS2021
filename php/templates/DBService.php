@@ -306,11 +306,14 @@ class DBService {
         return $result;
     }
 
-    public function setProjekt($name, $max_of_students, $points_reachable, $submission_date, $open_to_invite, $path_to_matrix) {
+    public function setProjekt($points_reachable, $path_to_matrix,  $submission_date, $open_to_invite, $max_of_students, $name) {
+
+        $date = new DateTime($submission_date);
+
         $query = $this->conn->query("
-        INSERT INTO project (points_reachable, path_to_matrix, submission_date, open_to_invite, max_of_students, name)
-        VALUES (".$points_reachable.", ".$path_to_matrix.", ".$submission_date.", ".$open_to_invite.", ".$max_of_students.",".$name.") ");
-        return 1;
+        INSERT INTO db_pain.project (points_reachable, path_to_matrix, submission_date, open_to_invite, max_of_students, name)
+        VALUES (".$points_reachable.", '".$path_to_matrix."', '".$date->format('Y-m-d H:i:s:u')."', ".$open_to_invite.", ".$max_of_students.",'".$name."') ");
+
     }
 
     public function getProjekt($projekt_id) {
@@ -318,6 +321,21 @@ class DBService {
             SELECT project_id,  name, max_of_students, points_reachable, submission_date, open_to_invite, path_to_matrix FROM project pro
             WHERE pro.project_id =" .$projekt_id);
         return mysqli_fetch_fall($query);
+    }
+
+    public function createUser($user_id, $password, $email, $login, $name, $surename){
+
+        if(user_id > 0) {
+            $query = $this->conn->query("
+                INSERT INTO db_pain.project(password, email, login, name, surename)
+                VALUES (".$password.", ".$email.", ".$login.", ".$name." ,".$surename.")
+                WHERE user_id = ".$user_id
+            );
+        }
+
+
+
+
     }
 
 
