@@ -68,14 +68,13 @@ class Table
             if (count($this->columns) > 0) {
                 for ($i = 0; $i < count($this->columns); ++$i) { //make Thgead and the head of the table
                     if ($this->columns[$i]["show"]) { // if it is suppoed to be shown it
-                        $string = $string . '<td>' . $this->columns[$i]["name"] . '</td>';
-                    } else {
                         if ($this->columns[$i]["HTML"]==null) {
-                            $string = $string . '<td style="display: none;">' . $this->columns[$i]["name"] . '</td>';
+                            $string = $string . '<td onclick="sortTable(this)">' . $this->columns[$i]["name"] . '</td>';
                         } else {
-                            $string = $string . '<td style="display: none;">' . $this->columns[$i]["name"] . '</td>';
+                            $string = $string . '<td>' . $this->columns[$i]["name"] . '</td>';
                         }
-
+                    } else {
+                        $string = $string . '<td style="display: none;">' . $this->columns[$i]["name"] . '</td>';
                     }
                 }
             } else { //wenn keine Columns angegeben werde nwerden einfach alle Daten raus geschreiben
