@@ -201,7 +201,6 @@ class DBService {
                 INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (3, null, 1);
             ");
         }
-        return $res;
     }
 
     public function getUserSession() {
@@ -329,6 +328,16 @@ class DBService {
         }
         return $result;
     }
+
+    public function setProjekt($points_reachable, $path_to_matrix,  $submission_date, $open_to_invite, $max_of_students, $name) {
+
+        $date = new DateTime($submission_date);
+
+        $query = $this->conn->query("
+        INSERT INTO db_pain.project (points_reachable, path_to_matrix, submission_date, open_to_invite, max_of_students, name)
+        VALUES (".$points_reachable.", '".$path_to_matrix."', '".$date->format('Y-m-d H:i:s:u')."', ".$open_to_invite.", ".$max_of_students.",'".$name."') ");
+
+    }
     public function getStammdaten($userId) {
         $query = $this->conn->query("
             SELECT login, email, password, name, surename FROM user u
@@ -369,6 +378,105 @@ class DBService {
             WHERE u.user_id =" . $userId);
         }
     }
+    public function setUser($user_id, $login, $email, $password, $surename, $name){
+        if($user_id > 0) {
+            $query = $this->conn->query("
+                UPDATE db_pain.user
+                SET password = '".$password."', email = '".$email."', login = '".$login."', name = '".$name."', surename = '".$surename."'
+                WHERE user_id = ".$user_id
+            );
+            return false;
+        } else {
+            $query = $this->conn->query("
+                INSERT INTO db_pain.user(password, email, login, name, surename)
+                VALUES ('".$password."', '".$email."', '".$login."', '".$name."' ,'".$surename."')"
+            );
+            $tempID = $this->conn->query("
+            SELECT LAST_INSERT_ID() FROM db_pain.user LIMIT 1
+            ");
+            return mysqli_fetch_all($tempID)[0][0];
+        }
+    }
+
+    public function setUserCIR($user_id, $institute, $course_input, $role_input, $userStatus) {
+        $query = $this->conn->query("
+            SELECT institution_id FROM institution WHERE name = '".$institute."' limit 1
+            
+        ");
+        $instValue = mysqli_fetch_all($query);
+
+
+        if(count($instValue) == 0 ) {
+            $this->conn->query("
+            INSERT INTO db_pain.institution (name) VALUES ('".$institute."')
+            ");
+
+            $query = $this->conn->query("
+            SELECT LAST_INSERT_ID() FROM db_pain.institution LIMIT 1
+            ");
+            $instValue = mysqli_fetch_all($query)[0][0];
+        } else {
+            $instValue = $instValue[0][0];
+        }
+
+
+        $query = $this->conn->query("
+            SELECT course_id FROM course WHERE name = '".$course_input."' limit 1
+            
+        ");
+        $courseValue = mysqli_fetch_all($query);
+
+        if(count($courseValue) == 0 ) {
+            $this->conn->query("
+            INSERT INTO db_pain.course (institution, name) VALUES (".$instValue.", '".$course_input."')
+            ");
+
+            $query = $this->conn->query("
+            SELECT LAST_INSERT_ID() FROM db_pain.course LIMIT 1
+            ");
+            $courseValue = mysqli_fetch_all($query)[0][0];
+        } else {
+            $courseValue = $courseValue[0][0];
+        }
+
+        if(!$userStatus) {
+            $this->conn->query("
+                UPDATE db_pain.user_mapping
+                SET course_id = ".$course_input.", institution_id = ".$institute."
+                WHERE user_id = ".$user_id
+            );
+
+            $this->conn->query("
+                UPDATE db_pain.user_role
+                SET role_id = ".$role_input."
+                WHERE user_id = ".$user_id
+            );
+        } else {
+            $this->conn->query("
+            INSERT INTO db_pain.user_mapping (user_id, course_id, institution_id) VALUES (".$userStatus.",".$courseValue." , ".$instValue.")
+        ");
+
+            $this->conn->query("
+            INSERT INTO db_pain.user_role (role_id, user_id) VALUES (".$role_input.", ".$userStatus.")
+        ");
+        }
+
+
+
+    }
+
+    public function getUser($user_id) {
+        $query = $this->conn->query("
+            SELECT u.user_id, r.role_id, u.password, u.email, u.login, u.name, u.surename, c.name, i.name
+            FROM user u
+            INNER JOIN user_role r ON r.user_id = u.user_id
+            RIGHT JOIN user_mapping m ON m.user_id = u.user_id
+            INNER JOIN course c ON c.course_id = m.course_id
+            INNER JOIN institution i ON i.institution_id = m.institution_id
+            WHERE u.user_id = " .$user_id);
+        return mysqli_fetch_all($query);
+    }
+
 
     /**
      * gets the number of people and then the course

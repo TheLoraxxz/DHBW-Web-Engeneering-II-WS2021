@@ -11,8 +11,8 @@ if ($page->getRole()==1) {
         if ($_GET["action"] == "overview") {
             $table = new Table($db->getAllUsersByID(0, "(SELECT MAX(us.user_id) LIMIT 1)"));
             $table->addTableHeading("User Übersicht");
-            $table->addButton("Schüler hinzufügen", Page::getRoot() . "php/admin/create_user.php?action=multiple_user");
-            $table->addButton("Einzelner User hinzufügen", Page::getRoot() . "php/admin/create_edit_user.php?action=new");
+            $table->addButton("Schüler hinzufügen", Page::getRoot() . "admin/create_user.php?action=multiple_user");
+            $table->addButton("Einzelner User hinzufügen", Page::getRoot() . "admin/create_edit_user.php?action=new&user_id=-1");
             $table->addColumn("ID", "id", false);
             $table->addColumn("Name", "name");
             $table->addColumn("Kurs", "Kurs");
@@ -24,7 +24,7 @@ if ($page->getRole()==1) {
             $table->addColumn("Passwort Zurücksetzen", -1, true, $resetPassword);
             $edit = '
                 <div>
-                    <button class="btn btn-secondary">Bearbeiten</button>
+                    <button class="btn btn-secondary" onclick="editUser(this)">Bearbeiten</button>
                 </div>
             ';
             $table->addColumn("Bearbeiten",-1,true,$edit);
@@ -106,7 +106,7 @@ if ($page->getRole()==1) {
         if ($tableData == null) {
             $page->showError("Fehler beim einfügen in der Datenbank ");
         } elseif ($tableData == -1) {
-            $page->showError("Kurs: ,," . $_POST["course_name"] . "nicht gefunden");
+            $page->showError("Kurs: " . $_POST["course_name"] . "nicht gefunden");
             $html = '
                 <div class="container-fluid"><a href="create_user.php"><button class="btn btn-primary">Zurück</button></a></div>
             ';
