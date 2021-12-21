@@ -6,12 +6,14 @@ $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 if ($page->getRole()==1) {
 
+    //übersetzung von der Variablen in tinyInt für die Datenbank.
     if($_POST["open_to_invite"] == "Ja") {
         $open_to_invite = 1;
     } else {
         $open_to_invite = 0;
     }
 
+    //Wurden Werte übergeben wird hier das Projekt über setProjekt() in DBService.php in der Datenbank erstellt.
     if(isset($_POST["name"])) {
         $project = $db->setProjekt($_POST["points_reachable"], $_POST["path_to_matrix"], $_POST["submission_date"], $open_to_invite, $_POST["max_of_students"], $_POST["name"]);
         if(!$db->createClass_Project($project,$_POST["klasscourse"])) {

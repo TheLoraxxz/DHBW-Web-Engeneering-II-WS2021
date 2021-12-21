@@ -8,6 +8,11 @@ if($page->getRole() == 1) {
 
     $id = $_GET["user_id"];
 
+    /**
+     *  Quellcode zur Usererstellung.
+     *  Bei Bearbeitung/Neuerstellung werden abhaengig von der uebergebenen user_id das Formular mit bestehenden Werten aufgefuellt.
+    */
+
     if(isset($id)) {
         if($id > 0) {
             $userArray = $db->getUser($id);

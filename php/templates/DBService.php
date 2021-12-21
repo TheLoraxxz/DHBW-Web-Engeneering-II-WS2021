@@ -329,6 +329,11 @@ class DBService {
         return $result;
     }
 
+    /**
+     *  Einfuegen der Daten aus createProject.php in die Datenbank.
+     *  Dabei wird das Datum in das korrekte Format fuer die Datenbank uebersetzt.
+     */
+
     public function setProjekt($points_reachable, $path_to_matrix,  $submission_date, $open_to_invite, $max_of_students, $name) {
 
         $date = new DateTime($submission_date);
@@ -378,6 +383,12 @@ class DBService {
             WHERE u.user_id =" . $userId);
         }
     }
+
+    /**
+     *  Einfuegen der Daten aus create_user.php in die Datenbank.
+     *  Anhand der uebergebenen user_id kann zwischen neuem Nutzer oder existierendem Nutzer unterschieden werden.
+     */
+
     public function setUser($user_id, $login, $email, $password, $surename, $name){
         if($user_id > 0) {
             $query = $this->conn->query("
@@ -397,6 +408,12 @@ class DBService {
             return mysqli_fetch_all($tempID)[0][0];
         }
     }
+
+    /**
+     *  Zusatzfunktion zu setUser() fuer die Erstellung/Bearbeitung eines Nutzers.
+     *  Hier werden ergaenzend das Institut, der Kurs und die Rolle angelegt oder editiert.
+     *  Ein Kurs/Institut das nicht in der Datenbank vorhanden ist wird neu erstellt.
+     */
 
     public function setUserCIR($user_id, $institute, $course_input, $role_input, $userStatus) {
         $query = $this->conn->query("
@@ -460,11 +477,11 @@ class DBService {
             INSERT INTO db_pain.user_role (role_id, user_id) VALUES (".$role_input.", ".$userStatus.")
         ");
         }
-
-
-
     }
 
+    /**
+     *  Abfrage der Datenbank fuer die Bearbeitung eines Nutzers in create_edit_user.php anhand der id.
+     */
     public function getUser($user_id) {
         $query = $this->conn->query("
             SELECT u.user_id, r.role_id, u.password, u.email, u.login, u.name, u.surename, c.name, i.name

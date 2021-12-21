@@ -4,6 +4,9 @@ include_once("../templates/DBService.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
+
+//  Html Code für das Formular mit dem neue Projekte erstellt werden können.
+
 if ($page->getRole()==1) {
     $string = '
         <div class="container-md mt-5" >
@@ -52,11 +55,7 @@ if ($page->getRole()==1) {
         </div>
     ';
 
-
-
     $page->addHtml($string);
-
-
 
 } else {
     $page->showError("Keinen Zugriff");
