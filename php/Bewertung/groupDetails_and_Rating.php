@@ -31,7 +31,7 @@ $string = '
             '.$html.'
             <br>
             <button class="btn-sm btn-primary">Speichern</button>
-            <button type="button" class="btn-sm btn-primary" href="">Zurück</button>
+            <a type="button" class="btn-sm btn-primary" href="../home.php">Zurück</a>
         </form>
         <div class="col-sm"></div>
     </div>
