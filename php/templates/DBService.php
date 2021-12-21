@@ -646,6 +646,9 @@ class DBService {
         ");
         $grades = mysqli_fetch_all($query,1);
         for ($i=0;$i<count($grades);++$i) {
+            if ($grades[$i]["points"]==null) {
+                $grades[$i]["points"] = "k.A.";
+            }
             $grades[$i]["points"] =$grades[$i]["points"]."/".$grades[$i]["points_reachable"];
             unset($grades[$i]["points_reachable"]);
         }
