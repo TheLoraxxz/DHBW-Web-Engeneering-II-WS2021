@@ -758,22 +758,6 @@ class DBService {
         UPDATE groupings SET `submitted`=1,`submitted_time`=".$timeStamp."
         WHERE  groupings.group_id=".$result[0][0]);
     }
-
-    public function setProjekt($points_reachable, $path_to_matrix,  $submission_date, $open_to_invite, $max_of_students, $name) {
-
-        $date = new DateTime($submission_date);
-
-
-
-        $this->conn->query("
-        INSERT INTO db_pain.project (points_reachable, path_to_matrix, submission_date, open_to_invite, max_of_students, name)
-        VALUES (".$points_reachable.", '".$path_to_matrix."', '".$date->format('Y-m-d H:i:s:u')."', ".$open_to_invite.", ".$max_of_students.",'".$name."') ");
-        $query = $this->conn->query("
-            SELECT LAST_INSERT_ID() FROM project LIMIT 1
-        ");
-        return mysqli_fetch_all($query)[0][0];
-
-    }
     public function createClass_Project($project_id,$course_name) {
         var_dump($course_name);
         $query =$this->conn->query("SELECT course_id FROM course WHERe name='".$course_name."' LIMIT 1");
