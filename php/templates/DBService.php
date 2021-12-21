@@ -576,4 +576,11 @@ class DBService {
             UPDATE rating SET points = '".$points."' 
             WHERE user_id=".$user);
     }
+    public function getPwAlt($user) {
+        $query = $this->conn->query("
+        SELECT password
+        FROM user
+        WHERE user_id=".$user);
+        return mysqli_fetch_all($query);
+    }
 }
