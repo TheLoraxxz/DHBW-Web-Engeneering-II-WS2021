@@ -30,6 +30,7 @@ $string = '
             </div>
             '.$html.'
             <br>
+                <input type="hidden" name="gruppeID" value="'.$_GET["disGruppe"].'">
             <button class="btn-sm btn-primary">Speichern</button>
             <button type="button" class="btn-sm btn-primary" href="">Zurück</button>
         </form>
