@@ -20,7 +20,7 @@ class DBService {
                 USE db_pain;
                 
                 create table institution(institution_id int,name varchar(1000) not null);
-                create table invites(ID int,Project_ID int, User_ID int);
+                create table invites(ID int,Group_ID int, User_ID int);
                 create unique index institution_institution_id_uindex on institution (institution_id);
                 alter table institution	add constraint institution_pk primary key (institution_id);
                 alter table institution modify institution_id int auto_increment;
@@ -532,6 +532,10 @@ class DBService {
         }
 
     }
+
+    /**
+     * gets user id and gives back all the projects it is in
+    */
     public function getProjectsToUSer($user_id) {
         $query = $this->conn->query("
             SELECT p.project_id FROM project as p
@@ -546,7 +550,9 @@ class DBService {
         }
         return json_encode($project_new);
     }
-
+    /**
+     * gets all user to one user which he is allowed to invite
+    */
     public function getAllSuitableUser($role,$userId) {
         if ($role==1) {
             $query = $this->conn->query("
@@ -582,7 +588,10 @@ class DBService {
     }
 
 
-
+    /**
+     * creates gorup and getzs the id of this project
+     * then it creates the connection in rating for each user id
+    */
     public function createGroup($course_id,$name,$member,$currentId=null,$isAdmin=true) {
         $this->conn->query("
             INSERT INTO db_pain.groupings (name, submitted, submitted_time, project_id) VALUES ('".$name."', DEFAULT, null, ".$course_id.")
@@ -599,16 +608,17 @@ class DBService {
             }
         } else {
             $this->conn->query("
-                    INSERT INTO db_pain.rating (user_id, group_id, points, is_admin) VALUES (".$currentId.", ".$group_id.", null, DEFAULT)
+                    INSERT INTO db_pain.rating (user_id, group_id, points, is_admin) VALUES (".$currentId.", ".$group_id.", null, 1)
                 ");
             foreach ($member as $user_id) {
-                $this->conn->query("
-                    INSERT INTO db_pain.rating (user_id, group_id, points, is_admin) VALUES (".$user_id.", ".$group_id.", null, DEFAULT)
-                ");
+
+                $this->createInvite($group_id,$user_id);
             }
         }
     }
-
+    /**
+     * gets all the projects to have a project overview
+    */
     public function getAllProjectsDetails($project_id) {
         $query =$this->conn->query("
            SELECT g.group_id as id, p.name as project,g.name as groupname,g.submitted,g.submitted_time,g.group_id,g.name,
@@ -685,12 +695,14 @@ class DBService {
         WHERE user_id=".$user);
         return mysqli_fetch_all($query);
     }
+
     public function getUserInvites($userId) {
         $query = $this->conn->query("
-            SELECT inv.Group_ID,p.name,p.submission_date FROM invites as inv
-            INNER JOIN user u on inv.User_ID = u.user_id
-            INNER JOIN project p on inv.Group_ID = p.project_id
-            WHERE u.user_id =".$userId);
+        SELECT inv.Group_ID,p.name,p2.submission_date FROM invites as inv
+      INNER JOIN user u on inv.User_ID = u.user_id
+      INNER JOIN groupings p on inv.Group_ID= p.group_id
+        INNER JOIN project p2 on p.project_id = p2.project_id
+        WHERE u.user_id =".$userId);
         $result = mysqli_fetch_all($query);
         return $result;
     }

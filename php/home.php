@@ -45,7 +45,7 @@ switch ($page->getRole()) {
 
         if($db->getUserInvites($page->getSession()) != null)// Einladung vorhanden
         {
-            $table->addButton("Einladungen",Page::getRoot()."we2/php/user/project/AcceptInvite.php");
+            $table->addButton("Einladungen",Page::getRoot()."php/user/project/AcceptInvite.php");
         }
         if(isset($_GET["ProjektId"]))
         {

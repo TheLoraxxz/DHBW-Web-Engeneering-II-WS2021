@@ -7,7 +7,7 @@ if (isset($_POST) and count($_POST)>0) {
     if ($page->getRole()==1) {
         $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"]));
     } else {
-        $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"],$page->getSession(),false));
+        $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"]),$page->getSession(),false);
     }
     header('Location: '.$page::getRoot().'php/home.php?success=newGroup');
     die();
