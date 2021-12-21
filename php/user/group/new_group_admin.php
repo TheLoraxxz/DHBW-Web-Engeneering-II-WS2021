@@ -67,6 +67,7 @@ if($page->getRole()!=3) {
             <div>
                 <ul class="list-group list_of_people">';
     $users = $db->getAllSuitableUser($page->getRole(),$page->getSession());
+    //für jeden user wird ein user hinzu gefügt und dann wird dazu ein projekt hinzugefügt- Dadurch kann man das alles auswählen
     for ($i=0;$i<count($users);$i++) {
         if ($users[$i]["surename"] == null or $users[$i]["name"]==null) {
             $html = $html.'
@@ -89,6 +90,7 @@ if($page->getRole()!=3) {
         }
 
     }
+    //shadowform für das abschicken hinzufügen
 
     $html = $html.'                </ul>
             </div>
