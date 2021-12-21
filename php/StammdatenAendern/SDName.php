@@ -28,7 +28,7 @@ $string = '
             <h2>Name ändern</h2>
             <div>
             <br>
-                <input name="name" placeholder="Neuer Name">
+                <input class="form-control" name="name" placeholder="Neuer Name">
                 <button class="btn-sm btn-primary">Speichern</button>
                 <br>
                 <br>

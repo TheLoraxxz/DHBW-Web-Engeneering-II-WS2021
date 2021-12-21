@@ -29,7 +29,7 @@ $string = '
             <h2>Nachname ändern</h2>
             <div>
             <br>
-                <input name="nachname" placeholder="Neuer Nachname">
+                <input class="form-control" name="nachname" placeholder="Neuer Nachname">
                 <button class="btn-sm btn-primary">Speichern</button>
                 <br>
                 <br>

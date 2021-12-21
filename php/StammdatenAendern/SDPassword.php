@@ -31,8 +31,8 @@ $string = '
             <h2>Passwort ändern</h2>
             <div>
                 <br>
-                <input name="pw" placeholder="Neues Passwort">
-                <input name="pwWdh" placeholder="Neues Passwort wiederholen">
+                <input class="form-control" name="pw" placeholder="Neues Passwort">
+                <input class="form-control" name="pwWdh" placeholder="Neues Passwort wiederholen">
                 <br>
                 <br>
                 <button class="btn-sm btn-primary">Speichern</button>
