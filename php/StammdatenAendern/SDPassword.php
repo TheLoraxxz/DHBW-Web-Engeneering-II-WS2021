@@ -7,15 +7,19 @@ $db = $page->getDBService();
 $user = $page->getSession();
 $daten = $db->getStammdaten($user);
 
-if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
+if ((isset($_POST["pw"]) and isset($_POST["pwWdh"])) and isset($_POST["pwdAlt"])) {
     if (($_POST["pw"]==$_POST["pwWdh"])) {
         if ($_POST["pw"]!="") {
+            $pwAlt=$db->getPwAlt($user);
             $auswahl=3;
             $password = password_hash($_POST["pw"],PASSWORD_BCRYPT);
             $password="'".$password."'";
-            $db->stammdatenUpdate($password, $user, $auswahl);
-            $db->verifyLogin($daten[0][0],$_POST["pw"]);
-            header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/index.php?action=logout");
+            if (password_verify($_POST["pwdAlt"], $pwAlt[0][0])) {
+                $db->stammdatenUpdate($password, $user, $auswahl);
+                $db->verifyLogin($daten[0][0],$_POST["pw"]);
+                header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/index.php?action=logout");
+            } else
+                $page->showError("Falsches Altes Passwort!");
         } else
             $page->showError("Felder müssen gefüllt und gleich sein!");
     } else
@@ -34,6 +38,7 @@ $string = '
                 <input class="form-control" name="pw" placeholder="Neues Passwort">
                 <input class="form-control" name="pwWdh" placeholder="Neues Passwort wiederholen">
                 <br>
+                <input class="form-control" name="pwdAlt" placeholder="Altes Passwort">
                 <br>
                 <button class="btn-sm btn-primary">Speichern</button>
             </div>
