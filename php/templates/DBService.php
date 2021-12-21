@@ -811,8 +811,7 @@ class DBService {
       INNER JOIN groupings p on inv.Group_ID= p.group_id
         INNER JOIN project p2 on p.project_id = p2.project_id
         WHERE u.user_id =".$userId);
-        $result = mysqli_fetch_all($query);
-        return $result;
+        return mysqli_fetch_all($query);
     }
 
     public function isInvitational($projectID)
@@ -850,7 +849,7 @@ class DBService {
         //remove the specified invite from the database
         $this->conn->query("
             Delete FROM invites
-            WHERE User_ID =".$userId);//."AND Group_ID=".$groupId);
+            WHERE User_ID =".$userId." AND Group_ID=".$groupId);
     }
 
     public function SubmitGroupProject($userId,$projektId, $timeStamp)
@@ -863,7 +862,7 @@ class DBService {
         $result = mysqli_fetch_all($query,MYSQLI_NUM );
         //update submitted und subtime in der Gruppe
         $this->conn->query("
-        UPDATE groupings SET `submitted`=1,`submitted_time`=".$timeStamp."
+        UPDATE groupings SET `submitted`=1,`submitted_time`=.$timeStamp.
         WHERE  groupings.group_id=".$result[0][0]);
     }
     public function createClass_Project($project_id,$course_name) {
@@ -879,5 +878,14 @@ class DBService {
         return true;
     }
 
-
+    public function DeleteProject($project_id)
+    {
+        $this->conn->query("Delete FROM project_class  WHERE project_class.project_id =".$project_id);
+        $query =$this->conn->query("SELECT g.group_id FROM groupings as g WHERE g.project_id =".$project_id);
+        $group_id =mysqli_fetch_all($query,MYSQLI_NUM);
+        print($group_id[0][0]);
+        $this->conn->query("Delete FROM rating  WHERE rating.group_id = ".$group_id[0][0]);
+        $this->conn->query("Delete FROM groupings  WHERE groupings.project_id =".$project_id);
+        $this->conn->query("Delete FROM project  WHERE project.project_id =".$project_id);
+    }
 }

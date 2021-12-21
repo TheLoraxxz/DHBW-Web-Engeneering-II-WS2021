@@ -24,6 +24,11 @@ switch ($page->getRole()) {
         //button that links to group or project
         $table->addButton("Neues Projekt","./project/createProject.php");
         $table->addButton("Neue Gruppe",Page::getRoot()."php/user/group/new_group_admin.php");
+        $table->addColumn("Projekt löschen",-1,true,'<button class="btn btn-dark" onClick="deleteProject(this);">löschen</button>');
+        if(isset($_GET["ProjectId"]))
+        {
+            $db->DeleteProject($_GET["ProjectId"]);
+        }
         $page->addElement($table);
         $page->addJs("tablebuttons_home.js");
         if (isset($_GET["success"]) and $_GET["success"]=="newGroup")
@@ -44,11 +49,11 @@ switch ($page->getRole()) {
 
         if($db->getUserInvites($page->getSession()) != null)// Einladung vorhanden
         {
-            $table->addButton("Einladungen",Page::getRoot()."php/user/project/AcceptInvite.php");
+            $table->addButton("Einladungen",Page::getRoot()."we2/php/user/project/AcceptInvite.php");
         }
         if(isset($_GET["ProjektId"]))
         {
-            $db->SubmitGroupProject($page->getSession(),$_GET["ProjektId"],time());
+            $db->SubmitGroupProject($page->getSession(),$_GET["ProjektId"],date('Y-m-d h:m:s'));
         }
         $page->addJs("tablebuttons_home.js");
         $page->addElement($table);

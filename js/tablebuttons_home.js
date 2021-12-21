@@ -44,3 +44,9 @@ function SubmitProject(button)
     //$db->SubmitGroupProject(rowID,timestamp);
     window.location.href = "?action=lock&ProjektId=" +rowId;
 }
+
+function deleteProject(button)
+{
+    var rowId = button.parentElement.parentElement.firstElementChild.innerHTML;
+    window.location.href = "?action=lock&ProjectId=" +rowId;
+}
