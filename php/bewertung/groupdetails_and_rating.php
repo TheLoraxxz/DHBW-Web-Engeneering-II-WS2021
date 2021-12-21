@@ -22,17 +22,17 @@ foreach ($daten as $value) {
 }
 
 /** Frontend wird gebaut */
-$page->addCs('Bewertung/bewertung.css');
+$page->addCs('bewertung/bewertung.css');
 $string = '
 <div  class="container">
     <div class="row">
         <div class="col-lg"></div>   
-        <form class="col-lg main_window" action="groupDetails_and_Rating_Backend.php" method="post">
+        <form class="col-lg main_window" action="groupdetails_and_rating_backend.php" method="post">
             <h2>Gruppen Details</h2>
             <div>
                 <input type="number" class="form-control" name="gPoints" placeholder="Punkte für Alle vergeben">
             </div>
-            '.$html.'
+            ' .$html.'
             <br>
                 <input type="hidden" name="gruppeID" value="'.$_GET["disGruppe"].'">
             <button class="btn-sm btn-primary">Speichern</button>

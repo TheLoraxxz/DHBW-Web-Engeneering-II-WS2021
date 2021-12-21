@@ -21,4 +21,4 @@ if (isset($_POST["gPoints"]) and $_POST["gPoints"]!="") {
     }
 }
 /** zurück auf die eigentliche Seite redirecten */
-header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/Bewertung/groupDetails_and_Rating.php?action=done");
+header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/bewertung/groupdetails_and_rating.php?action=done");

@@ -14,21 +14,21 @@ if (isset($_POST["nachname"]) and $daten[0][4]==NULL) {
         $auswahl=5;
         $stammdaten="'".$_POST["nachname"]."'";
         $db->stammdatenUpdate($stammdaten, $user, $auswahl);
-        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/stammdatenaendern/stammdaten.php?action=done");
         $page->showSuccess("Nachname geändert");
     } else
         $page->showError("Feld muss gefüllt sein!");
 }elseif (isset($_POST["nachname"]) and !($daten[0][4]==NULL)) {
-    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/stammdatenaendern/stammdaten.php?action=done");
 }
 
 /** Frontend wird gebaut */
-$page->addCs('StammdatenAendernCss/Stammdaten.css');
+$page->addCs('stammdatenaenderncss/stammdaten.css');
 $string = '
 <div  class="container">
     <div class="row">
         <div class="col-lg"></div>   
-        <form class="col-lg main_window" action="SDNachname.php" method="post">
+        <form class="col-lg main_window" action="sdnachname.php" method="post">
             <h2>Nachname ändern</h2>
             <div>
             <br>

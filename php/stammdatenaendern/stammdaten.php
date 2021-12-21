@@ -10,7 +10,7 @@ $user = $page->getSession();
 $daten = $db->getStammdaten($user);
 
 /** Aufbau des Frontend */
-$page->addCs('StammdatenAendernCss/Stammdaten.css');
+$page->addCs('stammdatenaenderncss/stammdaten.css');
 $string = '
 <div  class="container">
     <div class="row">
@@ -18,35 +18,35 @@ $string = '
         <form class="col-lg main_window">
             <h2>Stammdaten ändern</h2>
             <div>
-                <label class="info_text">Name: '. $daten[0][3].'<br><span class="text-warning">kann nur einmal gesetzt werden!</span></label>
+                <label class="info_text">Name: '. $daten[0][3]. '<br><span class="text-warning">kann nur einmal gesetzt werden!</span></label>
                 <br>
-                <a class="btn btn-primary text-decoration-none" href="SDName.php" >Ändern</a>
-                <br>
-                <br>
-            </div>
-            <div>
-                <label class="info_text">Nachname: '. $daten[0][4].'<br><span class="text-warning">kann nur einmal gesetzt werden!</span></label>
-                <br>
-                <a class="btn btn-primary text-decoration-none" href="SDNachname.php" >Ändern</a>
+                <a class="btn btn-primary text-decoration-none" href="sdname.php" >Ändern</a>
                 <br>
                 <br>
             </div>
             <div>
-                <label class="info_text">Login: '. $daten[0][0].'</label>
+                <label class="info_text">Nachname: ' . $daten[0][4]. '<br><span class="text-warning">kann nur einmal gesetzt werden!</span></label>
                 <br>
-                <a class="btn btn-primary text-decoration-none" href="SDLogin.php" >Ändern</a>
+                <a class="btn btn-primary text-decoration-none" href="sdnachname.php" >Ändern</a>
+                <br>
+                <br>
+            </div>
+            <div>
+                <label class="info_text">Login: ' . $daten[0][0]. '</label>
+                <br>
+                <a class="btn btn-primary text-decoration-none" href="sdlogin.php" >Ändern</a>
                 <br>
                 <br>
             <div>
-                <label class="info_text">Email: '. $daten[0][1].' </label>
+                <label class="info_text">Email: ' . $daten[0][1]. ' </label>
                 <br>
-                <a class="btn btn-primary text-decoration-none" href="SDEmail.php">Ändern</a>
+                <a class="btn btn-primary text-decoration-none" href="sdemail.php">Ändern</a>
                 <br>
                 <br>
             </div>
                 <label class="info_text">Passwort</label>
                 <br>
-                <a class="btn btn-primary text-decoration-none" href="SDPassword.php">Ändern</a>
+                <a class="btn btn-primary text-decoration-none" href="sdpassword.php">Ändern</a>
             </div>
         </form>
         <div class="col-sm"></div>

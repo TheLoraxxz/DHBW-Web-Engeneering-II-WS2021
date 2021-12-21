@@ -29,12 +29,12 @@ if ((isset($_POST["pw"]) and isset($_POST["pwWdh"])) and isset($_POST["pwdAlt"])
 }
 
 /** Frontend wird gebaut */
-$page->addCs('StammdatenAendernCss/Stammdaten.css');
+$page->addCs('stammdatenaenderncss/stammdaten.css');
 $string = '
 <div  class="container">
     <div class="row">
         <div class="col-lg"></div>   
-        <form class="col-lg main_window" action="SDPassword.php" method="post">
+        <form class="col-lg main_window" action="sdpassword.php" method="post">
             <h2>Passwort ändern</h2>
             <div>
                 <br>

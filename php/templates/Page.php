@@ -182,7 +182,7 @@ class Page {
                     break;
                 case 2:
                     $nav ='
-                        <a class="nav-link" href="'.$this->ROOTLIB  .'php/Bewertung/userBewertungAnsehen.php">Bewertungen</a>
+                        <a class="nav-link" href="'.$this->ROOTLIB  .'php/bewertung/userbewertungansehen.php">Bewertungen</a>
                         <a class="nav-link">Projekte</a>
                     ';
                     break;
@@ -201,7 +201,7 @@ class Page {
                               '.$nav.'
                             </div>
                         </div>
-                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB  .'php/StammdatenAendern/Stammdaten.php"><img src="'.$this->ROOTLIB.'assets/Icons/profile.svg" alt="Stammdaten"></a>
+                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB  .'php/stammdatenaendern/stammdaten.php"><img src="'.$this->ROOTLIB.'assets/Icons/profile.svg" alt="Stammdaten"></a>
                         <a class="nav-link navbar-icon" href="'.$this->ROOTLIB.'index.php?action=logout"><img src="'.$this->ROOTLIB.'assets/Icons/logout.svg" alt="Logout"></a>
                     </div>
                 </nav>
