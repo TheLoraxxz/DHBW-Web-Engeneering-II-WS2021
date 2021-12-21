@@ -169,7 +169,7 @@ class Page {
             switch ($this->role) { //depending on the session it shows the corrisponding header
                 case 1:
                     $nav ='
-                        <a class="nav-link">Noten</a>
+                        <a class="nav-link" href="'.self::getRoot().'php/admin/noten/notenOverview.php">Noten</a>
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             Admin
                         </a>
@@ -177,7 +177,6 @@ class Page {
                             <li><a class="dropdown-item" href="'.self::getRoot().'">Home</a></li>
                             <li><a class="dropdown-item" href="'.self::getRoot().'php/admin/create_user.php?action=overview">User Management</a></li>
                         </ul>
-                        <a class="nav-link">Projekte</a>
                     ';
                     break;
                 case 2:
