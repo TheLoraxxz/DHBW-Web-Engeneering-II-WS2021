@@ -338,74 +338,43 @@ class DBService {
     public function stammdatenUpdate($stammdaten, $userId, $auswahl)
     {
         if ($auswahl == 1) {
-            $this->conn->query("
+            $query = $this->conn->query("
             UPDATE user u
-            SET login=$stammdaten
+            SET login=".$stammdaten."
             WHERE u.user_id =" . $userId);
+            return $query;
         }
         if ($auswahl == 2) {
             $this->conn->query("
             UPDATE user u
-            SET email=$stammdaten
+            SET email=".$stammdaten."
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 3) {
             $this->conn->query("
             UPDATE user u
-            SET password='" . $stammdaten . "'
+            SET password=".$stammdaten."
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 4) {
             $this->conn->query("
             UPDATE user u
-            SET name=$stammdaten
+            SET name=".$stammdaten."
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 5) {
             $this->conn->query("
             UPDATE user u
-            SET surename=$stammdaten
+            SET surename=".$stammdaten."
             WHERE u.user_id =" . $userId);
         }
-    }
-
-    public function setProjekt($points_reachable, $path_to_matrix,  $submission_date, $open_to_invite, $max_of_students, $name) {
-
-        $date = new DateTime($submission_date);
-
-        $query = $this->conn->query("
-        INSERT INTO db_pain.project (points_reachable, path_to_matrix, submission_date, open_to_invite, max_of_students, name)
-        VALUES (".$points_reachable.", '".$path_to_matrix."', '".$date->format('Y-m-d H:i:s:u')."', ".$open_to_invite.", ".$max_of_students.",'".$name."') ");
-
-    }
-
-    public function getProjekt($projekt_id) {
-        $query = $this->conn->query("
-            SELECT project_id,  name, max_of_students, points_reachable, submission_date, open_to_invite, path_to_matrix FROM project pro
-            WHERE pro.project_id =" .$projekt_id);
-        return mysqli_fetch_fall($query);
-    }
-
-    public function createUser($user_id, $password, $email, $login, $name, $surename){
-
-        if(user_id > 0) {
-            $query = $this->conn->query("
-                INSERT INTO db_pain.project(password, email, login, name, surename)
-                VALUES (".$password.", ".$email.", ".$login.", ".$name." ,".$surename.")
-                WHERE user_id = ".$user_id
-            );
-        }
-
-
-
-
     }
 
     /**
      * gets the number of people and then the course
      * checks whether course is set if not it returns false else
      * it creates for each a new login and user
-     */
+    */
     public function createNewUsers($number,$course) {
         $password =password_hash('123456',PASSWORD_BCRYPT);
         $possibilities = "1234567890abcdefghijklmnopqrstuvwxyz_-.ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -685,5 +654,35 @@ class DBService {
             unset($grades[$i]["points_reachable"]);
         }
         return $grades;
+    }
+
+    public function getUserBewertungTable($userID) {
+        $query = $this->conn->query("
+        SELECT r.points, g.name, p.name, p.points_reachable
+        FROM rating r
+            INNER JOIN groupings g on r.group_id = g.group_id
+            INNER JOIN project p on g.project_id = p.project_id
+        WHERE r.user_id =" . $userID);
+        return mysqli_fetch_all($query);
+    }
+    public function getGroupRatingStuff($groupID) {
+        $query = $this->conn->query("
+        SELECT r.user_id, u.surename, r.points
+        FROM rating r
+            INNER JOIN user u on r.user_id = u.user_id
+        WHERE r.group_id=".$groupID);
+        return mysqli_fetch_all($query);
+    }
+    public function updatePoints($points, $user) {
+        $this->conn->query("
+            UPDATE rating SET points = '".$points."' 
+            WHERE user_id=".$user);
+    }
+    public function getPwAlt($user) {
+        $query = $this->conn->query("
+        SELECT password
+        FROM user
+        WHERE user_id=".$user);
+        return mysqli_fetch_all($query);
     }
 }

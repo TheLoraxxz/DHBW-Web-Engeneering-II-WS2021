@@ -7,15 +7,13 @@ $db = $page->getDBService();
 $user = $page->getSession();
 
 if (isset($_POST["email"])) {
-    if ($_POST["email"]=="") {
-        $page->showError("Bitte etwas eingeben!");
+    if ($_POST["email"]!="") {
+        $auswahl=2;
+        $stammdaten="'".$_POST["email"]."'";
+        $db->stammdatenUpdate($stammdaten, $user, $auswahl);
         header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-    }
-    $auswahl=2;
-    $stammdaten="'".$_POST["email"]."'";
-    $db->stammdatenUpdate($stammdaten, $user, $auswahl);
-    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-    $page->showSuccess("Email gespeichert");
+    } else
+        $page->showError("Feld muss gefüllt sein!");
 }
 
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
@@ -27,7 +25,7 @@ $string = '
             <h2>Email ändern</h2>
             <div>
                 <br>
-                <input name="email" placeholder="Neue Email">
+                <input class="form-control" name="email" placeholder="Neue Email">
                 <button class="btn-sm btn-primary">Speichern</button>
                 <br>
                 <br>
