@@ -40,7 +40,17 @@ switch ($page->getRole()) {
         //you can see your own details. Abgeben is to submiut the project
         $table->addColumn("Details einsehen",-1,true,'<button class="btn btn-secondary">See Details</button>');
         $table->addColumn("Abgeben",-1,true,'<button class="btn btn-primary">Abgeben</button>');
+        //if open to invite
+        $table->addColumn("Einladen",-1,true/*$db->isInvitational(ProjektId)*/,'<button class="btn btn-secondary" onclick="changeViewToInvite(this);">Edit</button>');// '<button class="btn btn-secondary" oncklick="changeViewToInvite(this);">Einladen</button>');//invite other Students to a Project
 
+        if($db->getUserInvites($page->getSession()) != null)// Einladung vorhanden
+        {
+            $table->addButton("Einladungen",Page::getRoot()."we2/php/user/project/AcceptInvite.php");
+        }
+        if(isset($_GET["ProjektId"]))
+        {
+            $db->SubmitGroupProject($page->getSession(),$_GET["ProjektId"],time());
+        }
         $page->addJs("tablebuttons_home.js");
         $page->addElement($table);
         break;
@@ -63,4 +73,3 @@ switch ($page->getRole()) {
         break;
 }
 $page->printPage();
-
