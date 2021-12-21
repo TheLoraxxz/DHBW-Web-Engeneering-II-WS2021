@@ -70,7 +70,12 @@ class Table
                     if ($this->columns[$i]["show"]) { // if it is suppoed to be shown it
                         $string = $string . '<td>' . $this->columns[$i]["name"] . '</td>';
                     } else {
-                        $string = $string . '<td style="display: none;">' . $this->columns[$i]["name"] . '</td>';
+                        if ($this->columns[$i]["HTML"]==null) {
+                            $string = $string . '<td style="display: none;">' . $this->columns[$i]["name"] . '</td>';
+                        } else {
+                            $string = $string . '<td style="display: none;">' . $this->columns[$i]["name"] . '</td>';
+                        }
+
                     }
                 }
             } else { //wenn keine Columns angegeben werde nwerden einfach alle Daten raus geschreiben

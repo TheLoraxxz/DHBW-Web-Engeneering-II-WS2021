@@ -867,7 +867,6 @@ class DBService {
         WHERE  groupings.group_id=".$result[0][0]);
     }
     public function createClass_Project($project_id,$course_name) {
-        var_dump($course_name);
         $query =$this->conn->query("SELECT course_id FROM course WHERe name='".$course_name."' LIMIT 1");
         $course_id =mysqli_fetch_all($query) ;
         if (count($course_id)==0) {
