@@ -7,6 +7,11 @@ $db = $page->getDBService();
 $daten=$db->getGroupRatingStuff(1);
 $html="";
 $i=0;
+
+if (empty($daten)) {
+    $page->showError("keine User in dieser Gruppe!");
+}
+
 foreach ($daten as $value) {
     $name="uPoints".$daten[$i][0];
     $html=$html.'<div class="input-group felder"><span class="input-group-text">'. $daten[$i][1].'</span><input type="number" class="form-control" name="'.$name.'" placeholder="Punkte"></div>';
@@ -21,7 +26,7 @@ $string = '
         <form class="col-lg main_window" action="groupDetails_and_Rating_Backend.php" method="post">
             <h2>Gruppen Details</h2>
             <div>
-                <input type="number" class="form-control" name="gPoints" placeholder="Punkte für Alle">
+                <input type="number" class="form-control" name="gPoints" placeholder="Punkte für Alle vergeben">
             </div>
             '.$html.'
             <br>

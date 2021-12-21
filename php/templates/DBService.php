@@ -340,31 +340,31 @@ class DBService {
         if ($auswahl == 1) {
             $this->conn->query("
             UPDATE user u
-            SET login='" . $stammdaten . "'
+            SET login=$stammdaten
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 2) {
             $this->conn->query("
             UPDATE user u
-            SET email='" . $stammdaten . "'
+            SET email=$stammdaten
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 3) {
             $this->conn->query("
             UPDATE user u
-            SET password='" . $stammdaten . "'
+            SET password=$stammdaten
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 4) {
             $this->conn->query("
             UPDATE user u
-            SET name='" . $stammdaten . "'
+            SET name=$stammdaten
             WHERE u.user_id =" . $userId);
         }
         if ($auswahl == 5) {
             $this->conn->query("
             UPDATE user u
-            SET surename='" . $stammdaten . "'
+            SET surename=$stammdaten
             WHERE u.user_id =" . $userId);
         }
     }
@@ -564,7 +564,7 @@ class DBService {
     }
     public function getGroupRatingStuff($groupID) {
         $query = $this->conn->query("
-        SELECT r.user_id, u.name 
+        SELECT r.user_id, u.surename 
         FROM rating r
             INNER JOIN user u on r.user_id = u.user_id
         WHERE r.group_id=".$groupID);

@@ -8,18 +8,16 @@ $user = $page->getSession();
 $daten = $db->getStammdaten($user);
 
 if (isset($_POST["nachname"]) and $daten[0][4]==NULL) {
-    if ($_POST["nachname"]=="") {
-        $page->showError("Bitte etwas eingeben!");
+    if ($_POST["nachname"]!="") {
+        $auswahl=5;
+        $stammdaten="'".$_POST["nachname"]."'";
+        $db->stammdatenUpdate($stammdaten, $user, $auswahl);
         header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-    }
-    $auswahl=5;
-    $stammdaten="'".$_POST["nachname"]."'";
-    $db->stammdatenUpdate($stammdaten, $user, $auswahl);
-    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-    $page->showSuccess("Nachname geändert");
+        $page->showSuccess("Nachname geändert");
+    } else
+        $page->showError("Feld muss gefüllt sein!");
 }elseif (isset($_POST["nachname"]) and !($daten[0][4]==NULL)) {
     header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-    $page->showError("Nachname kann nur einmal gesetzt werden!");
 }
 
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
