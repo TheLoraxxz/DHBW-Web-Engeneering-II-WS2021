@@ -4,7 +4,7 @@ include_once("../templates/DBService.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
-$daten=$db->getGroupRatingStuff();
+$daten=$db->getGroupRatingStuff($_POST["gruppeID"]);
 
 if (isset($_POST["gPoints"]) and $_POST["gPoints"]!="") {
     for ($z=0;$z<count($daten); $z++) {
@@ -18,4 +18,4 @@ if (isset($_POST["gPoints"]) and $_POST["gPoints"]!="") {
         }
     }
 }
-header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/Bewertung/groupDetails_and_Rating.php?action=done");
+header("Location: ".Page::getRoot().'php/home.php');

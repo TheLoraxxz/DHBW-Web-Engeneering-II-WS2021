@@ -17,7 +17,7 @@ if ((isset($_POST["pw"]) and isset($_POST["pwWdh"])) and isset($_POST["pwdAlt"])
             if (password_verify($_POST["pwdAlt"], $pwAlt[0][0])) {
                 $db->stammdatenUpdate($password, $user, $auswahl);
                 $db->verifyLogin($daten[0][0],$_POST["pw"]);
-                header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/index.php?action=logout");
+                header("Location: ".Page::getRoot()."index.php?action=logout");
             } else
                 $page->showError("Falsches Altes Passwort!");
         } else
