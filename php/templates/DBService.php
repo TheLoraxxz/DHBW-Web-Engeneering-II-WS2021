@@ -755,6 +755,7 @@ class DBService {
         return $projects;
 
     }
+
     public function getGrades() {
         $query = $this->conn->query("
         SELECT r.points,p.points_reachable,u.name,u.surename,p.name as project
@@ -783,6 +784,7 @@ class DBService {
         WHERE r.user_id =" . $userID);
         return mysqli_fetch_all($query);
     }
+
     public function getGroupRatingStuff($groupID) {
         $query = $this->conn->query("
         SELECT r.user_id, u.surename, r.points
@@ -865,6 +867,7 @@ class DBService {
         UPDATE groupings SET `submitted`=1,`submitted_time`=.$timeStamp.
         WHERE  groupings.group_id=".$result[0][0]);
     }
+
     public function createClass_Project($project_id,$course_name) {
         var_dump($course_name);
         $query =$this->conn->query("SELECT course_id FROM course WHERe name='".$course_name."' LIMIT 1");
