@@ -3,7 +3,7 @@
 function seeDetails(button) {
     var rowId = button.parentElement.parentElement.getAttribute("id");
     var project_id =document.getElementById(rowId).firstElementChild.innerHTML;
-    window.location.href = "./project/project.php?action=details&projectId="+project_id;
+    window.location.href = "./admin/project_overview.php?project_id="+project_id;
 }
 function editProject(button) {
     var rowId = button.parentElement.parentElement.getAttribute("id");

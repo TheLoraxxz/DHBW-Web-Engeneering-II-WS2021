@@ -639,4 +639,48 @@ class DBService {
             }
         }
     }
+
+    public function getAllProjectsDetails($project_id) {
+        $query =$this->conn->query("
+           SELECT g.group_id as id, p.name as project,g.name as groupname,g.submitted,g.submitted_time,g.group_id,g.name,
+               (SELECT COUNT(r.user_id)
+                   FROM rating as r
+                   WHERE r.group_id=g.group_id) as number
+            FROM groupings as g
+            LEFT JOIN project p on p.project_id = g.project_id
+            WHERE p.project_id=".$project_id."
+        ");
+        $projects = mysqli_fetch_all($query,1);
+        if (count($projects)==0) {
+            return [];
+        }
+        for ($i=0;$i<count($projects);++$i) {
+            if ($projects[$i]["submitted"]==false) {
+                $projects[$i]["submitted"] = "keine Abgabe";
+                $projects[$i]["submitted_time"] = "keine Zeit";
+
+            } else {
+                $projects[$i]["submitted"] = "Abgegeben";
+                $datetime = new DateTime($projects[$i]["submitted_time"]);
+                $projects[$i]["submitted_time"] = date_format($datetime,"d.m.Y H:i")." Uhr";
+            }
+        }
+        return $projects;
+
+    }
+    public function getGrades() {
+        $query = $this->conn->query("
+        SELECT r.points,p.points_reachable,u.name,u.surename,p.name as project
+        FROM rating as r
+        INNER JOIN groupings g on r.group_id = g.group_id
+        INNER JOIN user u on r.user_id = u.user_id
+        INNER JOIN project p on g.project_id = p.project_id
+        ");
+        $grades = mysqli_fetch_all($query,1);
+        for ($i=0;$i<count($grades);++$i) {
+            $grades[$i]["points"] =$grades[$i]["points"]."/".$grades[$i]["points_reachable"];
+            unset($grades[$i]["points_reachable"]);
+        }
+        return $grades;
+    }
 }
