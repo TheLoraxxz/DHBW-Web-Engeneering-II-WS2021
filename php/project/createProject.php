@@ -51,13 +51,7 @@ if ($page->getRole()==1) {
             </form>
         </div>
     ';
-
-
-
     $page->addHtml($string);
-
-
-
 } else {
     $page->showError("Keinen Zugriff");
 }
