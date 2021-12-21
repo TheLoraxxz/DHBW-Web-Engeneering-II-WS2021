@@ -7,7 +7,7 @@ if (isset($_POST) and count($_POST)>0) {
     if ($page->getRole()==1) {
         $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"]));
     } else {
-        $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"],$page->getSession(),false));
+        $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"]),$page->getSession(),false);
     }
     header('Location: '.$page::getRoot().'php/home.php?success=newGroup');
     die();
@@ -67,27 +67,25 @@ if($page->getRole()!=3) {
             <div>
                 <ul class="list-group list_of_people">';
     $users = $db->getAllSuitableUser($page->getRole(),$page->getSession());
-    for ($i=0;$i<count($users);++$i) {
+    for ($i=0;$i<count($users);$i++) {
         if ($users[$i]["surename"] == null or $users[$i]["name"]==null) {
             $html = $html.'
          <li class="list-group-item">
             <div class="form-check">
                 <input onclick="selectUser(this)" class="form-check-input" type="checkbox" id="name_'.$users[$i]["id"].'">
                 <label class="form-check-label">'.$users[$i]["login"].'</label>
-                <span style="display: none;">'.$users[$i]["project"].'</span>
+                <span style="display: none;">'.$db->getProjectsToUSer($users[$i]["id"]).'</span>
             </div>
-        </li>
-    ';
-        } else {
+        </li>';
+        } else if ($users[$i]["surename"] != null or $users[$i]["name"]!=null){
             $html = $html.'
          <li class="list-group-item">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="name_'.$users[$i]["id"].'">
                 <label class="form-check-label">'.$users[$i]["surename"].' '.$users[$i]["name"].'</label>
-                <span style="display: none;">'.$users[$i]["project"].'</span>
+                <span style="display: none;">'.$db->getProjectsToUSer($users[$i]["id"]).'</span>
             </div>
-        </li>
-    ';
+        </li>';
         }
 
     }

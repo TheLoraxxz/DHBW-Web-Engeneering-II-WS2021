@@ -1,7 +1,6 @@
 <?php
 include_once("./templates/Page.php");
 include_once("./templates/Table.php");
-//creating page and checking whether Session is valid --> and then getting Service
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
@@ -23,7 +22,7 @@ switch ($page->getRole()) {
         $table->addColumn("Ansehen",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
         $table->addColumn("Gruppeneinladung sperren",-1,true,'<button class="btn btn-dark" onClick="lockData(this);">Sperren</button>');
         //button that links to group or project
-        $table->addButton("Neues Projekt","");
+        $table->addButton("Neues Projekt","./project/createProject.php");
         $table->addButton("Neue Gruppe",Page::getRoot()."php/user/group/new_group_admin.php");
         $page->addElement($table);
         $page->addJs("tablebuttons_home.js");
@@ -39,8 +38,18 @@ switch ($page->getRole()) {
         $table->addColumn("Name",1);
         $table->addColumn("Date",2);
         //you can see your own details. Abgeben is to submiut the project
-        $table->addColumn("Details einsehen",-1,true,'<button class="btn btn-secondary">See Details</button>');
         $table->addColumn("Abgeben",-1,true,'<button class="btn btn-primary">Abgeben</button>');
+        //if open to invite
+        $table->addColumn("Einladen",-1,true/*$db->isInvitational(ProjektId)*/,'<button class="btn btn-secondary" onclick="changeViewToInvite(this);">Edit</button>');// '<button class="btn btn-secondary" oncklick="changeViewToInvite(this);">Einladen</button>');//invite other Students to a Project
+
+        if($db->getUserInvites($page->getSession()) != null)// Einladung vorhanden
+        {
+            $table->addButton("Einladungen",Page::getRoot()."php/user/project/AcceptInvite.php");
+        }
+        if(isset($_GET["ProjektId"]))
+        {
+            $db->SubmitGroupProject($page->getSession(),$_GET["ProjektId"],time());
+        }
         $page->addJs("tablebuttons_home.js");
         $page->addElement($table);
         break;
@@ -63,4 +72,3 @@ switch ($page->getRole()) {
         break;
 }
 $page->printPage();
-

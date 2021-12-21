@@ -7,15 +7,16 @@ $db = $page->getDBService();
 $user = $page->getSession();
 
 if (isset($_POST["login"])) {
-    if ($_POST["login"]=="") {
-        $page->showError("Bitte etwas eingeben!");
-        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-    }
-    $auswahl=1;
-    $stammdaten="'".$_POST["login"]."'";
-    $db->stammdatenUpdate($stammdaten, $user, $auswahl);
-    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-    $page->showSuccess("Login gespeichert");
+    if ($_POST["login"]!="") {
+        $auswahl=1;
+        $stammdaten="'".$_POST["login"]."'";
+        $besetzt=$db->stammdatenUpdate($stammdaten, $user, $auswahl);
+        if ($besetzt)
+            header("Location: ".Page::getRoot()."php/StammdatenAendern/Stammdaten.php?action=done");
+        else
+            $page->showError("Login besetzt!");
+    } else
+        $page->showError("Feld muss gefüllt sein!");
 }
 
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
@@ -27,7 +28,7 @@ $string = '
             <h2>Login ändern</h2>
             <div>
             <br>
-                <input name="login" placeholder="Neuer Login">
+                <input class="form-control" name="login" placeholder="Neuer Login">
                 <button class="btn-sm btn-primary">Speichern</button>
                 <br>
                 <br>
