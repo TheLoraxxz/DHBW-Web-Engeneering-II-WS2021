@@ -1,4 +1,5 @@
 <?php
+/** Im Header wird eine neue Seite kreirt und die benötigten Informationen beschafft.*/
 include_once("../templates/Page.php");
 include_once("../templates/DBService.php");
 $page = new Page();
@@ -6,6 +7,7 @@ $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 $daten=$db->getGroupRatingStuff($_POST["gruppeID"]);
 
+/** Input wird auf Korrektheit überprüft und ggf. in die Datenbank geladen */
 if (isset($_POST["gPoints"]) and $_POST["gPoints"]!="") {
     for ($z=0;$z<count($daten); $z++) {
         $db->updatePoints($_POST["gPoints"], $daten[$z][0]);
@@ -18,4 +20,5 @@ if (isset($_POST["gPoints"]) and $_POST["gPoints"]!="") {
         }
     }
 }
+/** zurück auf die eigentliche Seite redirecten */
 header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/Bewertung/groupDetails_and_Rating.php?action=done");

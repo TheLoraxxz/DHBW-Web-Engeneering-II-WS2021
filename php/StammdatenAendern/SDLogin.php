@@ -1,4 +1,5 @@
 <?php
+/** Im Header wird eine neue Seite kreirt und die benötigten Informationen beschafft.*/
 include_once("../templates/Page.php");
 include_once("../templates/DBService.php");
 $page = new Page();
@@ -6,6 +7,7 @@ $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 $user = $page->getSession();
 
+/** Input wird auf Korrektheit überprüft und ggf. in die Datenbank geladen */
 if (isset($_POST["login"])) {
     if ($_POST["login"]!="") {
         $auswahl=1;
@@ -19,6 +21,7 @@ if (isset($_POST["login"])) {
         $page->showError("Feld muss gefüllt sein!");
 }
 
+/** Frontend wird gebaut */
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
 $string = '
 <div  class="container">

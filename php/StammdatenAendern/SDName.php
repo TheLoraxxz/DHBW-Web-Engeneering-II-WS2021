@@ -1,4 +1,5 @@
 <?php
+/** Im Header wird eine neue Seite kreirt und die benötigten Informationen beschafft.*/
 include_once("../templates/Page.php");
 include_once("../templates/DBService.php");
 $page = new Page();
@@ -7,6 +8,7 @@ $db = $page->getDBService();
 $user = $page->getSession();
 $daten = $db->getStammdaten($user);
 
+/** Input wird auf Korrektheit überprüft und ggf. in die Datenbank geladen */
 if (isset($_POST["name"]) and $daten[0][3]==NULL) {
     if ($_POST["name"]!="") {
         $auswahl=4;
@@ -19,6 +21,7 @@ if (isset($_POST["name"]) and $daten[0][3]==NULL) {
     header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
 }
 
+/** Frontend wird gebaut */
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
 $string = '
 <div  class="container">

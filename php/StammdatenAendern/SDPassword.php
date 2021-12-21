@@ -1,4 +1,5 @@
 <?php
+/** Im Header wird eine neue Seite kreirt und die benötigten Informationen beschafft.*/
 include_once("../templates/Page.php");
 include_once("../templates/DBService.php");
 $page = new Page();
@@ -7,6 +8,7 @@ $db = $page->getDBService();
 $user = $page->getSession();
 $daten = $db->getStammdaten($user);
 
+/** Input wird auf Korrektheit überprüft und ggf. in die Datenbank geladen */
 if ((isset($_POST["pw"]) and isset($_POST["pwWdh"])) and isset($_POST["pwdAlt"])) {
     if (($_POST["pw"]==$_POST["pwWdh"])) {
         if ($_POST["pw"]!="") {
@@ -26,6 +28,7 @@ if ((isset($_POST["pw"]) and isset($_POST["pwWdh"])) and isset($_POST["pwdAlt"])
         $page->showError("Felder müssen gefüllt und gleich sein!");
 }
 
+/** Frontend wird gebaut */
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
 $string = '
 <div  class="container">

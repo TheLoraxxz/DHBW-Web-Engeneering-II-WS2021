@@ -1,4 +1,5 @@
 <?php
+/** Im Header wird eine neue Seite kreirt und die benötigten Informationen beschafft.*/
 include_once("../templates/Page.php");
 include_once("../templates/DBService.php");
 $page = new Page();
@@ -8,16 +9,19 @@ $daten=$db->getGroupRatingStuff($_GET["disGruppe"]);
 $html="";
 $i=0;
 
+/** Fehlernachricht, falls keine User in der Gruppe sind die bewertet werden soll */
 if (empty($daten)) {
     $page->showError("keine User in dieser Gruppe!");
 }
 
+/** Dynamische Anzahl Inputs je nach UserAnzahl*/
 foreach ($daten as $value) {
     $name="uPoints".$daten[$i][0];
     $html=$html.'<div class="input-group felder"><span class="input-group-text">'. $daten[$i][1].'</span><input value="'.$daten[$i][2].'" type="number" class="form-control" name="'.$name.'" placeholder="Punkte"></div>';
     $i++;
 }
 
+/** Frontend wird gebaut */
 $page->addCs('Bewertung/bewertung.css');
 $string = '
 <div  class="container">

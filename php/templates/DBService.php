@@ -329,12 +329,14 @@ class DBService {
         }
         return $result;
     }
+    /** Informationen für die Stammdatenanzeige holen */
     public function getStammdaten($userId) {
         $query = $this->conn->query("
             SELECT login, email, password, name, surename FROM user u
             WHERE u.user_id =".$userId);
         return mysqli_fetch_all($query);
     }
+    /** Stammdaten in die Datenbank laden, je nachdem welche geändert wurden */
     public function stammdatenUpdate($stammdaten, $userId, $auswahl)
     {
         if ($auswahl == 1) {
@@ -553,7 +555,7 @@ class DBService {
             return mysqli_fetch_all($query,MYSQLI_ASSOC);
         }
     }
-
+/** Informationen für die BewertungsAnsicht der User aus der Datenbank holen */
     public function getUserBewertungTable($userID) {
         $query = $this->conn->query("
         SELECT r.points, g.name, p.name, p.points_reachable
@@ -563,6 +565,7 @@ class DBService {
         WHERE r.user_id =" . $userID);
         return mysqli_fetch_all($query);
     }
+    /** Informationen für die Gruppenbewertung durch den Admin, aus der Datenbank holen */
     public function getGroupRatingStuff($groupID) {
         $query = $this->conn->query("
         SELECT r.user_id, u.surename, r.points
@@ -571,11 +574,13 @@ class DBService {
         WHERE r.group_id=".$groupID);
         return mysqli_fetch_all($query);
     }
+    /** gesetzte Bewertungspunkte in die Datenbank schreiben */
     public function updatePoints($points, $user) {
         $this->conn->query("
             UPDATE rating SET points = '".$points."' 
             WHERE user_id=".$user);
     }
+    /** altes/aktuelles Passwort holen zur Abfrage bei der Passwortänderung */
     public function getPwAlt($user) {
         $query = $this->conn->query("
         SELECT password

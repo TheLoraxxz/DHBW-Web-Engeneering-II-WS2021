@@ -1,4 +1,5 @@
 <?php
+/** Im Header wird eine neue Seite kreirt und die benötigten Informationen beschafft.*/
 include_once("../templates/Page.php");
 include_once("../templates/DBService.php");
 $page = new Page();
@@ -8,7 +9,7 @@ $auswahl= 0;
 $user = $page->getSession();
 $daten = $db->getStammdaten($user);
 
-
+/** Aufbau des Frontend */
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
 $string = '
 <div  class="container">
