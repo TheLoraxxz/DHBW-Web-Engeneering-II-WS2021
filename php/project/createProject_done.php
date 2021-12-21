@@ -13,7 +13,12 @@ if ($page->getRole()==1) {
     }
 
     if(isset($_POST["name"])) {
-        $db->setProjekt($_POST["points_reachable"], $_POST["path_to_matrix"], $_POST["submission_date"], $open_to_invite, $_POST["max_of_students"], $_POST["name"]);
+        $project = $db->setProjekt($_POST["points_reachable"], $_POST["path_to_matrix"], $_POST["submission_date"], $open_to_invite, $_POST["max_of_students"], $_POST["name"]);
+        if(!$db->createClass_Project($project,$_POST["klasscourse"])) {
+            $page->showError("Keinen Kurs gefunden");
+            $page->addHtml('<div class="container-fluid main"><a class="btn btn-primary" href="createProject.php">Zurück</a></div>');
+        }
+
     }
 
     $string = '

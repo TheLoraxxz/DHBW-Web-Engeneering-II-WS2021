@@ -21,7 +21,7 @@ if ($page->getRole()==1) {
                 <div class="col-md-2">
                     <label for="validationDefaultUsername" class="form-label">Erreichbare Punkte</label>
                     <div class="input-group">
-                        <input type="number" min="1" class="form-control" id="validationDefaultUsername"  aria-describedby="inputGroupPrepend2" required name="points_reachable">
+                        <input type="number" min="1" class="form-control" id="validationDefaultUsername"  required name="points_reachable">
                     </div>
                  </div>
                   <div class="col-md-2">
@@ -35,10 +35,15 @@ if ($page->getRole()==1) {
                       <option>Nein</option>
                     </select>
                   </div>
+                  <div class="col-md-2">
+                    <label for="klasscourse" class="form-label">Klasse/Kurs</label>
+                    <input class="form-control" id="klasscourse" name="klasscourse">
+                  </div>
                   <div class="mb-3">
                     <label for="exampleFormControlTextarea1" class="form-label">Anmerkung</label>
-                    <input class="form-control" id="exampleFormControlTextarea1" rows="3" name="path_to_matrix"></input>
+                    <input class="form-control" id="exampleFormControlTextarea1"  name="path_to_matrix">
                   </div>
+       
               </div>
               <div class="col-12">
                 <button class="btn btn-outline-secondary" type="submit">Erstellen</button>
