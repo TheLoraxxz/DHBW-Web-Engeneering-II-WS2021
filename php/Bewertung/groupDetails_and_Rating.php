@@ -4,7 +4,7 @@ include_once("../templates/DBService.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
-$daten=$db->getGroupRatingStuff(1);
+$daten=$db->getGroupRatingStuff($_GET[]);
 $html="";
 $i=0;
 

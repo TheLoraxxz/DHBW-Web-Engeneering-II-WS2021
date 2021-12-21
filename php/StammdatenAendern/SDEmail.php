@@ -25,7 +25,7 @@ $string = '
             <h2>Email ändern</h2>
             <div>
                 <br>
-                <input name="email" placeholder="Neue Email">
+                <input class="form-control" name="email" placeholder="Neue Email">
                 <button class="btn-sm btn-primary">Speichern</button>
                 <br>
                 <br>

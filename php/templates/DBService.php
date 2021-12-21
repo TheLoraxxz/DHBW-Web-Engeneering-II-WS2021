@@ -338,10 +338,11 @@ class DBService {
     public function stammdatenUpdate($stammdaten, $userId, $auswahl)
     {
         if ($auswahl == 1) {
-            $this->conn->query("
+            $query = $this->conn->query("
             UPDATE user u
             SET login=$stammdaten
             WHERE u.user_id =" . $userId);
+            return $query;
         }
         if ($auswahl == 2) {
             $this->conn->query("
