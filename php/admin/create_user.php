@@ -24,7 +24,7 @@ if ($page->getRole()==1) {
             $table->addColumn("Passwort Zurücksetzen", -1, true, $resetPassword);
             $edit = '
                 <div>
-                    <button class="btn btn-secondary">Bearbeiten</button>
+                    <button class="btn btn-secondary" onclick="editUser()">Bearbeiten</button>
                 </div>
             ';
             $table->addColumn("Bearbeiten",-1,true,$edit);

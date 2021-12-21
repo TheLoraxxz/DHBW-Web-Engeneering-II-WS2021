@@ -1,5 +1,6 @@
 <?php
 include_once('./../templates/Page.php');
+include_once("../templates/DBService.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
@@ -13,6 +14,8 @@ $html = '
                                 <input id="login_input" type="text" class="form-control mb-3">
                                 <label class="form-label" for="email_input">E-Mail:</label>
                                 <input type="text" id="email_input" class="form-control mb-3">
+                                <label class="form-label" for="login_input">Passwort:</label>
+                                <input id="login_input" type="text" class="form-control mb-3">
                             </div>
                             <div class="input-group">
                                 <span class="input-group-text">Vorname:</span>
@@ -49,6 +52,9 @@ $html = '
                             </div>
                         </div>
                     </div>
+                     <div class="col-12 mt-3">
+                        <button class="btn btn-outline-secondary" type="submit">Erstellen</button>
+                     </div>
                 </div>
             ';
 try {

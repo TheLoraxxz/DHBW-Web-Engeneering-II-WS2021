@@ -369,11 +369,43 @@ class DBService {
         }
     }
 
+    public function setProjekt($points_reachable, $path_to_matrix,  $submission_date, $open_to_invite, $max_of_students, $name) {
+
+        $date = new DateTime($submission_date);
+
+        $query = $this->conn->query("
+        INSERT INTO db_pain.project (points_reachable, path_to_matrix, submission_date, open_to_invite, max_of_students, name)
+        VALUES (".$points_reachable.", '".$path_to_matrix."', '".$date->format('Y-m-d H:i:s:u')."', ".$open_to_invite.", ".$max_of_students.",'".$name."') ");
+
+    }
+
+    public function getProjekt($projekt_id) {
+        $query = $this->conn->query("
+            SELECT project_id,  name, max_of_students, points_reachable, submission_date, open_to_invite, path_to_matrix FROM project pro
+            WHERE pro.project_id =" .$projekt_id);
+        return mysqli_fetch_fall($query);
+    }
+
+    public function createUser($user_id, $password, $email, $login, $name, $surename){
+
+        if(user_id > 0) {
+            $query = $this->conn->query("
+                INSERT INTO db_pain.project(password, email, login, name, surename)
+                VALUES (".$password.", ".$email.", ".$login.", ".$name." ,".$surename.")
+                WHERE user_id = ".$user_id
+            );
+        }
+
+
+
+
+    }
+
     /**
      * gets the number of people and then the course
      * checks whether course is set if not it returns false else
      * it creates for each a new login and user
-    */
+     */
     public function createNewUsers($number,$course) {
         $password =password_hash('123456',PASSWORD_BCRYPT);
         $possibilities = "1234567890abcdefghijklmnopqrstuvwxyz_-.ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -489,15 +521,15 @@ class DBService {
             $update = $update."AND us.login = '".$login."'";
         }
         if($email!= null) {
-            $update = $update."AND us.email='".$email."' ";
+            $update = $update."AND user.email='".$email."' ";
         }
         if ($name!=null) {
-            $update = $update."AND us.name='".$name."' ";
+            $update = $update."AND user.name='".$name."' ";
         }
         if ($surename!=null) {
-            $surename = $update."AND us.name='".$name."' ";
+            $surename = $update."AND user.name='".$name."' ";
         }
-        $update = $update."WHERE us.user_id=".$id;
+        $update = $update."WHERE user.user_id=".$id;
         $this->conn->query($update);
     }
 
