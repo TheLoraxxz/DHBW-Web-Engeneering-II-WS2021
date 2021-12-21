@@ -17,7 +17,7 @@ else
     $db->createInvite($_GET["invitedProjekt"], $_GET["invitedUser"]);
     $table->addColumn("ID",0,false);
     $table->addColumn("Name",1,false);
-    $table->addButton("Zurück",page::getRoot()."we2/php/home.php");
+    $table->addButton("Zurück",page::getRoot()."php/home.php");
 }
 $page->addElement($table);
 try {

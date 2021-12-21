@@ -43,7 +43,7 @@ switch ($page->getRole()) {
 
         if($db->getUserInvites($page->getSession()) != null)// Einladung vorhanden
         {
-            $table->addButton("Einladungen",Page::getRoot()."we2/php/user/project/AcceptInvite.php");
+            $table->addButton("Einladungen",Page::getRoot()."php/user/project/AcceptInvite.php");
         }
         //you can see your own details. Abgeben is to submit the project
         $table->addColumn("Details einsehen",-1,true,'<button class="btn btn-secondary" onclick="viewProjectDetails(this);">See Details</button>');
