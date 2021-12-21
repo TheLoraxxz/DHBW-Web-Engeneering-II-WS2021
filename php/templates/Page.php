@@ -185,11 +185,6 @@ class Page {
                         <a class="nav-link">Projekte</a>
                     ';
                     break;
-                case 3:
-                    $nav = '
-                        <a class="nav-link">Noten</a>
-                    ';
-                    break;
             }
             echo('
                 <nav class="navbar navbar-light bg-light navbar-expand-sm">
