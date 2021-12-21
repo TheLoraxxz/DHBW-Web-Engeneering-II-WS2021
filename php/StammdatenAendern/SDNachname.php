@@ -12,12 +12,12 @@ if (isset($_POST["nachname"]) and $daten[0][4]==NULL) {
         $auswahl=5;
         $stammdaten="'".$_POST["nachname"]."'";
         $db->stammdatenUpdate($stammdaten, $user, $auswahl);
-        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+        header("Location: ".Page::getRoot()."php/StammdatenAendern/Stammdaten.php?action=done");
         $page->showSuccess("Nachname geändert");
     } else
         $page->showError("Feld muss gefüllt sein!");
 }elseif (isset($_POST["nachname"]) and !($daten[0][4]==NULL)) {
-    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+    header("Location: ".Page::getRoot()."php/StammdatenAendern/Stammdaten.php?action=done");
 }
 
 $page->addCs('StammdatenAendernCss/Stammdaten.css');

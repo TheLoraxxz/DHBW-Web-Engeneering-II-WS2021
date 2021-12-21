@@ -11,7 +11,7 @@ if (isset($_POST["email"])) {
         $auswahl=2;
         $stammdaten="'".$_POST["email"]."'";
         $db->stammdatenUpdate($stammdaten, $user, $auswahl);
-        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+        header("Location: ".Page::getRoot()."php/StammdatenAendern/Stammdaten.php?action=done");
     } else
         $page->showError("Feld muss gefüllt sein!");
 }

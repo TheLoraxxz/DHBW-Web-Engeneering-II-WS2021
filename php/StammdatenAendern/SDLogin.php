@@ -12,7 +12,7 @@ if (isset($_POST["login"])) {
         $stammdaten="'".$_POST["login"]."'";
         $besetzt=$db->stammdatenUpdate($stammdaten, $user, $auswahl);
         if ($besetzt)
-            header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
+            header("Location: ".Page::getRoot()."php/StammdatenAendern/Stammdaten.php?action=done");
         else
             $page->showError("Login besetzt!");
     } else
