@@ -17,14 +17,14 @@ $string = '
         <form class="col-lg main_window">
             <h2>Stammdaten ändern</h2>
             <div>
-                <label class="info_text">Name: '. $daten[0][3].'</label>
+                <label class="info_text">Name: '. $daten[0][3].'<br><span class="text-warning">kann nur einmal gesetzt werden!</span></label>
                 <br>
                 <a class="btn btn-primary text-decoration-none" href="SDName.php" >Ändern</a>
                 <br>
                 <br>
             </div>
             <div>
-                <label class="info_text">Nachname: '. $daten[0][4].'</label>
+                <label class="info_text">Nachname: '. $daten[0][4].'<br><span class="text-warning">kann nur einmal gesetzt werden!</span></label>
                 <br>
                 <a class="btn btn-primary text-decoration-none" href="SDNachname.php" >Ändern</a>
                 <br>

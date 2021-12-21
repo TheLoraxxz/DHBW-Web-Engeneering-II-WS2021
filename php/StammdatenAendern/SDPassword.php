@@ -9,20 +9,17 @@ $daten = $db->getStammdaten($user);
 
 if ((isset($_POST["pw"]) and isset($_POST["pwWdh"]))) {
     if (($_POST["pw"]==$_POST["pwWdh"])) {
-        if ($_POST["pw"]=="") {
-            $page->showError("Bitte etwas eingeben!");
-            header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-        }
-        $auswahl=3;
-        $password = password_hash($_POST["pw"],PASSWORD_BCRYPT);
-        $db->stammdatenUpdate($password, $user, $auswahl);
-        $db->verifyLogin($daten[0][0],$_POST["pw"]);
-        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/index.php?action=logout");
-    }
-    else {
-        header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-        $page->showError("Passwort und PasswortWDH müssen übereinstimmen!");
-    }
+        if ($_POST["pw"]!="") {
+            $auswahl=3;
+            $password = password_hash($_POST["pw"],PASSWORD_BCRYPT);
+            $password="'".$password."'";
+            $db->stammdatenUpdate($password, $user, $auswahl);
+            $db->verifyLogin($daten[0][0],$_POST["pw"]);
+            header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/index.php?action=logout");
+        } else
+            $page->showError("Felder müssen gefüllt und gleich sein!");
+    } else
+        $page->showError("Felder müssen gefüllt und gleich sein!");
 }
 
 $page->addCs('StammdatenAendernCss/Stammdaten.css');

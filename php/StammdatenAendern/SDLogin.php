@@ -7,15 +7,13 @@ $db = $page->getDBService();
 $user = $page->getSession();
 
 if (isset($_POST["login"])) {
-    if ($_POST["login"]=="") {
-        $page->showError("Bitte etwas eingeben!");
+    if ($_POST["login"]!="") {
+        $auswahl=1;
+        $stammdaten="'".$_POST["login"]."'";
+        $db->stammdatenUpdate($stammdaten, $user, $auswahl);
         header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-    }
-    $auswahl=1;
-    $stammdaten="'".$_POST["login"]."'";
-    $db->stammdatenUpdate($stammdaten, $user, $auswahl);
-    header("Location: http://localhost/DHBW-Web-Engeneering-II-WS2021/php/StammdatenAendern/Stammdaten.php?action=done");
-    $page->showSuccess("Login gespeichert");
+    } else
+        $page->showError("Feld muss gefüllt sein!");
 }
 
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
