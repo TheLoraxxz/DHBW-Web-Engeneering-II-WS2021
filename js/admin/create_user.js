@@ -57,6 +57,7 @@ function resetPasswordButton(button) {
     window.location.href = './create_user.php?action=reset_password&id='+cells[0].innerHTML+"&login="+cells[1].innerHTML;
 }
 
-function editUser() {
-    window.location.href = "./create_edit_user.php";
+function editUser(button) {
+    var user_id = button.parentElement.parentElement.parentElement.firstElementChild.innerHTML;
+    window.location.href = "./create_edit_user.php?action=edit&user_id="+user_id;
 }
