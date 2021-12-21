@@ -565,7 +565,7 @@ class DBService {
     }
     public function getGroupRatingStuff($groupID) {
         $query = $this->conn->query("
-        SELECT r.user_id, u.surename 
+        SELECT r.user_id, u.surename, r.points
         FROM rating r
             INNER JOIN user u on r.user_id = u.user_id
         WHERE r.group_id=".$groupID);

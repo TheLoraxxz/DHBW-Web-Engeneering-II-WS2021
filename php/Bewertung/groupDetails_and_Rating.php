@@ -4,7 +4,7 @@ include_once("../templates/DBService.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
-$daten=$db->getGroupRatingStuff($_GET[]);
+$daten=$db->getGroupRatingStuff($_GET["disGruppe"]);
 $html="";
 $i=0;
 
@@ -14,7 +14,7 @@ if (empty($daten)) {
 
 foreach ($daten as $value) {
     $name="uPoints".$daten[$i][0];
-    $html=$html.'<div class="input-group felder"><span class="input-group-text">'. $daten[$i][1].'</span><input type="number" class="form-control" name="'.$name.'" placeholder="Punkte"></div>';
+    $html=$html.'<div class="input-group felder"><span class="input-group-text">'. $daten[$i][1].'</span><input value="'.$daten[$i][2].'" type="number" class="form-control" name="'.$name.'" placeholder="Punkte"></div>';
     $i++;
 }
 
