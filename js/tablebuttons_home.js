@@ -30,18 +30,9 @@ function changeViewToAcceptInvites(button)
     window.location.href = "./user/project/InviteToProject.php?action=lock&userId=" +rowId;
 }
 
-function viewProjectDetails(button)
-{
-    var rowId = button.parentElement.parentElement.firstElementChild.innerHTML;
-    //open detail window
-    //window.location.href = halt pfad angeben
-}
-
 function SubmitProject(button)
 {
     var rowId = button.parentElement.parentElement.firstElementChild.innerHTML;
-    //safe timestamp and set submit bool
-    //$db->SubmitGroupProject(rowID,timestamp);
     window.location.href = "?action=lock&ProjektId=" +rowId;
 }
 
