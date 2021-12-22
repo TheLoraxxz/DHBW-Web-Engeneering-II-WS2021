@@ -13,25 +13,39 @@ function sortTable(headerValue) {
         }
         ++i;
     })
+    //get image source
+    var img_src = headerValue.children[1].getAttribute("src");
+    img_src = img_src.substr(0,img_src.indexOf("sort-"));
 
     var sortsindex = sorts.map((res)=>{return res.index}).indexOf(index)
     if (sortsindex===-1) {
-        sorts.push({"index":index,"desc":1})
+        sorts.push({"index":index,"desc":1,"order":1})
     } else {
+
+        switch (sorts[sortsindex]["desc"]) {
+            case 0:
+                sorts[sortsindex]["desc"] = 1;
+            case 1:
+                sorts[sortsindex]["desc"]=-1;
+            case -1:
+                sorts[sortsindex]["desc"]=0;
+        }
     }
-    var img_src = headerValue.children[1].getAttribute("src");
-    console.log(img_src)
+
     switch (desc) {
         case 0:
             desc = 1;
-
+            img_src =img_src+"sort-down.png";
             break;
         case 1:
             desc = -1;
+            img_src =img_src+"sort-up.png";
             break;
         case -1:
             desc = 0;
+            img_src =img_src+"sort-no.png";
     }
+    headerValue.children[1].setAttribute("src",img_src)
     //gets the tbody and sorts it
     var tbody = document.getElementById("tableBodyTemplate");
     var rows = tbody.children
@@ -46,6 +60,7 @@ function sortTable(headerValue) {
     })
 }
 
+//function sort
 
 function compareColumns(a,b,index) {
     if (desc===1) {
