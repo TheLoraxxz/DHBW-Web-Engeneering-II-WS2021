@@ -12,7 +12,7 @@ if ($page->getRole()==1) {
             $table = new Table($db->getAllUsersByID(0, "(SELECT MAX(us.user_id) LIMIT 1)"));
             $table->addTableHeading("User Übersicht");
             $table->addButton("Schüler hinzufügen", Page::getRoot() . "admin/create_user.php?action=multiple_user");
-            $table->addButton("Einzelner User hinzufügen", Page::getRoot() . "admin/create_edit_user.php?action=new&user_id=-1");
+            $table->addButton("Einzelner User hinzufügen", Page::getRoot() . "./create_edit_user.php?action=new&user_id=-1");
             $table->addColumn("ID", "id", false);
             $table->addColumn("Name", "name");
             $table->addColumn("Kurs", "Kurs");
