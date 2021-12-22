@@ -20,7 +20,6 @@ class DBService {
                 USE db_pain;
                 
                 create table institution(institution_id int,name varchar(1000) not null);
-                create table invites(ID int,Group_ID int, User_ID int);
                 create unique index institution_institution_id_uindex on institution (institution_id);
                 alter table institution	add constraint institution_pk primary key (institution_id);
                 alter table institution modify institution_id int auto_increment;
@@ -186,6 +185,15 @@ class DBService {
                 create unique index user_login_uindex
                 	on user (login);
                 
+                create table invites
+                (
+                    ID int,
+                    Group_ID int,
+                    User_ID int
+                );
+                alter table invites
+                    add constraint invites_pk
+                        primary key (ID);
                 INSERT INTO role (name) VALUES ('admin');
                 INSERT INTO role (name) VALUES ('student');
                 INSERT INTO role (name) VALUES ('secretary');
@@ -333,10 +341,18 @@ class DBService {
 
         $date = new DateTime($submission_date);
 
-        $query = $this->conn->query("
+        $this->conn->query("
         INSERT INTO db_pain.project (points_reachable, path_to_matrix, submission_date, open_to_invite, max_of_students, name)
         VALUES (".$points_reachable.", '".$path_to_matrix."', '".$date->format('Y-m-d H:i:s:u')."', ".$open_to_invite.", ".$max_of_students.",'".$name."') ");
-
+        $query = $this->conn->query("
+            SELECT p.project_id FROM project p  
+            WHERE p.points_reachable = ".$points_reachable." 
+            AND p.path_to_matrix = '".$path_to_matrix."' 
+            AND p.submission_date = '".$submission_date."' 
+            AND p.open_to_invite = ".$open_to_invite."
+            AND p.max_of_students = ".$max_of_students." 
+            AND p.name = '".$name."'");
+        return mysqli_fetch_all($query, MYSQLI_NUM);
     }
     public function getStammdaten($userId) {
         $query = $this->conn->query("
@@ -811,8 +827,8 @@ class DBService {
     public function getUserInvites($userId) {
         $query = $this->conn->query("
         SELECT inv.Group_ID,p.name,p2.submission_date FROM invites as inv
-      INNER JOIN user u on inv.User_ID = u.user_id
-      INNER JOIN groupings p on inv.Group_ID= p.group_id
+        INNER JOIN user u on inv.User_ID = u.user_id
+        INNER JOIN groupings p on inv.Group_ID= p.group_id
         INNER JOIN project p2 on p.project_id = p2.project_id
         WHERE u.user_id =".$userId);
         return mysqli_fetch_all($query);
@@ -877,8 +893,9 @@ class DBService {
         if (count($course_id)==0) {
             return false;
         }
+        print_r(count($project_id));
         $this->conn->query("
-            INSERT INTO db_pain.project_class (project_id, course_id) VALUES (".$project_id.", ".$course_id[0][0].")
+            INSERT INTO db_pain.project_class (project_id, course_id) VALUES (".$project_id[0][0].", ".$course_id[0][0].")
         ");
         return true;
     }

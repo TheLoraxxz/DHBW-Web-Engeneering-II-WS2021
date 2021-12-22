@@ -18,7 +18,6 @@ switch ($page->getRole()) {
         $table->addColumn("Gruppen insgesamt",3);
         //buttons that each column so you can edit the porject or lock the group
         $editButton = '<button class="btn btn-secondary" onclick="editProject(this);">Edit</button>';
-        $table->addColumn("Projekt bearbeiten",-1,true,$editButton);
         $table->addColumn("Ansehen",-1,true,'<button class="btn btn-info" onClick="seeDetails(this);">See Details</button>');
         $table->addColumn("Gruppeneinladung sperren",-1,true,'<button class="btn btn-dark" onClick="lockData(this);">Sperren</button>');
         //button that links to group or project

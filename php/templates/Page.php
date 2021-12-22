@@ -224,6 +224,4 @@ class Page {
         echo("</body>");
         echo("</html>");
     }
-
-
 }
