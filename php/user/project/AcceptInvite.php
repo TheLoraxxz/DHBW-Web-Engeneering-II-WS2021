@@ -8,6 +8,7 @@ $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 $userId = $page->getSession();
 $table = new Table($db->getUserInvites($page->getSession()));
+
 //base view
 if(!isset($_GET["Group_ID"]))
 {
@@ -20,7 +21,8 @@ if(!isset($_GET["Group_ID"]))
 //if an invite was processed
 else
 {
-    if($_GET["accepted"] == "true")
+    $accepted = filter_var($_GET['accepted'], FILTER_VALIDATE_BOOLEAN);
+    if($accepted)
     {
         $db->AddToGroup($_GET["user_id"], $_GET["Group_ID"]);
     }
@@ -33,9 +35,9 @@ else
     $table->addColumn("Date",2,false);
     $table->addButton("Zurück",page::getRoot()."we2/php/home.php");
 }
-$page->addElement($table);
 try {
     $page->addJs("User/inviteToProject.js");
 } catch (Exception $e) {
 }
+$page->addElement($table);
 $page->printPage();

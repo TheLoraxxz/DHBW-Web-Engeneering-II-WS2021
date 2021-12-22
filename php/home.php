@@ -43,7 +43,7 @@ switch ($page->getRole()) {
         $table->addColumn("Name",1);
         $table->addColumn("Date",2);
         //you can see your own details. Abgeben is to submiut the project
-        $table->addColumn("Abgeben",-1,true,'<button class="btn btn-primary">Abgeben</button>');
+        $table->addColumn("Abgeben",-1,true,'<button class="btn btn-primary" onclick="SubmitProject(this);">Abgeben</button>');
         //if open to invite
         $table->addColumn("Einladen",-1,true,'<button class="btn btn-secondary" onclick="changeViewToInvite(this);">Edit</button>');// '<button class="btn btn-secondary" oncklick="changeViewToInvite(this);">Einladen</button>');//invite other Students to a Project
 
@@ -53,6 +53,7 @@ switch ($page->getRole()) {
         }
         if(isset($_GET["ProjektId"]))
         {
+            date_default_timezone_set("CET");
             $db->SubmitGroupProject($page->getSession(),$_GET["ProjektId"],date('Y-m-d h:m:s'));
         }
         $page->addJs("tablebuttons_home.js");

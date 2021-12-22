@@ -804,9 +804,11 @@ class DBService {
 
     public function getGroupRatingStuff($groupID) {
         $query = $this->conn->query("
-        SELECT r.user_id, u.surename, r.points
+        SELECT r.user_id, u.surename, r.points, p.points_reachable
         FROM rating r
             INNER JOIN user u on r.user_id = u.user_id
+            Inner JOIN groupings g on g.group_id = r.group_id
+            inner JOIN project p on p.project_id = g.project_id
         WHERE r.group_id=".$groupID);
         return mysqli_fetch_all($query);
     }
@@ -884,7 +886,7 @@ class DBService {
         $result = mysqli_fetch_all($query,MYSQLI_NUM );
         //update submitted und subtime in der Gruppe
         $this->conn->query("
-        UPDATE groupings SET `submitted`=1,`submitted_time`=.$timeStamp.
+        UPDATE groupings SET `submitted`=1,`submitted_time`='".$timeStamp."'
         WHERE  groupings.group_id=".$result[0][0]);
     }
 
