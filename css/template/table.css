@@ -6,3 +6,6 @@
     justify-content: right;
     margin-right: 30px;
 }
+th:hover {
+    cursor: pointer;
+}

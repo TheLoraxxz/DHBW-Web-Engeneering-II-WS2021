@@ -68,23 +68,27 @@ class Table
             if (count($this->columns) > 0) {
                 for ($i = 0; $i < count($this->columns); ++$i) { //make Thgead and the head of the table
                     if ($this->columns[$i]["show"]) { // if it is suppoed to be shown it
-                        $string = $string . '<td>' . $this->columns[$i]["name"] . '</td>';
+                        if ($this->columns[$i]["HTML"]==null) {
+                            $string = $string . '<th onclick="sortTable(this)">' . $this->columns[$i]["name"] . '</th>';
+                        } else {
+                            $string = $string . '<th>' . $this->columns[$i]["name"] . '</th>';
+                        }
                     } else {
-                        $string = $string . '<td style="display: none;">' . $this->columns[$i]["name"] . '</td>';
+                        $string = $string . '<th style="display: none;">' . $this->columns[$i]["name"] . '</th>';
                     }
                 }
             } else { //wenn keine Columns angegeben werde nwerden einfach alle Daten raus geschreiben
                 for ($i = 0; $i < count($this->data[0]); $i++) {
-                    $string = $string . '<td>' . $i . '</td>';
+                    $string = $string . '<th>' . $i . '</th>';
                 }
             }
             $string = $string . '
                     </tr>                
                 </thead>
-                <tbody>';
+                <tbody id="tableBodyTemplate">';
             //tbody wird geschrieben
             for ($i = 0; $i < count($this->data); ++$i) { //für jede Daten wird
-                $string = $string . '<tr id="' . $i . '">';
+                $string = $string . '<tr id="row_' . $i . '">';
                 if (count($this->columns) > 0) { //wenn wieder columns gesetzt sind werden diese genutzt
                     for ($j = 0; $j < count($this->columns); $j++) {
                         if ($this->columns[$j]["HTML"] == null) {
