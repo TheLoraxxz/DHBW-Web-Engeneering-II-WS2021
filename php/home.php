@@ -22,11 +22,12 @@ switch ($page->getRole()) {
         $table->addColumn("Gruppeneinladung sperren",-1,true,'<button class="btn btn-dark" onClick="lockData(this);">Sperren</button>');
         //button that links to group or project
         $table->addButton("Neues Projekt","./project/createProject.php");
-        $table->addButton("Neue Gruppe",Page::getRoot()."php/user/group/new_group_admin.php");
+        $table->addButton("Neue Gruppe","./user/group/new_group_admin.php");
         $table->addColumn("Projekt löschen",-1,true,'<button class="btn btn-dark" onClick="deleteProject(this);">löschen</button>');
         if(isset($_GET["ProjectId"]))
         {
             $db->DeleteProject($_GET["ProjectId"]);
+            header('Refresh: 0; url=home.php');
         }
         $page->addElement($table);
         $page->addJs("tablebuttons_home.js");
