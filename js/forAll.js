@@ -1,9 +1,30 @@
 var desc = 0
-
+var sorts = []
 function sortTable(headerValue) {
+    //getting which element it is from the main point
+    var headerrow = headerValue.parentElement
+    var i=0;
+    var index =0
+    headerrow.childNodes.forEach((value)=> {
+        if (value.hasChildNodes() && value.children.length>0) {
+            if (value.firstElementChild.innerHTML===headerValue.firstElementChild.innerHTML) {
+                index = i
+            }
+        }
+        ++i;
+    })
+
+    var sortsindex = sorts.map((res)=>{return res.index}).indexOf(index)
+    if (sortsindex===-1) {
+        sorts.push({"index":index,"desc":1})
+    } else {
+    }
+    var img_src = headerValue.children[1].getAttribute("src");
+    console.log(img_src)
     switch (desc) {
         case 0:
             desc = 1;
+
             break;
         case 1:
             desc = -1;
@@ -11,17 +32,6 @@ function sortTable(headerValue) {
         case -1:
             desc = 0;
     }
-    //getting which element it is from the main point
-    var headerrow = headerValue.parentElement
-    var i=0;
-    var index =0
-    headerrow.childNodes.forEach((value)=> {
-        if (value.innerHTML===headerValue.innerHTML) {
-            index = i
-        } else  {
-            ++i
-        }
-    })
     //gets the tbody and sorts it
     var tbody = document.getElementById("tableBodyTemplate");
     var rows = tbody.children
@@ -34,7 +44,6 @@ function sortTable(headerValue) {
     tbodyKeys.forEach((key)=> {
         document.getElementById("tableBodyTemplate").appendChild(rowArray[key]);
     })
-    console.log(desc)
 }
 
 

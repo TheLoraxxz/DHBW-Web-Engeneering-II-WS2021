@@ -1,5 +1,5 @@
 <?php
-
+require_once('Page.php');
 class Table
 {
     private $data = null;
@@ -69,7 +69,7 @@ class Table
                 for ($i = 0; $i < count($this->columns); ++$i) { //make Thgead and the head of the table
                     if ($this->columns[$i]["show"]) { // if it is suppoed to be shown it
                         if ($this->columns[$i]["HTML"]==null) {
-                            $string = $string . '<th onclick="sortTable(this)">' . $this->columns[$i]["name"] . '</th>';
+                            $string = $string . '<th onclick="sortTable(this)"><span>' . $this->columns[$i]["name"] . '</span><img src="'.Page::getRoot().'assets/Icons/sort-no.png" alt="No sort"><span class="number-order-sort"> </span></th>';
                         } else {
                             $string = $string . '<th>' . $this->columns[$i]["name"] . '</th>';
                         }
@@ -79,7 +79,7 @@ class Table
                 }
             } else { //wenn keine Columns angegeben werde nwerden einfach alle Daten raus geschreiben
                 for ($i = 0; $i < count($this->data[0]); $i++) {
-                    $string = $string . '<th>' . $i . '</th>';
+                    $string = $string . '<th onclick="sortTable(this)"><span>' . $i . '</span></th>';
                 }
             }
             $string = $string . '

@@ -9,3 +9,12 @@
 th:hover {
     cursor: pointer;
 }
+img {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}
+.number-order-sort {
+    margin-left: 5px;
+    font-size: 8px;
+}
