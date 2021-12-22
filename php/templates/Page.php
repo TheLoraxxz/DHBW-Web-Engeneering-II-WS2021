@@ -195,7 +195,7 @@ class Page {
                               '.$nav.'
                             </div>
                         </div>
-                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB  .'php/StammdatenAendern/Stammdaten.php"><img src="'.$this->ROOTLIB.'assets/Icons/profile.svg" alt="Stammdaten"></a>
+                        <a class="nav-link navbar-icon" href="'.$this->ROOTLIB  .'php/StammdatenAendern/stammdaten.php"><img src="'.$this->ROOTLIB.'assets/Icons/profile.svg" alt="Stammdaten"></a>
                         <a class="nav-link navbar-icon" href="'.$this->ROOTLIB.'index.php?action=logout"><img src="'.$this->ROOTLIB.'assets/Icons/logout.svg" alt="Logout"></a>
                     </div>
                 </nav>
