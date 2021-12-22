@@ -38,7 +38,7 @@ switch ($page->getRole()) {
     case 2:
         $table = new Table($db->getUserHomeTable($page->getSession()));
         //add data  and add ID / name  / Date where you have to submit
-        $table->addButton("Neue Gruppe",$page::getRoot()."php/user/group/new_group_admin.php");
+        $table->addButton("Neue Gruppe","../php/user/group/new_group_admin.php");
         $table->addColumn("ID",0,false);
         $table->addColumn("Name",1);
         $table->addColumn("Date",2);

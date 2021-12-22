@@ -194,6 +194,7 @@ class DBService {
                 alter table invites
                     add constraint invites_pk
                         primary key (ID);
+                alter table invites modify ID int auto_increment;
                 INSERT INTO role (name) VALUES ('admin');
                 INSERT INTO role (name) VALUES ('student');
                 INSERT INTO role (name) VALUES ('secretary');
@@ -850,7 +851,7 @@ class DBService {
  */
     public function createInvite($groupId, $userId)
     {
-        $this->conn-> query("INSERT INTO invites (ID,Group_ID,User_ID) VALUES (null, $groupId,$userId)");
+        $this->conn-> query("INSERT INTO invites (Group_ID,User_ID) VALUES ($groupId,$userId)");
     }
 /*
  * adds an user to a projectgroup
