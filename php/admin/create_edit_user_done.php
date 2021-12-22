@@ -20,15 +20,22 @@ if ($page->getRole() == 1) {
         $db->setUserCIR($_POST["user_id"], $_POST["institute"], $_POST["course_input"], $_POST["role"], $userStatus);
     }
 
-
-
     $string = '
-        <div class="container-md mt-5" >
+        <div class="container-sm mt-5" >
             <h2>Der User wurde erstellt!</h2>
-             <div class="col-12 mt-3">
-                <a href="./create_user.php?action=overview"><button class="btn btn-outline-secondary" href="createProject.php">Einen weiteren User erstellen</button></a>
-                <a href = "../home.php"><button class="btn btn-outline-secondary">Startseite</button></a>
-              </div>
+             <div class="row  justify-content-start">
+                <div class="col mt-4">
+                    <form action="./create_user.php">
+                        <button class="btn btn-outline-secondary">Einen weiteren User erstellen</button>
+                        <input name="action" type="text" style ="display:none" value="overview">
+                    </form>
+                    <div class="col mt-4">
+                        <form action="../home.php">
+                            <button class="btn btn-outline-secondary">Startseite</button>
+                        </form>
+                    </div>
+                </div>
+             </div>
         </div>
     ';
 

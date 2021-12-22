@@ -24,12 +24,20 @@ if ($page->getRole()==1) {
     }
 
     $string = '
-        <div class="container-md mt-5" >
+        <div class="container-sm mt-5" >
             <h2>Ihr Projekt wurde erstellt!</h2>
-             <div class="col-12 mt-3">
-                <a href="./createProject.php"><button class="btn btn-outline-secondary" href="createProject.php">Ein weiteres Projekt erstellen</button></a>
-                <a href = "../home.php"><button class="btn btn-outline-secondary">Startseite</button></a>
-              </div>
+             <div class="row  justify-content-start">
+                <div class="col mt-4">
+                    <form action="./createProject.php">
+                        <button class="btn btn-outline-secondary">Ein weiteres Projekt erstellen</button>
+                    </form>
+                    <div class="col mt-4">
+                        <form action="../home.php">
+                            <button class="btn btn-outline-secondary">Startseite</button>
+                        </form>
+                    </div>
+                </div>
+             </div>
         </div>
     ';
 

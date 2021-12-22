@@ -24,12 +24,12 @@ if($page->getRole() == 1) {
                                 <div class="col-5">
                                     <h5>Neuen Nutzer erstellen</h5>
                                     <div class="mb-3">
-                                        <label class="form-label" for="login_input">Login:</label>
+                                        <label class="form-label" for="login">Login:</label>
                                         <input id="user_id" value="'.$id.'"type="text" class="form-control mb-3" name="user_id" style="display:none">
                                         <input id="login" value="'.$userArray[0][4].'"type="text" class="form-control mb-3" name="login" required>
-                                        <label class="form-label" for="email_input">E-Mail:</label>
+                                        <label class="form-label" for="email">E-Mail:</label>
                                         <input type="email" value="'.$userArray[0][3].'"id="email" class="form-control mb-3" name ="email" required>
-                                        <label class="form-label" for="login_input">Passwort:</label>
+                                        <label class="form-label" for="password">Passwort:</label>
                                         <input id="password" type="text" class="form-control mb-3" name="password">
                                     </div>
                                     <div class="input-group">
@@ -82,12 +82,12 @@ if($page->getRole() == 1) {
                                 <div class="col-5">
                                     <h5>Neuen Nutzer erstellen</h5>
                                     <div class="mb-3">
-                                        <label class="form-label" for="login_input">Login:</label>
+                                        <label class="form-label" for="login">Login:</label>
                                         <input id="user_id" value="'.$id.'"type="text" class="form-control mb-3" name="user_id" style="display:none" required>
                                         <input id="login" type="text" class="form-control mb-3" name="login">
-                                        <label class="form-label" for="email_input">E-Mail:</label required>
+                                        <label class="form-label" for="email">E-Mail:</label required>
                                         <input type="email" id="email" class="form-control mb-3" name="email">
-                                        <label class="form-label" for="login_input">Passwort:</label>
+                                        <label class="form-label" for="password">Passwort:</label>
                                         <input id="password" type="text" class="form-control mb-3" name="password" required>
                                     </div>
                                     <div class="input-group">
@@ -141,12 +141,12 @@ if($page->getRole() == 1) {
                                 <div class="col-5">
                                     <h5>Neuen Nutzer erstellen</h5>
                                     <div class="mb-3">
-                                        <label class="form-label" for="login_input">Login:</label>
+                                        <label class="form-label" for="login">Login:</label>
                                         <input id="user_id" value="'.$id.'"type="text" class="form-control mb-3" name="user_id" style="display:none" required>
                                         <input id="login" type="text" class="form-control mb-3" name="login">
-                                        <label class="form-label" for="email_input">E-Mail:</label required>
+                                        <label class="form-label" for="email">E-Mail:</label required>
                                         <input type="email" id="email" class="form-control mb-3" name="email">
-                                        <label class="form-label" for="login_input">Passwort:</label>
+                                        <label class="form-label" for="password">Passwort:</label>
                                         <input id="password" type="text" class="form-control mb-3" name="password" required>
                                     </div>
                                     <div class="input-group">
