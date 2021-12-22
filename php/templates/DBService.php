@@ -893,7 +893,6 @@ class DBService {
         if (count($course_id)==0) {
             return false;
         }
-        print_r(count($project_id));
         $this->conn->query("
             INSERT INTO db_pain.project_class (project_id, course_id) VALUES (".$project_id[0][0].", ".$course_id[0][0].")
         ");
@@ -907,9 +906,11 @@ class DBService {
         $this->conn->query("Delete FROM project_class  WHERE project_class.project_id =".$project_id);
         $query =$this->conn->query("SELECT g.group_id FROM groupings as g WHERE g.project_id =".$project_id);
         $group_id =mysqli_fetch_all($query,MYSQLI_NUM);
-        print($group_id[0][0]);
-        $this->conn->query("Delete FROM rating  WHERE rating.group_id = ".$group_id[0][0]);
-        $this->conn->query("Delete FROM groupings  WHERE groupings.project_id =".$project_id);
+        if(count($group_id) > 0)
+        {
+            $this->conn->query("Delete FROM rating  WHERE rating.group_id = ".$group_id[0][0]);
+            $this->conn->query("Delete FROM groupings  WHERE groupings.project_id =".$project_id);
+        }
         $this->conn->query("Delete FROM project  WHERE project.project_id =".$project_id);
     }
 }
