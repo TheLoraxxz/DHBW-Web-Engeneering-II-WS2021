@@ -8,6 +8,7 @@ $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 $userId = $page->getSession();
 $table = new Table($db->getUserInvites($page->getSession()));
+//base view
 if(!isset($_GET["Group_ID"]))
 {
     $table->addColumn("ID",0,false);
@@ -16,6 +17,7 @@ if(!isset($_GET["Group_ID"]))
     $table->addColumn("",-1,true, '<button class="btn btn-secondary", onclick="EndInvite(this,  true,'.$userId.')">Accept </button>
                                <button class="btn btn-secondary", onclick="EndInvite(this, false,'.$userId.')">Decline</button>');
 }
+//if an invite was processed
 else
 {
     if($_GET["accepted"])

@@ -1,3 +1,6 @@
+/*
+/ Erstellt eine Einladung für den angegebenen nutzer
+ */
 function CreateInvite(button,projektID, userId)
 {
     var rowId = button.parentElement.parentElement.firstElementChild.innerHTML;
@@ -5,7 +8,9 @@ function CreateInvite(button,projektID, userId)
     window.location.href = "?action=lock&invitedUser="+rowId+"&invitedProjekt="+projektID+"&userId="+userId;
     //$db => createInvite(projektID,rowId);
 }
-
+/*
+löscht die angegebene Einladung
+ */
 function EndInvite(button, accepted, userId)
 {
     var rowId = button.parentElement.parentElement.firstElementChild.innerHTML;

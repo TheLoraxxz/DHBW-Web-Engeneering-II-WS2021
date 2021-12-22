@@ -45,7 +45,7 @@ switch ($page->getRole()) {
         //you can see your own details. Abgeben is to submiut the project
         $table->addColumn("Abgeben",-1,true,'<button class="btn btn-primary">Abgeben</button>');
         //if open to invite
-        $table->addColumn("Einladen",-1,true/*$db->isInvitational(ProjektId)*/,'<button class="btn btn-secondary" onclick="changeViewToInvite(this);">Edit</button>');// '<button class="btn btn-secondary" oncklick="changeViewToInvite(this);">Einladen</button>');//invite other Students to a Project
+        $table->addColumn("Einladen",-1,true,'<button class="btn btn-secondary" onclick="changeViewToInvite(this);">Edit</button>');// '<button class="btn btn-secondary" oncklick="changeViewToInvite(this);">Einladen</button>');//invite other Students to a Project
 
         if($db->getUserInvites($page->getSession()) != null)// Einladung vorhanden
         {

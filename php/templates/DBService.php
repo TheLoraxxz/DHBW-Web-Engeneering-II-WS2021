@@ -805,7 +805,9 @@ class DBService {
         WHERE user_id=".$user);
         return mysqli_fetch_all($query);
     }
-
+/*
+ * pulls all invites for the active User
+ */
     public function getUserInvites($userId) {
         $query = $this->conn->query("
         SELECT inv.Group_ID,p.name,p2.submission_date FROM invites as inv
@@ -815,16 +817,9 @@ class DBService {
         WHERE u.user_id =".$userId);
         return mysqli_fetch_all($query);
     }
-
-    public function isInvitational($projectID)
-    {
-        $query = $this->conn->query("
-            SELECT p.open_to_invite FROM project as p
-            WHERE p.project_id =".$projectID);
-        $result = mysqli_fetch_all($query);
-        return $result;
-    }
-
+/*
+ * pulls all users in the same Course as active User
+ */
     public function getAllUsersInCourse($userId, $projectId) {
         $query = $this->conn->query("
             SELECT u.user_id , u.name FROM user as u
@@ -834,18 +829,24 @@ class DBService {
         $result = mysqli_fetch_all($query);
         return $result;
     }
-
+/*
+ * creates an invite in the db
+ */
     public function createInvite($groupId, $userId)
     {
         $this->conn-> query("INSERT INTO invites (ID,Group_ID,User_ID) VALUES (null, $groupId,$userId)");
     }
-
+/*
+ * adds an user to a projectgroup
+ */
     public function AddToGroup($userId, $groupId)
     {
         $this->conn-> query("INSERT INTO rating (user_id,group_id, points, is_admin) VALUES ( $userId,$groupId,null ,0)");
         $this->RemoveInvite($userId,$groupId);
     }
-
+/*
+ * deletes an invite from the db
+ */
     public function RemoveInvite($userId, $groupId)
     {
         //remove the specified invite from the database
@@ -853,7 +854,9 @@ class DBService {
             Delete FROM invites
             WHERE User_ID =".$userId." AND Group_ID=".$groupId);
     }
-
+/*
+ * Set the submit flag in a project and safes the Time
+ */
     public function SubmitGroupProject($userId,$projektId, $timeStamp)
     {
         $query = $this->conn->query("
@@ -880,7 +883,9 @@ class DBService {
         ");
         return true;
     }
-
+/*
+ * deletes a Project from the db
+ */
     public function DeleteProject($project_id)
     {
         $this->conn->query("Delete FROM project_class  WHERE project_class.project_id =".$project_id);
