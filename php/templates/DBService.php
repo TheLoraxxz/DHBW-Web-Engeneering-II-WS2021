@@ -901,7 +901,7 @@ class DBService {
         ");
         return true;
     }
-/*
+/**
  * deletes a Project from the db
  */
     public function DeleteProject($project_id)
@@ -915,5 +915,14 @@ class DBService {
             $this->conn->query("Delete FROM groupings  WHERE groupings.project_id =".$project_id);
         }
         $this->conn->query("Delete FROM project  WHERE project.project_id =".$project_id);
+    }
+    public function getProjectInfos($project_id) {
+        $query = $this->conn->query("
+        SELECT  p.name as project,c.name as class
+        FROM project as p
+        INNER JOIN project_class pc on p.project_id = pc.project_id
+        INNER JOIN course c on pc.course_id = c.course_id
+        WHERE p.project_id=".$project_id);
+        return mysqli_fetch_all($query,1);
     }
 }

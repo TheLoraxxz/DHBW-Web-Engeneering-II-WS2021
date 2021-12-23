@@ -17,6 +17,8 @@ if ($page->getRole()==1) {
         if(!$db->createClass_Project($project,$_POST["klasscourse"])) {
             $page->showError("Keinen Kurs gefunden");
             $page->addHtml('<div class="container-fluid main"><a class="btn btn-primary" href="createProject.php">Zurück</a></div>');
+            $page->printPage();
+            exit();
         }
 
     }

@@ -9,6 +9,13 @@ if($page->getRole()==1) {
     $table = new Table($data);
     if (count($data)>0) {
         $table->addTableHeading("Projekt: ".$data[0]["project"]);
+    } else {
+        $data = $db->getProjectInfos($_GET["project_id"]);
+        $table->addTableHeading("Projekt: ".$data[0]["project"]);
+        $html = '<div class="container-fluid">
+            <p>Klasse: '.$data[0]["class"].'</p>
+        </div>';
+        $page->addHtml($html);
     }
     $table->addColumn("ID","id",false);
     $table->addColumn("Gruppenname","groupname");
