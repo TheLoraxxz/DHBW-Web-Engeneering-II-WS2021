@@ -8,7 +8,7 @@ $auswahl= 0;
 $user = $page->getSession();
 $daten = $db->getStammdaten($user);
 
-
+//general overview of your own data
 $page->addCs('StammdatenAendernCss/Stammdaten.css');
 $string = '
 <div  class="container">
@@ -52,5 +52,6 @@ $string = '
     </div>
 </div>
 ';
+//you can seleect and it gets you to the acoriding SD.....php file
 $page->addHtml($string);
 $page->printPage();

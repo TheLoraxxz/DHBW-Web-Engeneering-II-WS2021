@@ -4,6 +4,8 @@ include_once("../templates/DBService.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
+//backend of the create project
+//if the admin is set the relevant informations are searched and are set
 if ($page->getRole()==1) {
 
     if($_POST["open_to_invite"] == "Ja") {
@@ -11,7 +13,7 @@ if ($page->getRole()==1) {
     } else {
         $open_to_invite = 0;
     }
-
+    //it has a look whether the project class can be created if not it returns error else it just exits
     if(isset($_POST["name"])) {
         $project = $db->setProjekt($_POST["points_reachable"], $_POST["path_to_matrix"], $_POST["submission_date"], $open_to_invite, $_POST["max_of_students"], $_POST["name"]);
         if(!$db->createClass_Project($project,$_POST["klasscourse"])) {

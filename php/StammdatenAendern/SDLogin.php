@@ -5,7 +5,7 @@ $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 $user = $page->getSession();
-
+//if the login is presset the login is beeing updated and the rest is shown
 if (isset($_POST["login"])) {
     if ($_POST["login"]!="") {
         $auswahl=1;

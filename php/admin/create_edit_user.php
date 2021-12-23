@@ -3,11 +3,11 @@ include_once('./../templates/Page.php');
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
-
+//if role is admin he ca ncreate a user
 if($page->getRole() == 1) {
 
     $id = $_GET["user_id"];
-
+    //if the id is set
     if(isset($id)) {
         if($id > 0) {
             $userArray = $db->getUser($id);
@@ -69,7 +69,7 @@ if($page->getRole() == 1) {
                         </div>
                     </form>
                 ';
-        } else {
+        } else { //if it is not set a new input is created
             $html = '
                     <form action="./create_edit_user_done.php" method="post">
                         <div class="container-fluid main">
@@ -129,7 +129,7 @@ if($page->getRole() == 1) {
                     </form>
                 ';
         }
-    } else {
+    } else {//else it is a new user that is beeing created
         $html = '
                     <form action="./create_edit_user_done.php" method="post">
                         <div class="container-fluid main">

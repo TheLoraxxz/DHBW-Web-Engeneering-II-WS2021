@@ -1,6 +1,7 @@
 <?php
 /**
  @author: Tilmann Lorenz --> 2447899
+ * pdf class that creates a table with all neccesary informations that beeing givben
  */
 require('./../../php-libaries/PDF/fpdf.php');
 class PDF extends FPDF {

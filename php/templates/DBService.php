@@ -211,7 +211,9 @@ class DBService {
             ");
         }
     }
-
+    /**
+     * gets all the user session via concatinating the passwords and  the userid without hashing
+    */
     public function getUserSession() {
         $result =$this->conn->query("
             SELECT user_id,password
@@ -224,6 +226,9 @@ class DBService {
 
         return $session;
     }
+    /**
+     * gets the current role from the current user id
+    */
     public function getRole($user_id) {
         $role = $this->conn->query("SELECT role_id FROM user_role
         WHERE user_id=".$user_id);
@@ -337,7 +342,9 @@ class DBService {
         }
         return $result;
     }
-
+    /**
+     * the project is set and all the values are inserted
+    */
     public function setProjekt($points_reachable, $path_to_matrix,  $submission_date, $open_to_invite, $max_of_students, $name) {
 
         $date = new DateTime($submission_date);
@@ -355,12 +362,19 @@ class DBService {
             AND p.name = '".$name."'");
         return mysqli_fetch_all($query, MYSQLI_NUM);
     }
+    /**
+     * all the current stammdaten are getted
+    */
     public function getStammdaten($userId) {
         $query = $this->conn->query("
             SELECT login, email, password, name, surename FROM user u
             WHERE u.user_id =".$userId);
         return mysqli_fetch_all($query);
     }
+    /**
+     * stammdaten are beeing updated according the auswahl so one can control and the
+     * function can be used the same over different websites
+    */
     public function stammdatenUpdate($stammdaten, $userId, $auswahl)
     {
         if ($auswahl == 1) {
@@ -395,6 +409,9 @@ class DBService {
             WHERE u.user_id =" . $userId);
         }
     }
+    /**
+     * creates a user or updates an existing one by name
+    */
     public function setUser($user_id, $login, $email, $password, $surename, $name){
         if($user_id > 0) {
             $query = $this->conn->query("
@@ -414,7 +431,10 @@ class DBService {
             return mysqli_fetch_all($tempID)[0][0];
         }
     }
-
+    /**
+     * the users all others connection to institut, course, and role are inserted
+     * int o the database
+    */
     public function setUserCIR($user_id, $institute, $course_input, $role_input, $userStatus) {
         $query = $this->conn->query("
             SELECT institution_id FROM institution WHERE name = '".$institute."' limit 1
@@ -481,7 +501,9 @@ class DBService {
 
 
     }
-
+    /**
+     * all relevant user information are gotten
+    */
     public function getUser($user_id) {
         $query = $this->conn->query("
             SELECT u.user_id, r.role_id, u.password, u.email, u.login, u.name, u.surename, c.name, i.name
@@ -772,7 +794,10 @@ class DBService {
         return $projects;
 
     }
-
+    /**
+     * the ratings and the normal points reachable are gettoon for the information for the table
+     * then those are pulled together to make it look more interesting
+    */
     public function getGrades() {
         $query = $this->conn->query("
         SELECT r.points,p.points_reachable,u.name,u.surename,p.name as project
@@ -791,7 +816,9 @@ class DBService {
         }
         return $grades;
     }
-
+    /**
+     * when you click on Bewertungen in the user menu you can see this
+    */
     public function getUserBewertungTable($userID) {
         $query = $this->conn->query("
         SELECT r.points, g.name, p.name, p.points_reachable
@@ -801,7 +828,9 @@ class DBService {
         WHERE r.user_id =" . $userID);
         return mysqli_fetch_all($query);
     }
-
+    /**
+     * you can get group ratings
+    */
     public function getGroupRatingStuff($groupID) {
         $query = $this->conn->query("
         SELECT r.user_id, u.surename, r.points, p.points_reachable
@@ -812,6 +841,9 @@ class DBService {
         WHERE r.group_id=".$groupID);
         return mysqli_fetch_all($query);
     }
+    /**
+     * if the pointsare akready inserted into the rating table these are updated
+    */
     public function updatePoints($points, $user) {
         $this->conn->query("
             UPDATE rating SET points = '".$points."' 
@@ -824,9 +856,9 @@ class DBService {
         WHERE user_id=".$user);
         return mysqli_fetch_all($query);
     }
-/*
- * pulls all invites for the active User
- */
+    /**
+     * pulls all invites for the active User
+     */
     public function getUserInvites($userId) {
         $query = $this->conn->query("
         SELECT inv.Group_ID,p.name,p2.submission_date FROM invites as inv
@@ -836,9 +868,9 @@ class DBService {
         WHERE u.user_id =".$userId);
         return mysqli_fetch_all($query);
     }
-/*
- * pulls all users in the same Course as active User
- */
+    /**
+     * pulls all users in the same Course as active User
+     */
     public function getAllUsersInCourse($userId, $projectId) {
         $query = $this->conn->query("
             SELECT u.user_id , u.name FROM user as u
@@ -889,7 +921,9 @@ class DBService {
         UPDATE groupings SET `submitted`=1,`submitted_time`='".$timeStamp."'
         WHERE  groupings.group_id=".$result[0][0]);
     }
-
+    /**
+     * creates class anda project so the projects are linked to the class
+    */
     public function createClass_Project($project_id,$course_name) {
         $query =$this->conn->query("SELECT course_id FROM course WHERe name='".$course_name."' LIMIT 1");
         $course_id =mysqli_fetch_all($query) ;
@@ -916,6 +950,9 @@ class DBService {
         }
         $this->conn->query("Delete FROM project  WHERE project.project_id =".$project_id);
     }
+    /**
+     * gets all the infos to onne project
+    */
     public function getProjectInfos($project_id) {
         $query = $this->conn->query("
         SELECT  p.name as project,c.name as class

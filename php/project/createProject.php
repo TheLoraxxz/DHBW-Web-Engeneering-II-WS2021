@@ -3,6 +3,7 @@ include_once("../templates/Page.php");
 include_once("../templates/DBService.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
+//if the role is an admin because only admins are able to do this you can create a porject
 $db = $page->getDBService();
 if ($page->getRole()==1) {
     $string = '
