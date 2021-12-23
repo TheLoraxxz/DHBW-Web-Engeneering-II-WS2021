@@ -1,6 +1,6 @@
 var shown_course = false;
 var save = false;
-
+//shows and hides the course so you dont need to always add users
 function hideShowCourse() {
     if (!save) {
         shown_course = !shown_course;
@@ -17,6 +17,7 @@ function hideShowCourse() {
     }
 
 }
+//saves course
 function saveCourse() {
 
     if (document.getElementById("course_name").value.length >0 && document.getElementById("institut_input").value.length>0) {
@@ -26,12 +27,14 @@ function saveCourse() {
     }
 
 }
+//on submit the numbers are shown and it doesnt need to be zero and submitting the item
 function submit() {
     var number  = document.getElementById("number_of_accounts_input").value
-    if (!(number.length == 0)) {
+    if (!(number.length === 0)) {
         document.getElementById("number_of_accounts").value = number
         let course_name;
         let action
+        //if save = true the course name and isntitute name are gotten
         if (save) {
             if (document.getElementById("course_name").value.length>0) {
                 course_name = document.getElementById("course_name").value;
@@ -42,6 +45,7 @@ function submit() {
             course_name = document.getElementById("course_input").value;
             action = "create";
         }
+        //if the name is set it seets all to the shadow form and submits this
         if(course_name.length>0) {
             document.getElementById("action").value = action
             document.getElementById("number_of_accounts").value = number

@@ -3,11 +3,14 @@ require_once ('./../templates/Page.php');
 require_once('pdf.php');
 $page = new Page();
 $page->getLoginstatus($_COOKIE["GradlappainCook"]);
+//this is for printing PDFs
 if (isset($_GET["source"])) {
+    //if it is form home than it is only the secretary
     if ($_GET["source"]=="home") {
         $db = $page->getDBService();
         if ($page->getRole()==3) {
             $data =$db->getSecretareHomeTable($page->getSession());
+            //if there is data aall the pdf is printed else it is beeing redirected because there is no data
             if(count($data)>0) {
                 for($i=0;$i<count($data);++$i) {
                     $points_reahable = $data[$i][5];

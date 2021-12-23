@@ -4,15 +4,16 @@ require_once ('./../templates/Table.php');
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
+//because this is only for admins the role is checked
 if ($page->getRole()==1) {
     if (isset($_GET["action"])) {
 
-
+        //if it is the overview all are shown
         if ($_GET["action"] == "overview") {
             $table = new Table($db->getAllUsersByID(0, "(SELECT MAX(us.user_id) LIMIT 1)"));
             $table->addTableHeading("User Übersicht");
             $table->addButton("Schüler hinzufügen", "./create_user.php?action=multiple_user");
-            $table->addButton("Einzelner User hinzufügen",  "./create_edit_user.php?action=new&user_id=-1");
+            $table->addButton("Einzelnen Benutzer hinzufügen",  "./create_edit_user.php?action=new&user_id=-1");
             $table->addColumn("ID", "id", false);
             $table->addColumn("Name", "name");
             $table->addColumn("Kurs", "Kurs");
@@ -35,7 +36,7 @@ if ($page->getRole()==1) {
 
             }
 
-
+            //if you want to create multiple users this is shown
         } else if ($_GET["action"] == "multiple_user") {
             $html = '
             <div class="container-fluid main row">
@@ -84,7 +85,7 @@ if ($page->getRole()==1) {
             }
             $page->addHtml($html);
 
-
+        //if u pressed the reset password key the password is reseettet to 123456
         } else if ($_GET["action"] == "reset_password") {
 
             $password = password_hash("123456", PASSWORD_BCRYPT);
@@ -94,15 +95,19 @@ if ($page->getRole()==1) {
 
         }
     }
-
+    //if the action post is set all the infos are handeld
     if (isset($_POST["action"])) {
         $course = "";
+        //when it is a new course the the course is created elsewise it is just decoded and the already
+        //used is used
         if ($_POST["action"] == "create_kurs") {
             $course = $db->createNewCourse(urldecode($_POST["course_name"]), $_POST["institut"]);
         } else if ($_POST["action"] == "create") {
             $course = urldecode($_POST["course_name"]);
         }
+        //crerates mutliple users
         $tableData = $db->createNewUsers(intval($_POST["number"]), $_POST["course_name"]);
+        //on any errors  this happens
         if ($tableData == null) {
             $page->showError("Fehler beim einfügen in der Datenbank ");
         } elseif ($tableData == -1) {
@@ -112,6 +117,7 @@ if ($page->getRole()==1) {
             ';
             $page->addHtml($html);
         } else {
+            //this is the table of all the people that have started
             $table = new Table($tableData);
             $table->addColumn("Benutzername", "name");
             $table->addColumn("Password", "password");
@@ -127,6 +133,7 @@ if ($page->getRole()==1) {
 
 
 } else {
+    //showing that you are not allowed there
     $page->showError("Keinen Zugriff");
     $page->printPage();
 }

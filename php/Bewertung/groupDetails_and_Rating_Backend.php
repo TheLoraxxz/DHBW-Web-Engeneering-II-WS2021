@@ -5,7 +5,7 @@ $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 $daten=$db->getGroupRatingStuff($_POST["gruppeID"]);
-
+//this looks whether the points for all are set if not then for every user the rating is set
 if (isset($_POST["gPoints"]) and $_POST["gPoints"]!="") {
     if($daten[0][3] >= $_POST["gPoints"])
     {
@@ -22,4 +22,5 @@ if (isset($_POST["gPoints"]) and $_POST["gPoints"]!="") {
         }
     }
 }
+//after that you are beeing sent back to home.php
 header("Location: ".Page::getRoot().'php/home.php');

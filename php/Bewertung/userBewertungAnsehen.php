@@ -4,7 +4,7 @@ include_once("../templates/Table.php");
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
-
+//can give you all the ratings of one user
 if ($page->getRole()==2) {
     $table = new Table($db->getUserBewertungTable($page->getSession()));
     $table->addColumn("Projekt",2);

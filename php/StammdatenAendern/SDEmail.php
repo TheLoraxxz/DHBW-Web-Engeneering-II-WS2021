@@ -5,7 +5,7 @@ $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
 $user = $page->getSession();
-
+//if the email is set then the current emai lis updated else the normal thing is shown
 if (isset($_POST["email"])) {
     if ($_POST["email"]!="") {
         $auswahl=2;

@@ -1,5 +1,5 @@
 <?php
-
+require_once('Page.php');
 class Table
 {
     private $data = null;
@@ -49,13 +49,20 @@ class Table
             $string = $string.'<h3>'.$this->header.'</h3>';
         }
         if (count($this->button) > 0) {
-            $string = $string.'<div class="buttongroup"><div class="btn-group btns">';
+            $string = $string.'
+                <div class="table-search-header">
+                <div class="input-group mb-3 header" >
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Suchen</span>
+                    </div>
+                        <input id="searchFilter" class="form-control" placeholder="Suchen" onkeyup="searchTable(this.value)">
+                        <div class="input-group-append">';
             for ($i = 0; $i < count($this->button); $i++) {
-                $string = $string . '<button  class="btn btn-outline-secondary" onClick="(function (){
+                $string = $string . '<button  class="btn btn-outline-secondary" type="button" onClick="(function (){
                 window.location.href=\''.$this->button[$i]["link"].'\';})() ;">'.
                     $this->button[$i]["name"] . '</button>';
             }
-            $string = $string . '</div></div>';
+            $string = $string . '</div></div></div>';
         }
 
         if (count($this->data) == 0) {
@@ -63,13 +70,13 @@ class Table
         } else {
             $string = $string . '
                 <table class="table table-striped">
-                    <thead>
+                    <thead id="tableHeadTemplate">
                         <tr>';
             if (count($this->columns) > 0) {
                 for ($i = 0; $i < count($this->columns); ++$i) { //make Thgead and the head of the table
                     if ($this->columns[$i]["show"]) { // if it is suppoed to be shown it
                         if ($this->columns[$i]["HTML"]==null) {
-                            $string = $string . '<th onclick="sortTable(this)">' . $this->columns[$i]["name"] . '</th>';
+                            $string = $string . '<th onclick="sortTable(this)"><span>' . $this->columns[$i]["name"] . '</span><img src="'.Page::getRoot().'assets/Icons/sort-no.png" alt="No sort"><span class="number-order-sort"> </span></th>';
                         } else {
                             $string = $string . '<th>' . $this->columns[$i]["name"] . '</th>';
                         }
@@ -79,7 +86,7 @@ class Table
                 }
             } else { //wenn keine Columns angegeben werde nwerden einfach alle Daten raus geschreiben
                 for ($i = 0; $i < count($this->data[0]); $i++) {
-                    $string = $string . '<th>' . $i . '</th>';
+                    $string = $string . '<th onclick="sortTable(this)"><span>' . $i . '</span></th>';
                 }
             }
             $string = $string . '

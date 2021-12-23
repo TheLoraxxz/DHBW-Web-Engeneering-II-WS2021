@@ -3,12 +3,16 @@ include_once('../../templates/Page.php');
 $page = new Page();
 $page->getLoginstatus($_COOKIE['GradlappainCook']);
 $db = $page->getDBService();
+//if it is set then the groups are cereated
 if (isset($_POST) and count($_POST)>0) {
     if ($page->getRole()==1) {
+        //if it is created the groups are directly created without inventation
         $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"]));
     } else {
+        //else theser are used to invite
         $db->createGroup($_POST["course"],$_POST["group_name"],json_decode($_POST["member"]),$page->getSession(),false);
     }
+    //it retrns home and shows one success
     header('Location: '.$page::getRoot().'php/home.php?success=newGroup');
     die();
 }

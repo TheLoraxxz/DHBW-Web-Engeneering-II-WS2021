@@ -89,6 +89,7 @@ class Page {
             $rootlib[strpos($rootlib,"\\",$off)] = "/";
             $off = strpos($rootlib,"\\",$off)+1;
         }
+        $rootlib[strpos($rootlib,"\\")]="/";
         return substr($rootlib,strpos($rootlib,"htdocs")+6)."/../../";
     }
     public function addElement($element) {

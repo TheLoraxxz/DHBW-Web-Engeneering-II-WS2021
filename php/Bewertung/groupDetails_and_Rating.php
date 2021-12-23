@@ -11,7 +11,7 @@ $i=0;
 if (empty($daten)) {
     $page->showError("keine User in dieser Gruppe!");
 }
-
+//dynamic value to grade all at once
 foreach ($daten as $value) {
     $name="uPoints".$daten[$i][0];
     $html=$html.'<div class="input-group felder"><span class="input-group-text">'. $daten[$i][1].'</span><input value="'.$daten[$i][2].'" type="number" class="form-control" name="'.$name.'" placeholder="Punkte"></div>';
