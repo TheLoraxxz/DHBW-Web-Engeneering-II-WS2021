@@ -1,6 +1,6 @@
 var shown_course = false;
 var save = false;
-
+//shows institute if it is shown and if it is saved you can open and close it every time
 function hideShowInstitute() {
     if (!save) {
         shown_course = !shown_course;
@@ -13,7 +13,7 @@ function hideShowInstitute() {
         }
     }
 }
-
+//if the course is saved the inputs are saved so it is used to determine everything also the fields go disabled to prevent  more inüut
 function saveCourse() {
     if (document.getElementById("course_input").value.length >0 && document.getElementById("institute").value.length>0) {
         document.getElementById("course_input").setAttribute("disabled","true")
@@ -21,7 +21,7 @@ function saveCourse() {
         save = true;
     }
 }
-
+//copies all the files to the shadow form and then submits this form
 function submit() {
     let course_name = document.getElementById("course_input").value;
     let action = document.getElementById("action").value;
