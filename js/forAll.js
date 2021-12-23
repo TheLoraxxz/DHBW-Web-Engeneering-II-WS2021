@@ -2,6 +2,7 @@
 //sorts is uesed to determine in which order the table needs to be sorted
 var sorts = []
 
+var tableRows = undefined;
 
 function sortTable(headerValue) {
     //getting which element it is from the main point
@@ -119,4 +120,34 @@ function compareColumns(a,b) {
         return 1
     }
     return 0;
+}
+
+function searchTable(inputValue) {
+    if (tableRows===undefined) {
+        let thead = document.getElementById("tableHeadTemplate")
+        let keys = Object.keys(thead.children[0].children)
+        tableRows = [];
+        keys.forEach((key) => {
+            if (thead.children[0].children[key].getAttribute("onclick") !== null) {
+                tableRows.push(key)
+            }
+        })
+    }
+    var rows = document.getElementById("tableBodyTemplate").children;
+    let rowKeys = Object.keys(rows);
+    rowKeys.forEach((index)=>{
+        let isShown = false;
+        tableRows.forEach((tableRow)=>{
+            if(rows[index].children[tableRow].innerHTML.indexOf(inputValue)>-1) {
+                isShown=true;
+            }
+        })
+        if (isShown) {
+            rows[index].setAttribute("style","display:table-row;")
+        } else {
+            rows[index].setAttribute("style","display:none;")
+        }
+
+    })
+
 }

@@ -18,3 +18,10 @@ img {
     margin-left: 5px;
     font-size: 8px;
 }
+.table-search-header{
+    display: flex;
+    justify-content: right;
+}
+.header {
+    width: 50%;
+}
