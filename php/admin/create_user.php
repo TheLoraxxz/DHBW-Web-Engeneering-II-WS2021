@@ -43,7 +43,7 @@ if ($page->getRole()==1) {
                 <div class="col-3">
                     <h5>Account</h5>
                      <div class="mb-3">
-                        <label class="mb-1 form-label" for="number_of_accounts_input">Anzahl der zu kreeierenden Accounts</label>
+                        <label class="mb-1 form-label" for="number_of_accounts_input">Anzahl der zu kreierenden Accounts</label>
                         <input type="number" class="form-control" id="number_of_accounts_input">
                     </div>
                     <div class="input-group mb-3">
