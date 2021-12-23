@@ -7,14 +7,18 @@ $db = $page->getDBService();
 $daten=$db->getGroupRatingStuff($_POST["gruppeID"]);
 
 if (isset($_POST["gPoints"]) and $_POST["gPoints"]!="") {
-    for ($z=0;$z<count($daten); $z++) {
-        $db->updatePoints($_POST["gPoints"], $daten[$z][0]);
+    if($daten[0][3] >= $_POST["gPoints"])
+    {
+        for ($z=0;$z<count($daten); $z++) {
+            $db->updatePoints($_POST["gPoints"], $daten[$z][0]);
+        }
     }
 } else {
     $length=count($_POST)-1;
     for ($k=0;$k<$length;$k++) {
         if ($_POST["uPoints".$daten[$k][0]]!="") {
-            $db->updatePoints($_POST["uPoints".$daten[$k][0]], $daten[$k][0]);
+            if($daten[0][3] >= $_POST["uPoints"])
+                $db->updatePoints($_POST["uPoints".$daten[$k][0]], $daten[$k][0]);
         }
     }
 }

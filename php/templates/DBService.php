@@ -20,7 +20,6 @@ class DBService {
                 USE db_pain;
                 
                 create table institution(institution_id int,name varchar(1000) not null);
-                create table invites(ID int,Group_ID int, User_ID int);
                 create unique index institution_institution_id_uindex on institution (institution_id);
                 alter table institution	add constraint institution_pk primary key (institution_id);
                 alter table institution modify institution_id int auto_increment;
@@ -186,6 +185,16 @@ class DBService {
                 create unique index user_login_uindex
                 	on user (login);
                 
+                create table invites
+                (
+                    ID int,
+                    Group_ID int,
+                    User_ID int
+                );
+                alter table invites
+                    add constraint invites_pk
+                        primary key (ID);
+                alter table invites modify ID int auto_increment;
                 INSERT INTO role (name) VALUES ('admin');
                 INSERT INTO role (name) VALUES ('student');
                 INSERT INTO role (name) VALUES ('secretary');
@@ -333,10 +342,18 @@ class DBService {
 
         $date = new DateTime($submission_date);
 
-        $query = $this->conn->query("
+        $this->conn->query("
         INSERT INTO db_pain.project (points_reachable, path_to_matrix, submission_date, open_to_invite, max_of_students, name)
         VALUES (".$points_reachable.", '".$path_to_matrix."', '".$date->format('Y-m-d H:i:s:u')."', ".$open_to_invite.", ".$max_of_students.",'".$name."') ");
-
+        $query = $this->conn->query("
+            SELECT p.project_id FROM project p  
+            WHERE p.points_reachable = ".$points_reachable." 
+            AND p.path_to_matrix = '".$path_to_matrix."' 
+            AND p.submission_date = '".$submission_date."' 
+            AND p.open_to_invite = ".$open_to_invite."
+            AND p.max_of_students = ".$max_of_students." 
+            AND p.name = '".$name."'");
+        return mysqli_fetch_all($query, MYSQLI_NUM);
     }
     public function getStammdaten($userId) {
         $query = $this->conn->query("
@@ -755,6 +772,7 @@ class DBService {
         return $projects;
 
     }
+
     public function getGrades() {
         $query = $this->conn->query("
         SELECT r.points,p.points_reachable,u.name,u.surename,p.name as project
@@ -783,11 +801,14 @@ class DBService {
         WHERE r.user_id =" . $userID);
         return mysqli_fetch_all($query);
     }
+
     public function getGroupRatingStuff($groupID) {
         $query = $this->conn->query("
-        SELECT r.user_id, u.surename, r.points
+        SELECT r.user_id, u.surename, r.points, p.points_reachable
         FROM rating r
             INNER JOIN user u on r.user_id = u.user_id
+            Inner JOIN groupings g on g.group_id = r.group_id
+            inner JOIN project p on p.project_id = g.project_id
         WHERE r.group_id=".$groupID);
         return mysqli_fetch_all($query);
     }
@@ -803,27 +824,21 @@ class DBService {
         WHERE user_id=".$user);
         return mysqli_fetch_all($query);
     }
-
+/*
+ * pulls all invites for the active User
+ */
     public function getUserInvites($userId) {
         $query = $this->conn->query("
         SELECT inv.Group_ID,p.name,p2.submission_date FROM invites as inv
-      INNER JOIN user u on inv.User_ID = u.user_id
-      INNER JOIN groupings p on inv.Group_ID= p.group_id
+        INNER JOIN user u on inv.User_ID = u.user_id
+        INNER JOIN groupings p on inv.Group_ID= p.group_id
         INNER JOIN project p2 on p.project_id = p2.project_id
         WHERE u.user_id =".$userId);
-        $result = mysqli_fetch_all($query);
-        return $result;
+        return mysqli_fetch_all($query);
     }
-
-    public function isInvitational($projectID)
-    {
-        $query = $this->conn->query("
-            SELECT p.open_to_invite FROM project as p
-            WHERE p.project_id =".$projectID);
-        $result = mysqli_fetch_all($query);
-        return $result;
-    }
-
+/*
+ * pulls all users in the same Course as active User
+ */
     public function getAllUsersInCourse($userId, $projectId) {
         $query = $this->conn->query("
             SELECT u.user_id , u.name FROM user as u
@@ -833,26 +848,34 @@ class DBService {
         $result = mysqli_fetch_all($query);
         return $result;
     }
-
+/*
+ * creates an invite in the db
+ */
     public function createInvite($groupId, $userId)
     {
-        $this->conn-> query("INSERT INTO invites (ID,Group_ID,User_ID) VALUES (null, $groupId,$userId)");
+        $this->conn-> query("INSERT INTO invites (Group_ID,User_ID) VALUES ($groupId,$userId)");
     }
-
+/*
+ * adds an user to a projectgroup
+ */
     public function AddToGroup($userId, $groupId)
     {
         $this->conn-> query("INSERT INTO rating (user_id,group_id, points, is_admin) VALUES ( $userId,$groupId,null ,0)");
         $this->RemoveInvite($userId,$groupId);
     }
-
+/*
+ * deletes an invite from the db
+ */
     public function RemoveInvite($userId, $groupId)
     {
         //remove the specified invite from the database
         $this->conn->query("
             Delete FROM invites
-            WHERE User_ID =".$userId);//."AND Group_ID=".$groupId);
+            WHERE User_ID =".$userId." AND Group_ID=".$groupId);
     }
-
+/*
+ * Set the submit flag in a project and safes the Time
+ */
     public function SubmitGroupProject($userId,$projektId, $timeStamp)
     {
         $query = $this->conn->query("
@@ -863,9 +886,10 @@ class DBService {
         $result = mysqli_fetch_all($query,MYSQLI_NUM );
         //update submitted und subtime in der Gruppe
         $this->conn->query("
-        UPDATE groupings SET `submitted`=1,`submitted_time`=".$timeStamp."
+        UPDATE groupings SET `submitted`=1,`submitted_time`='".$timeStamp."'
         WHERE  groupings.group_id=".$result[0][0]);
     }
+
     public function createClass_Project($project_id,$course_name) {
         $query =$this->conn->query("SELECT course_id FROM course WHERe name='".$course_name."' LIMIT 1");
         $course_id =mysqli_fetch_all($query) ;
@@ -873,10 +897,23 @@ class DBService {
             return false;
         }
         $this->conn->query("
-            INSERT INTO db_pain.project_class (project_id, course_id) VALUES (".$project_id.", ".$course_id[0][0].")
+            INSERT INTO db_pain.project_class (project_id, course_id) VALUES (".$project_id[0][0].", ".$course_id[0][0].")
         ");
         return true;
     }
-
-
+/*
+ * deletes a Project from the db
+ */
+    public function DeleteProject($project_id)
+    {
+        $this->conn->query("Delete FROM project_class  WHERE project_class.project_id =".$project_id);
+        $query =$this->conn->query("SELECT g.group_id FROM groupings as g WHERE g.project_id =".$project_id);
+        $group_id =mysqli_fetch_all($query,MYSQLI_NUM);
+        if(count($group_id) > 0)
+        {
+            $this->conn->query("Delete FROM rating  WHERE rating.group_id = ".$group_id[0][0]);
+            $this->conn->query("Delete FROM groupings  WHERE groupings.project_id =".$project_id);
+        }
+        $this->conn->query("Delete FROM project  WHERE project.project_id =".$project_id);
+    }
 }

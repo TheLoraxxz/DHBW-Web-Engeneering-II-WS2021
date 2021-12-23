@@ -11,8 +11,8 @@ if ($page->getRole()==1) {
         if ($_GET["action"] == "overview") {
             $table = new Table($db->getAllUsersByID(0, "(SELECT MAX(us.user_id) LIMIT 1)"));
             $table->addTableHeading("User Übersicht");
-            $table->addButton("Schüler hinzufügen", Page::getRoot() . "php/admin/create_user.php?action=multiple_user");
-            $table->addButton("Einzelner User hinzufügen", Page::getRoot() . "php/admin/create_edit_user.php?action=new&user_id=-1");
+            $table->addButton("Schüler hinzufügen", "./create_user.php?action=multiple_user");
+            $table->addButton("Einzelner User hinzufügen",  "./create_edit_user.php?action=new&user_id=-1");
             $table->addColumn("ID", "id", false);
             $table->addColumn("Name", "name");
             $table->addColumn("Kurs", "Kurs");
@@ -116,8 +116,8 @@ if ($page->getRole()==1) {
             $table->addColumn("Benutzername", "name");
             $table->addColumn("Password", "password");
             $table->addColumn("Kurs", "Kurs");
-            $table->addButton("Zurück", Page::getRoot() ."php/home.php");
-            $table->addButton("Drucken", Page::getRoot() . "pdf/print_pdf.php?source=create_user&start=" . $tableData[0]["id"] . "&end=" . $tableData[count($tableData) - 1]["id"]);
+            $table->addButton("Zurück", "../home.php");
+            $table->addButton("Drucken", "../pdf/print_pdf.php?source=create_user&start=" . $tableData[0]["id"] . "&end=" . $tableData[count($tableData) - 1]["id"]);
             $table->addTableHeading("Übersicht über neu erstellte User");
             $page->addElement($table);
         }
